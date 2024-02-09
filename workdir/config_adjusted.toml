@@ -137,9 +137,6 @@ respect-gitignore = true
 # Whether to show an enumeration of all fixed lint violations
 # (overridden by the --show-fixes command-line flag).
 show-fixes = false
-# Whether to show source code snippets when reporting lint violations
-# (overridden by the --show-source command-line flag).
-show-source = false
 # The directories to consider when resolving first- vs. third-party
 # imports.
 # As an example: given a Python package structure like:
