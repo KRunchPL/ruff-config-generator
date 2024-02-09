@@ -264,6 +264,17 @@ allowed-confusables = []
 # should be ignored when enforcing (e.g.) unused-variable rules. The
 # default expression matches _, __, and _var, but not _var_.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# A list of file patterns to exclude from linting in addition to the files excluded globally (see exclude, and extend-exclude).
+# Exclusions are based on globs, and can be either:
+# - Single-path patterns, like .mypy_cache (to exclude any directory
+#   named .mypy_cache in the tree), foo.py (to exclude any file named
+#   foo.py), or foo_*.py (to exclude any file matching foo_*.py ).
+# - Relative patterns, like directory/foo.py (to exclude that specific
+#   file) or directory/*.py (to exclude any Python files in
+#   directory). Note that these paths are relative to the project root
+#   (e.g., the directory containing your pyproject.toml).
+# For more information on the glob syntax, refer to the globset documentation.
+exclude = []
 # Whether to require exact codes to select preview rules. When enabled,
 # preview rules will not be selected by prefixes — the full code of each
 # preview rule will be required to enable the rule.
@@ -336,6 +347,9 @@ ignore-init-module-imports = false
 # logging_setup.logger is treated as a logging.Logger object when
 # imported from other modules (e.g., from logging_setup import logger).
 logger-objects = []
+# Whether to enable preview mode. When preview mode is enabled, Ruff will
+# use unstable rules and fixes.
+preview = false
 # A list of rule codes or prefixes to enable. Prefixes can specify exact
 # rules (like F841), entire categories (like F), or anything in
 # between.
