@@ -252,7 +252,7 @@ unsafe-fixes = false
 # reStructuredText literal blocks, the contents are assumed to be Python
 # and reformatted. As with any other format, if the contents aren't valid
 # Python, then the block is left untouched automatically.
-docstring-code-format = false
+docstring-code-format = true
 # Set the line length used when formatting code snippets in docstrings.
 # This only has an effect when the docstring-code-format setting is
 # enabled.
