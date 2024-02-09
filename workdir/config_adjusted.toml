@@ -1,6 +1,3 @@
-# A list of allowed "confusable" Unicode characters to ignore when
-# enforcing RUF001, RUF002, and RUF003.
-allowed-confusables = []
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
 builtins = []
@@ -12,10 +9,6 @@ builtins = []
 # This setting will override even the RUFF_CACHE_DIR environment
 # variable, if set.
 cache-dir = ".ruff_cache"
-# A regular expression used to identify "dummy" variables, or those which
-# should be ignored when enforcing (e.g.) unused-variable rules. The
-# default expression matches _, __, and _var, but not _var_.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # A list of file patterns to exclude from formatting and linting.
 # Exclusions are based on globs, and can be either:
 # - Single-path patterns, like .mypy_cache (to exclude any directory
@@ -51,10 +44,6 @@ exclude = [
     "node_modules",
     "venv",
 ]
-# Whether to require exact codes to select preview rules. When enabled,
-# preview rules will not be selected by prefixes — the full code of each
-# preview rule will be required to enable the rule.
-explicit-preview-rules = false
 # A path to a local pyproject.toml file to merge into this
 # configuration. User home directory and environment variables will be
 # expanded.
@@ -74,43 +63,18 @@ explicit-preview-rules = false
 #   (e.g., the directory containing your pyproject.toml).
 # For more information on the glob syntax, refer to the globset documentation.
 extend-exclude = []
-# A list of rule codes or prefixes to consider fixable, in addition to those
-# specified by fixable.
-extend-fixable = []
 # A list of file patterns to include when linting, in addition to those
 # specified by include.
 # Inclusion are based on globs, and should be single-path patterns, like
 # *.pyw, to include any file with the .pyw extension.
 # For more information on the glob syntax, refer to the globset documentation.
 extend-include = []
-# A list of mappings from file pattern to rule codes or prefixes to
-# exclude, in addition to any rules excluded by per-file-ignores.
-extend-per-file-ignores = {}
-# A list of rule codes or prefixes for which unsafe fixes should be considered
-# safe.
-extend-safe-fixes = []
-# A list of rule codes or prefixes to enable, in addition to those
-# specified by select.
-extend-select = []
-# A list of rule codes or prefixes for which safe fixes should be considered
-# unsafe.
-extend-unsafe-fixes = []
-# A list of rule codes or prefixes that are unsupported by Ruff, but should be
-# preserved when (e.g.) validating # noqa directives. Useful for
-# retaining # noqa directives that cover plugins not yet implemented
-# by Ruff.
-external = []
 # Enable fix behavior by-default when running ruff (overridden
 # by the --fix and --no-fix command-line flags).
 # Only includes automatic fixes unless --unsafe-fixes is provided.
 fix = false
 # Like fix, but disables reporting on leftover violation. Implies fix.
 fix-only = false
-# A list of rule codes or prefixes to consider fixable. By default,
-# all rules are considered fixable.
-fixable = [
-    "ALL",
-]
 # Whether to enforce exclude and extend-exclude patterns, even for
 # paths that are passed to Ruff explicitly. Typically, Ruff will lint
 # any paths passed in directly, even if they would typically be
@@ -121,35 +85,6 @@ fixable = [
 # plugin, regardless of whether they're marked as excluded by Ruff's own
 # settings.
 force-exclude = false
-# A list of rule codes or prefixes to ignore. Prefixes can specify exact
-# rules (like F841), entire categories (like F), or anything in
-# between.
-# When breaking ties between enabled and disabled rules (via select and
-# ignore, respectively), more specific prefixes override less
-# specific prefixes.
-ignore = [
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in classmethod
-    "B005",    # Using .strip() with multi-character strings is misleading
-    "D100",    # Missing docstring in public module
-    "D104",    # Missing docstring in public package
-    "D105",    # Missing docstring in magic method
-    "D107",    # Missing docstring in `__init__`
-    "D200",    # One-line docstring should fit on one line
-    "D203",    # 1 blank line required before class docstring
-    "D212",    # Multi-line docstring summary should start at the first line
-    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
-    "S101",    # Use of `assert` detected
-    "TCH001",  # [*] Move application import into a type-checking block
-    "TCH002",  # [*] Move third-party import into a type-checking block
-    "TCH003",  # [*] Move standard library import into a type-checking block
-    "PYI041",  # Use `float` instead of `int | float`
-]
-# Avoid automatically removing unused imports in __init__.py files. Such
-# imports will still be flagged, but with a dedicated message suggesting
-# that the import is either added to the module's __all__ symbol, or
-# re-exported with a redundant alias (e.g., import os as os).
-ignore-init-module-imports = false
 # A list of file patterns to include when linting.
 # Inclusion are based on globs, and should be single-path patterns, like
 # *.pyw, to include any file with the .pyw extension. pyproject.toml is
@@ -178,20 +113,6 @@ indent-width = 4
 # exceed the line-length.
 # See pycodestyle.max-line-length to configure different lengths for E501 and the formatter.
 line-length = 110
-# A list of objects that should be treated equivalently to a
-# logging.Logger object.
-# This is useful for ensuring proper diagnostics (e.g., to identify
-# logging deprecations and other best-practices) for projects that
-# re-export a logging.Logger object from a common module.
-# For example, if you have a module logging_setup.py with the following
-# contents:
-# import logging
-#
-# logger = logging.getLogger(__name__)
-# Adding "logging_setup.logger" to logger-objects will ensure that
-# logging_setup.logger is treated as a logging.Logger object when
-# imported from other modules (e.g., from logging_setup import logger).
-logger-objects = []
 # Mark the specified directories as namespace packages. For the purpose of
 # module resolution, Ruff will treat those directories as if they
 # contained an __init__.py file.
@@ -213,15 +134,6 @@ preview = false
 # .gitignore, .git/info/exclude, and global gitignore files.
 # Enabled by default.
 respect-gitignore = true
-# A list of rule codes or prefixes to enable. Prefixes can specify exact
-# rules (like F841), entire categories (like F), or anything in
-# between.
-# When breaking ties between enabled and disabled rules (via select and
-# ignore, respectively), more specific prefixes override less
-# specific prefixes.
-select = [
-    "ALL",
-]
 # Whether to show an enumeration of all fixed lint violations
 # (overridden by the --show-fixes command-line flag).
 show-fixes = false
@@ -270,6 +182,172 @@ src = [
 # If both are specified, target-version takes precedence over
 # requires-python.
 target-version = "py311"
+# Enable application of unsafe fixes.
+# If excluded, a hint will be displayed when unsafe fixes are available.
+# If set to false, the hint will be hidden.
+unsafe-fixes = false
+
+[format]
+# A list of file patterns to exclude from formatting in addition to the files excluded globally (see exclude, and extend-exclude).
+# Exclusions are based on globs, and can be either:
+# - Single-path patterns, like .mypy_cache (to exclude any directory
+#   named .mypy_cache in the tree), foo.py (to exclude any file named
+#   foo.py), or foo_*.py (to exclude any file matching foo_*.py ).
+# - Relative patterns, like directory/foo.py (to exclude that specific
+#   file) or directory/*.py (to exclude any Python files in
+#   directory). Note that these paths are relative to the project root
+#   (e.g., the directory containing your pyproject.toml).
+# For more information on the glob syntax, refer to the globset documentation.
+exclude = []
+# Whether to use spaces or tabs for indentation.
+# indent-style = "space" (default):
+# ---
+# def f():
+#     print("Hello") #  Spaces indent the `print` statement.
+# ---
+# indent-style = "tab"":
+# ---
+# def f():
+#     print("Hello") #  A tab `\t` indents the `print` statement.
+# ---
+# PEP 8 recommends using spaces for indentation.
+# We care about accessibility; if you do not need tabs for accessibility, we do not recommend you use them.
+# See indent-width to configure the number of spaces per indentation and the tab width.
+indent-style = "space"
+# The character Ruff uses at the end of a line.
+# - auto: The newline style is detected automatically on a file per file basis. Files with mixed line endings will be converted to the first detected line ending. Defaults to \n for files that contain no line endings.
+# - lf: Line endings will be converted to \n. The default line ending on Unix.
+# - cr-lf: Line endings will be converted to \r\n. The default line ending on Windows.
+# - native: Line endings will be converted to \n on Unix and \r\n on Windows.
+line-ending = "lf"
+# Whether to enable the unstable preview style formatting.
+preview = false
+# Configures the preferred quote character for strings. Valid options are:
+# - double (default): Use double quotes "
+# - single: Use single quotes '
+# - preserve (preview only): Keeps the existing quote character. We don't recommend using this option except for projects
+#    that already use a mixture of single and double quotes and can't migrate to using double or single quotes.
+# In compliance with PEP 8 and PEP 257,
+# Ruff prefers double quotes for multiline strings and docstrings, regardless of the
+# configured quote style.
+# Ruff may also deviate from using the configured quotes if doing so requires
+# escaping quote characters within the string. For example, given:
+# ---
+# a = "a string without any quotes"
+# b = "It's monday morning"
+# ---
+# Ruff will change a to use single quotes when using quote-style = "single". However,
+# b remains unchanged, as converting to single quotes requires escaping the inner ',
+# which leads to less readable code: 'It\'s monday morning'. This does not apply when using preserve.
+quote-style = "single"
+# Ruff uses existing trailing commas as an indication that short lines should be left separate.
+# If this option is set to true, the magic trailing comma is ignored.
+# For example, Ruff leaves the arguments separate even though
+# collapsing the arguments to a single line doesn't exceed the line length if skip-magic-trailing-comma = false:
+# ---
+#  # The arguments remain on separate lines because of the trailing comma after `b`
+# def test(
+#     a,
+#     b,
+# ): pass
+# ---
+# Setting skip-magic-trailing-comma = true changes the formatting to:
+# ---
+# # The arguments remain on separate lines because of the trailing comma after `b`
+# def test(a, b):
+#     pass
+# ---
+skip-magic-trailing-comma = false
+
+[lint]
+# A list of allowed "confusable" Unicode characters to ignore when
+# enforcing RUF001, RUF002, and RUF003.
+allowed-confusables = []
+# A regular expression used to identify "dummy" variables, or those which
+# should be ignored when enforcing (e.g.) unused-variable rules. The
+# default expression matches _, __, and _var, but not _var_.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# Whether to require exact codes to select preview rules. When enabled,
+# preview rules will not be selected by prefixes — the full code of each
+# preview rule will be required to enable the rule.
+explicit-preview-rules = false
+# A list of rule codes or prefixes to consider fixable, in addition to those
+# specified by fixable.
+extend-fixable = []
+# A list of mappings from file pattern to rule codes or prefixes to
+# exclude, in addition to any rules excluded by per-file-ignores.
+extend-per-file-ignores = {}
+# A list of rule codes or prefixes for which unsafe fixes should be considered
+# safe.
+extend-safe-fixes = []
+# A list of rule codes or prefixes to enable, in addition to those
+# specified by select.
+extend-select = []
+# A list of rule codes or prefixes for which safe fixes should be considered
+# unsafe.
+extend-unsafe-fixes = []
+# A list of rule codes or prefixes that are unsupported by Ruff, but should be
+# preserved when (e.g.) validating # noqa directives. Useful for
+# retaining # noqa directives that cover plugins not yet implemented
+# by Ruff.
+external = []
+# A list of rule codes or prefixes to consider fixable. By default,
+# all rules are considered fixable.
+fixable = [
+    "ALL",
+]
+# A list of rule codes or prefixes to ignore. Prefixes can specify exact
+# rules (like F841), entire categories (like F), or anything in
+# between.
+# When breaking ties between enabled and disabled rules (via select and
+# ignore, respectively), more specific prefixes override less
+# specific prefixes.
+ignore = [
+    "ANN101",  # Missing type annotation for `self` in method
+    "ANN102",  # Missing type annotation for `cls` in classmethod
+    "B005",    # Using .strip() with multi-character strings is misleading
+    "D100",    # Missing docstring in public module
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in `__init__`
+    "D200",    # One-line docstring should fit on one line
+    "D203",    # 1 blank line required before class docstring
+    "D212",    # Multi-line docstring summary should start at the first line
+    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S101",    # Use of `assert` detected
+    "TCH001",  # [*] Move application import into a type-checking block
+    "TCH002",  # [*] Move third-party import into a type-checking block
+    "TCH003",  # [*] Move standard library import into a type-checking block
+    "PYI041",  # Use `float` instead of `int | float`
+]
+# Avoid automatically removing unused imports in __init__.py files. Such
+# imports will still be flagged, but with a dedicated message suggesting
+# that the import is either added to the module's __all__ symbol, or
+# re-exported with a redundant alias (e.g., import os as os).
+ignore-init-module-imports = false
+# A list of objects that should be treated equivalently to a
+# logging.Logger object.
+# This is useful for ensuring proper diagnostics (e.g., to identify
+# logging deprecations and other best-practices) for projects that
+# re-export a logging.Logger object from a common module.
+# For example, if you have a module logging_setup.py with the following
+# contents:
+# import logging
+#
+# logger = logging.getLogger(__name__)
+# Adding "logging_setup.logger" to logger-objects will ensure that
+# logging_setup.logger is treated as a logging.Logger object when
+# imported from other modules (e.g., from logging_setup import logger).
+logger-objects = []
+# A list of rule codes or prefixes to enable. Prefixes can specify exact
+# rules (like F841), entire categories (like F), or anything in
+# between.
+# When breaking ties between enabled and disabled rules (via select and
+# ignore, respectively), more specific prefixes override less
+# specific prefixes.
+select = [
+    "ALL",
+]
 # A list of task tags to recognize (e.g., "TODO", "FIXME", "XXX").
 # Comments starting with these tags will be ignored by commented-out code
 # detection (ERA), and skipped by line-length rules (E501) if
@@ -289,11 +367,9 @@ task-tags = [
 typing-modules = []
 # A list of rule codes or prefixes to consider non-fixable.
 unfixable = []
-# Enable application of unsafe fixes.
-unsafe-fixes = false
 # A list of mappings from file pattern to rule codes or prefixes to
 # exclude, when considering any matching files.
-[per-file-ignores]
+[lint.per-file-ignores]
 "tests/*" = [
     "ANN",  # flake8-annotations
     "SLF001",  # Private member accessed
@@ -570,76 +646,6 @@ strict = false
 [lint.flake8-unused-arguments]
 # Whether to allow unused variadic arguments, like *args and **kwargs.
 ignore-variadic-names = false
-
-[format]
-# A list of file patterns to exclude from formatting in addition to the files excluded globally (see exclude, and extend-exclude).
-# Exclusions are based on globs, and can be either:
-# - Single-path patterns, like .mypy_cache (to exclude any directory
-#   named .mypy_cache in the tree), foo.py (to exclude any file named
-#   foo.py), or foo_*.py (to exclude any file matching foo_*.py ).
-# - Relative patterns, like directory/foo.py (to exclude that specific
-#   file) or directory/*.py (to exclude any Python files in
-#   directory). Note that these paths are relative to the project root
-#   (e.g., the directory containing your pyproject.toml).
-# For more information on the glob syntax, refer to the globset documentation.
-# Note that you'll typically want to use
-# extend-exclude to modify the excluded paths.
-exclude = []
-# Whether to use spaces or tabs for indentation.
-# indent-style = "space" (default):
-# ---
-# def f():
-#     print("Hello") #  Spaces indent the `print` statement.
-# ---
-# indent-style = "tab"":
-# ---
-# def f():
-#     print("Hello") #  A tab `\t` indents the `print` statement.
-# ---
-# PEP 8 recommends using spaces for indentation.
-# We care about accessibility; if you do not need tabs for accessibility, we do not recommend you use them.
-# See indent-width to configure the number of spaces per indentation and the tab width.
-indent-style = "space"
-# The character Ruff uses at the end of a line.
-# - auto: The newline style is detected automatically on a file per file basis. Files with mixed line endings will be converted to the first detected line ending. Defaults to \n for files that contain no line endings.
-# - lf: Line endings will be converted to \n. The default line ending on Unix.
-# - cr-lf: Line endings will be converted to \r\n. The default line ending on Windows.
-# - native: Line endings will be converted to \n on Unix and \r\n on Windows.
-line-ending = "lf"
-# Whether to enable the unstable preview style formatting.
-preview = false
-# Whether to prefer single ' or double " quotes for strings. Defaults to double quotes.
-# In compliance with PEP 8 and PEP 257,
-# Ruff prefers double quotes for multiline strings and docstrings, regardless of the
-# configured quote style.
-# Ruff may also deviate from this option if using the configured quotes would require
-# escaping quote characters within the string. For example, given:
-# ---
-# a = "a string without any quotes"
-# b = "It's monday morning"
-# ---
-# Ruff will change a to use single quotes when using quote-style = "single". However,
-# b will be unchanged, as converting to single quotes would require the inner ' to be
-# escaped, which leads to less readable code: 'It\'s monday morning'.
-quote-style = "single"
-# Ruff uses existing trailing commas as an indication that short lines should be left separate.
-# If this option is set to true, the magic trailing comma is ignored.
-# For example, Ruff leaves the arguments separate even though
-# collapsing the arguments to a single line doesn't exceed the line length if skip-magic-trailing-comma = false:
-# ---
-#  # The arguments remain on separate lines because of the trailing comma after `b`
-# def test(
-#     a,
-#     b,
-# ): pass
-# ---
-# Setting skip-magic-trailing-comma = true changes the formatting to:
-# ---
-# # The arguments remain on separate lines because of the trailing comma after `b`
-# def test(a, b):
-#     pass
-# ---
-skip-magic-trailing-comma = false
 
 [lint.isort]
 # Sort imports taking into account case sensitivity.
