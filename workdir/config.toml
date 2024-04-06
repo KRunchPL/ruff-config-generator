@@ -39,7 +39,6 @@ exclude = [
     "__pypackages__",
     "_build",
     "buck-out",
-    "build",
     "dist",
     "node_modules",
     "venv",
@@ -114,8 +113,8 @@ indent-width = 4
 # See pycodestyle.max-line-length to configure different lengths for E501 and the formatter.
 line-length = 88
 # Mark the specified directories as namespace packages. For the purpose of
-# module resolution, Ruff will treat those directories as if they
-# contained an __init__.py file.
+# module resolution, Ruff will treat those directories and all their subdirectories
+# as if they contained an __init__.py file.
 namespace-packages = []
 # The style in which violation messages should be formatted: "full"
 # (shows source),"concise" (default), "grouped" (group messages by file), "json"
@@ -126,9 +125,12 @@ output-format = "concise"
 # Whether to enable preview mode. When preview mode is enabled, Ruff will
 # use unstable rules, fixes, and formatting.
 preview = false
-# Require a specific version of Ruff to be running (useful for unifying
-# results across many environments, e.g., with a pyproject.toml
-# file).
+# Enforce a requirement on the version of Ruff, to enforce at runtime.
+# If the version of Ruff does not meet the requirement, Ruff will exit
+# with an error.
+# Useful for unifying results across many environments, e.g., with a
+# pyproject.toml file.
+# Accepts a PEP 440 specifier, like ==0.3.1 or >=0.3.1.
 #required-version =
 # Whether to automatically exclude files that are ignored by .ignore,
 # .gitignore, .git/info/exclude, and global gitignore files.
@@ -243,7 +245,7 @@ target-version = "py38"
 #     """
 #     pass
 # ---
-# If a code snippt in a docstring contains invalid Python code or if the
+# If a code snippet in a docstring contains invalid Python code or if the
 # formatter would otherwise write invalid Python code, then the code
 # example is ignored by the formatter and kept as-is.
 # Currently, doctest, Markdown, reStructuredText literal blocks, and
@@ -337,23 +339,23 @@ indent-style = "space"
 line-ending = "auto"
 # Whether to enable the unstable preview style formatting.
 preview = false
-# Configures the preferred quote character for strings. Valid options are:
+# Configures the preferred quote character for strings. The recommended options are
 # - double (default): Use double quotes "
 # - single: Use single quotes '
-# - preserve (preview only): Keeps the existing quote character. We don't recommend using this option except for projects
-#    that already use a mixture of single and double quotes and can't migrate to using double or single quotes.
 # In compliance with PEP 8 and PEP 257,
-# Ruff prefers double quotes for multiline strings and docstrings, regardless of the
-# configured quote style.
-# Ruff may also deviate from using the configured quotes if doing so requires
-# escaping quote characters within the string. For example, given:
+# Ruff prefers double quotes for triple quoted strings and docstrings even when using quote-style = "single".
+# Ruff deviates from using the configured quotes if doing so prevents the need for
+# escaping quote characters inside the string:
 # ---
 # a = "a string without any quotes"
 # b = "It's monday morning"
 # ---
-# Ruff will change a to use single quotes when using quote-style = "single". However,
-# b remains unchanged, as converting to single quotes requires escaping the inner ',
-# which leads to less readable code: 'It\'s monday morning'. This does not apply when using preserve.
+# Ruff will change the quotes of the string assigned to a to single quotes when using quote-style = "single".
+# However, ruff uses double quotes for he string assigned to b because using single quotes would require escaping the ',
+# which leads to the less readable code: 'It\'s monday morning'.
+# In addition, Ruff supports the quote style preserve for projects that already use
+# a mixture of single and double quotes and can't migrate to the double or single style.
+# The quote style preserve leaves the quotes of all strings unchanged.
 quote-style = "double"
 # Ruff uses existing trailing commas as an indication that short lines should be left separate.
 # If this option is set to true, the magic trailing comma is ignored.
@@ -433,7 +435,9 @@ ignore = []
 # imports will still be flagged, but with a dedicated message suggesting
 # that the import is either added to the module's __all__ symbol, or
 # re-exported with a redundant alias (e.g., import os as os).
-ignore-init-module-imports = false
+# This option is enabled by default, but you can opt-in to removal of imports
+# via an unsafe fix.
+ignore-init-module-imports = true
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.
 # This is useful for ensuring proper diagnostics (e.g., to identify
@@ -522,6 +526,12 @@ hardcoded-tmp-directory = [
 # specified by hardcoded-tmp-directory.
 hardcoded-tmp-directory-extend = []
 
+[lint.flake8-boolean-trap]
+# Additional callable functions with which to allow boolean traps.
+# Expects to receive a list of fully-qualified names (e.g., pydantic.Field, rather than
+# Field).
+extend-allowed-calls = []
+
 [lint.flake8-bugbear]
 # Additional callable functions to consider "immutable" when evaluating, e.g., the
 # function-call-in-default-argument rule (B008) or function-call-in-dataclass-defaults
@@ -547,13 +557,14 @@ allow-dict-calls-with-keyword-arguments = false
 min-file-size = 0
 # The regular expression used to match the copyright notice, compiled
 # with the regex crate.
-# Defaults to (?i)Copyright\s+(\(C\)\s+)?\d{4}(-\d{4})*, which matches
+# Defaults to (?i)Copyright\s+((?:\(C\)|©)\s+)?\d{4}((-|,\s)\d{4})*, which matches
 # the following:
 # - Copyright 2023
 # - Copyright (C) 2023
 # - Copyright 2021-2023
 # - Copyright (C) 2021-2023
-notice-rgx = "(?i)Copyright\\s+(\\(C\\)\\s+)?\\d{4}([-,]\\d{4})*"
+# - Copyright (C) 2021, 2023
+notice-rgx = "(?i)Copyright\\s+((?:\\(C\\)|©)\\s+)?\\d{4}((-|,\\s)\\d{4})*"
 
 [lint.flake8-errmsg]
 # Maximum string length for string literals in exception messages.
@@ -792,6 +803,8 @@ combine-as-imports = false
 # An override list of tokens to always recognize as a CONSTANT
 # for order-by-type regardless of casing.
 constants = []
+# Define a default section for any imports that don't fit into the specified section-order.
+default-section = "third-party"
 # Whether to automatically mark imports from within the same package as first-party.
 # For example, when detect-same-package = true, then when analyzing files within the
 # foo package, any imports from within the foo package will be considered first-party.
@@ -874,6 +887,8 @@ length-sort = false
 length-sort-straight = false
 # The number of blank lines to place after imports.
 # Use -1 for automatic determination.
+# Ruff uses at most one blank line after imports in typing stub files (files with .pyi extension) in accordance to
+# the typing style recommendations (source).
 # When using the formatter, only the values -1, 1, and 2 are compatible because
 # it enforces at least one empty and at most two empty lines after imports.
 lines-after-imports = -1
