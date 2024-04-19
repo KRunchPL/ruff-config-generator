@@ -505,13 +505,15 @@ unfixable = []
 # the file pattern.
 [lint.per-file-ignores]
 "tests/*" = [
-    "ANN",  # flake8-annotations
-    "SLF001",  # Private member accessed
-    "FBT001",  # Boolean-typed positional argument in function definition
+    "SLF001",   # Private member accessed
+    "FBT001",   # Boolean-typed positional argument in function definition
     "PLR0913",  # Too many arguments to function call
+    "RUF018",   # Avoid assignment expressions in `assert` statements
 ]
 "tests/**/test_*" = [
+    "ANN",   # flake8-annotations
     "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
     "D103",  # Missing docstring in public function
     "B011",  # [*] Do not `assert False` (`python -O` removes these calls), raise `AssertionError()`
 ]
