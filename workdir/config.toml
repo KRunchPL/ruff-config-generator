@@ -453,7 +453,8 @@ ignore-init-module-imports = true
 # imported from other modules (e.g., from logging_setup import logger).
 logger-objects = []
 # A list of mappings from file pattern to rule codes or prefixes to
-# exclude, when considering any matching files.
+# exclude, when considering any matching files. An initial '!' negates
+# the file pattern.
 per-file-ignores = {}
 # Whether to enable preview mode. When preview mode is enabled, Ruff will
 # use unstable rules and fixes.

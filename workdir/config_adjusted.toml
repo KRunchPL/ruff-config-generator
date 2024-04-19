@@ -501,7 +501,8 @@ typing-modules = []
 # A list of rule codes or prefixes to consider non-fixable.
 unfixable = []
 # A list of mappings from file pattern to rule codes or prefixes to
-# exclude, when considering any matching files.
+# exclude, when considering any matching files. An initial '!' negates
+# the file pattern.
 [lint.per-file-ignores]
 "tests/*" = [
     "ANN",  # flake8-annotations
