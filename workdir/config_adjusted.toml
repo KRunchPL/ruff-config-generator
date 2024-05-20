@@ -180,7 +180,7 @@ src = [
 # ---
 # If both are specified, target-version takes precedence over
 # requires-python.
-target-version = "py311"
+target-version = "py310"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
@@ -418,7 +418,9 @@ extend-unsafe-fixes = []
 # preserved when (e.g.) validating # noqa directives. Useful for
 # retaining # noqa directives that cover plugins not yet implemented
 # by Ruff.
-external = []
+external = [
+    "DAR",
+]
 # A list of rule codes or prefixes to consider fixable. By default,
 # all rules are considered fixable.
 fixable = [
@@ -504,6 +506,9 @@ unfixable = []
 # exclude, when considering any matching files. An initial '!' negates
 # the file pattern.
 [lint.per-file-ignores]
+"!tests/*" = [
+    "PT",       # flake8-pytest-style
+]
 "tests/*" = [
     "SLF001",   # Private member accessed
     "FBT001",   # Boolean-typed positional argument in function definition
@@ -965,7 +970,26 @@ section-order = [
     "local-folder",
 ]
 # A list of mappings from section names to modules.
-# By default custom sections are output last, but this can be overridden with section-order.
+# By default, imports are categorized according to their type (e.g., future, third-party,
+# and so on). This setting allows you to group modules into custom sections, to augment or
+# override the built-in sections.
+# For example, to group all testing utilities, you could create a testing section:
+# testing = ["pytest", "hypothesis"]
+# The values in the list are treated as glob patterns. For example, to match all packages in
+# the LangChain ecosystem (langchain-core, langchain-openai, etc.):
+# langchain = ["langchain-*"]
+# Custom sections should typically be inserted into the section-order list to ensure that
+# they're displayed as a standalone group and in the intended order, as in:
+# section-order = [
+#   "future",
+#   "standard-library",
+#   "third-party",
+#   "first-party",
+#   "local-folder",
+#   "testing"
+# ]
+# If a custom section is omitted from section-order, imports in that section will be
+# assigned to the default-section (which defaults to third-party).
 sections = {}
 # One or more modules to exclude from the single line rule.
 single-line-exclusions = []

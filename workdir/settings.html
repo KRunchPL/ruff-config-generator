@@ -4837,12 +4837,12 @@ specified by <code>hardcoded-tmp-directory</code>.</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-130-1" name="__codelineno-130-1" href="#__codelineno-130-1"></a><span class="k">[tool.ruff.lint.flake8-bandit]</span>
-<a id="__codelineno-130-2" name="__codelineno-130-2" href="#__codelineno-130-2"></a><span class="n">extend-hardcoded-tmp-directory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/foo/bar&quot;</span><span class="p">]</span>
+<a id="__codelineno-130-2" name="__codelineno-130-2" href="#__codelineno-130-2"></a><span class="n">hardcoded-tmp-directory-extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/foo/bar&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-131-1" name="__codelineno-131-1" href="#__codelineno-131-1"></a><span class="k">[lint.flake8-bandit]</span>
-<a id="__codelineno-131-2" name="__codelineno-131-2" href="#__codelineno-131-2"></a><span class="n">extend-hardcoded-tmp-directory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/foo/bar&quot;</span><span class="p">]</span>
+<a id="__codelineno-131-2" name="__codelineno-131-2" href="#__codelineno-131-2"></a><span class="n">hardcoded-tmp-directory-extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/foo/bar&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6450,23 +6450,45 @@ this to "closest-to-furthest" is equivalent to isort's
 <hr />
 <h4 id="lint_isort_sections"><a href="#lint_isort_sections"><code>sections</code></a><a class="headerlink" href="#lint_isort_sections" title="Permanent link">#</a></h4>
 <p><span id="sections"></span></p>
-<p>A list of mappings from section names to modules.
-By default custom sections are output last, but this can be overridden with <code>section-order</code>.</p>
+<p>A list of mappings from section names to modules.</p>
+<p>By default, imports are categorized according to their type (e.g., <code>future</code>, <code>third-party</code>,
+and so on). This setting allows you to group modules into custom sections, to augment or
+override the built-in sections.</p>
+<p>For example, to group all testing utilities, you could create a <code>testing</code> section:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-267-1" name="__codelineno-267-1" href="#__codelineno-267-1"></a><span class="n">testing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pytest&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;hypothesis&quot;</span><span class="p">]</span>
+</code></pre></div></p>
+<p>The values in the list are treated as glob patterns. For example, to match all packages in
+the LangChain ecosystem (<code>langchain-core</code>, <code>langchain-openai</code>, etc.):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-268-1" name="__codelineno-268-1" href="#__codelineno-268-1"></a><span class="n">langchain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;langchain-*&quot;</span><span class="p">]</span>
+</code></pre></div></p>
+<p>Custom sections should typically be inserted into the <code>section-order</code> list to ensure that
+they're displayed as a standalone group and in the intended order, as in:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-269-1" name="__codelineno-269-1" href="#__codelineno-269-1"></a><span class="n">section-order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-269-2" name="__codelineno-269-2" href="#__codelineno-269-2"></a><span class="w">  </span><span class="s2">&quot;future&quot;</span><span class="p">,</span>
+<a id="__codelineno-269-3" name="__codelineno-269-3" href="#__codelineno-269-3"></a><span class="w">  </span><span class="s2">&quot;standard-library&quot;</span><span class="p">,</span>
+<a id="__codelineno-269-4" name="__codelineno-269-4" href="#__codelineno-269-4"></a><span class="w">  </span><span class="s2">&quot;third-party&quot;</span><span class="p">,</span>
+<a id="__codelineno-269-5" name="__codelineno-269-5" href="#__codelineno-269-5"></a><span class="w">  </span><span class="s2">&quot;first-party&quot;</span><span class="p">,</span>
+<a id="__codelineno-269-6" name="__codelineno-269-6" href="#__codelineno-269-6"></a><span class="w">  </span><span class="s2">&quot;local-folder&quot;</span><span class="p">,</span>
+<a id="__codelineno-269-7" name="__codelineno-269-7" href="#__codelineno-269-7"></a><span class="w">  </span><span class="s2">&quot;testing&quot;</span>
+<a id="__codelineno-269-8" name="__codelineno-269-8" href="#__codelineno-269-8"></a><span class="p">]</span>
+</code></pre></div></p>
+<p>If a custom section is omitted from <code>section-order</code>, imports in that section will be
+assigned to the <code>default-section</code> (which defaults to <code>third-party</code>).</p>
 <p><strong>Default value</strong>: <code>{}</code></p>
 <p><strong>Type</strong>: <code>dict[str, list[str]]</code></p>
 <p><strong>Example usage</strong>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="124:2"><input checked="checked" id="__tabbed_124_1" name="__tabbed_124" type="radio" /><input id="__tabbed_124_2" name="__tabbed_124" type="radio" /><div class="tabbed-labels"><label for="__tabbed_124_1">pyproject.toml</label><label for="__tabbed_124_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-267-1" name="__codelineno-267-1" href="#__codelineno-267-1"></a><span class="k">[tool.ruff.lint.isort.sections]</span>
-<a id="__codelineno-267-2" name="__codelineno-267-2" href="#__codelineno-267-2"></a><span class="c1"># Group all Django imports into a separate section.</span>
-<a id="__codelineno-267-3" name="__codelineno-267-3" href="#__codelineno-267-3"></a><span class="s2">&quot;django&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-270-1" name="__codelineno-270-1" href="#__codelineno-270-1"></a><span class="k">[tool.ruff.lint.isort.sections]</span>
+<a id="__codelineno-270-2" name="__codelineno-270-2" href="#__codelineno-270-2"></a><span class="c1"># Group all Django imports into a separate section.</span>
+<a id="__codelineno-270-3" name="__codelineno-270-3" href="#__codelineno-270-3"></a><span class="s2">&quot;django&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-268-1" name="__codelineno-268-1" href="#__codelineno-268-1"></a><span class="k">[lint.isort.sections]</span>
-<a id="__codelineno-268-2" name="__codelineno-268-2" href="#__codelineno-268-2"></a><span class="c1"># Group all Django imports into a separate section.</span>
-<a id="__codelineno-268-3" name="__codelineno-268-3" href="#__codelineno-268-3"></a><span class="s2">&quot;django&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-271-1" name="__codelineno-271-1" href="#__codelineno-271-1"></a><span class="k">[lint.isort.sections]</span>
+<a id="__codelineno-271-2" name="__codelineno-271-2" href="#__codelineno-271-2"></a><span class="c1"># Group all Django imports into a separate section.</span>
+<a id="__codelineno-271-3" name="__codelineno-271-3" href="#__codelineno-271-3"></a><span class="s2">&quot;django&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6481,13 +6503,13 @@ By default custom sections are output last, but this can be overridden with <cod
 <div class="tabbed-set tabbed-alternate" data-tabs="125:2"><input checked="checked" id="__tabbed_125_1" name="__tabbed_125" type="radio" /><input id="__tabbed_125_2" name="__tabbed_125" type="radio" /><div class="tabbed-labels"><label for="__tabbed_125_1">pyproject.toml</label><label for="__tabbed_125_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-269-1" name="__codelineno-269-1" href="#__codelineno-269-1"></a><span class="k">[tool.ruff.lint.isort]</span>
-<a id="__codelineno-269-2" name="__codelineno-269-2" href="#__codelineno-269-2"></a><span class="n">single-line-exclusions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-272-1" name="__codelineno-272-1" href="#__codelineno-272-1"></a><span class="k">[tool.ruff.lint.isort]</span>
+<a id="__codelineno-272-2" name="__codelineno-272-2" href="#__codelineno-272-2"></a><span class="n">single-line-exclusions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-270-1" name="__codelineno-270-1" href="#__codelineno-270-1"></a><span class="k">[lint.isort]</span>
-<a id="__codelineno-270-2" name="__codelineno-270-2" href="#__codelineno-270-2"></a><span class="n">single-line-exclusions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-273-1" name="__codelineno-273-1" href="#__codelineno-273-1"></a><span class="k">[lint.isort]</span>
+<a id="__codelineno-273-2" name="__codelineno-273-2" href="#__codelineno-273-2"></a><span class="n">single-line-exclusions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6506,13 +6528,13 @@ to avoid that the formatter removes the trailing commas.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="126:2"><input checked="checked" id="__tabbed_126_1" name="__tabbed_126" type="radio" /><input id="__tabbed_126_2" name="__tabbed_126" type="radio" /><div class="tabbed-labels"><label for="__tabbed_126_1">pyproject.toml</label><label for="__tabbed_126_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-271-1" name="__codelineno-271-1" href="#__codelineno-271-1"></a><span class="k">[tool.ruff.lint.isort]</span>
-<a id="__codelineno-271-2" name="__codelineno-271-2" href="#__codelineno-271-2"></a><span class="n">split-on-trailing-comma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-274-1" name="__codelineno-274-1" href="#__codelineno-274-1"></a><span class="k">[tool.ruff.lint.isort]</span>
+<a id="__codelineno-274-2" name="__codelineno-274-2" href="#__codelineno-274-2"></a><span class="n">split-on-trailing-comma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-272-1" name="__codelineno-272-1" href="#__codelineno-272-1"></a><span class="k">[lint.isort]</span>
-<a id="__codelineno-272-2" name="__codelineno-272-2" href="#__codelineno-272-2"></a><span class="n">split-on-trailing-comma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-275-1" name="__codelineno-275-1" href="#__codelineno-275-1"></a><span class="k">[lint.isort]</span>
+<a id="__codelineno-275-2" name="__codelineno-275-2" href="#__codelineno-275-2"></a><span class="n">split-on-trailing-comma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 </code></pre></div>
 </div>
 </div>
@@ -6528,13 +6550,13 @@ for <code>order-by-type</code> regardless of casing.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="127:2"><input checked="checked" id="__tabbed_127_1" name="__tabbed_127" type="radio" /><input id="__tabbed_127_2" name="__tabbed_127" type="radio" /><div class="tabbed-labels"><label for="__tabbed_127_1">pyproject.toml</label><label for="__tabbed_127_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-273-1" name="__codelineno-273-1" href="#__codelineno-273-1"></a><span class="k">[tool.ruff.lint.isort]</span>
-<a id="__codelineno-273-2" name="__codelineno-273-2" href="#__codelineno-273-2"></a><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VAR&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-276-1" name="__codelineno-276-1" href="#__codelineno-276-1"></a><span class="k">[tool.ruff.lint.isort]</span>
+<a id="__codelineno-276-2" name="__codelineno-276-2" href="#__codelineno-276-2"></a><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VAR&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-274-1" name="__codelineno-274-1" href="#__codelineno-274-1"></a><span class="k">[lint.isort]</span>
-<a id="__codelineno-274-2" name="__codelineno-274-2" href="#__codelineno-274-2"></a><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VAR&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-277-1" name="__codelineno-277-1" href="#__codelineno-277-1"></a><span class="k">[lint.isort]</span>
+<a id="__codelineno-277-2" name="__codelineno-277-2" href="#__codelineno-277-2"></a><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VAR&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6550,15 +6572,15 @@ for <code>order-by-type</code> regardless of casing.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="128:2"><input checked="checked" id="__tabbed_128_1" name="__tabbed_128" type="radio" /><input id="__tabbed_128_2" name="__tabbed_128" type="radio" /><div class="tabbed-labels"><label for="__tabbed_128_1">pyproject.toml</label><label for="__tabbed_128_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-275-1" name="__codelineno-275-1" href="#__codelineno-275-1"></a><span class="k">[tool.ruff.lint.mccabe]</span>
-<a id="__codelineno-275-2" name="__codelineno-275-2" href="#__codelineno-275-2"></a><span class="c1"># Flag errors (`C901`) whenever the complexity level exceeds 5.</span>
-<a id="__codelineno-275-3" name="__codelineno-275-3" href="#__codelineno-275-3"></a><span class="n">max-complexity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-278-1" name="__codelineno-278-1" href="#__codelineno-278-1"></a><span class="k">[tool.ruff.lint.mccabe]</span>
+<a id="__codelineno-278-2" name="__codelineno-278-2" href="#__codelineno-278-2"></a><span class="c1"># Flag errors (`C901`) whenever the complexity level exceeds 5.</span>
+<a id="__codelineno-278-3" name="__codelineno-278-3" href="#__codelineno-278-3"></a><span class="n">max-complexity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-276-1" name="__codelineno-276-1" href="#__codelineno-276-1"></a><span class="k">[lint.mccabe]</span>
-<a id="__codelineno-276-2" name="__codelineno-276-2" href="#__codelineno-276-2"></a><span class="c1"># Flag errors (`C901`) whenever the complexity level exceeds 5.</span>
-<a id="__codelineno-276-3" name="__codelineno-276-3" href="#__codelineno-276-3"></a><span class="n">max-complexity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-279-1" name="__codelineno-279-1" href="#__codelineno-279-1"></a><span class="k">[lint.mccabe]</span>
+<a id="__codelineno-279-2" name="__codelineno-279-2" href="#__codelineno-279-2"></a><span class="c1"># Flag errors (`C901`) whenever the complexity level exceeds 5.</span>
+<a id="__codelineno-279-3" name="__codelineno-279-3" href="#__codelineno-279-3"></a><span class="n">max-complexity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 </div>
@@ -6581,27 +6603,27 @@ the last segment in case the decorator itself consists of a dotted name.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="129:2"><input checked="checked" id="__tabbed_129_1" name="__tabbed_129" type="radio" /><input id="__tabbed_129_2" name="__tabbed_129" type="radio" /><div class="tabbed-labels"><label for="__tabbed_129_1">pyproject.toml</label><label for="__tabbed_129_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-277-1" name="__codelineno-277-1" href="#__codelineno-277-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
-<a id="__codelineno-277-2" name="__codelineno-277-2" href="#__codelineno-277-2"></a><span class="n">classmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-277-3" name="__codelineno-277-3" href="#__codelineno-277-3"></a><span class="w">    </span><span class="c1"># Allow Pydantic&#39;s `@validator` decorator to trigger class method treatment.</span>
-<a id="__codelineno-277-4" name="__codelineno-277-4" href="#__codelineno-277-4"></a><span class="w">    </span><span class="s2">&quot;pydantic.validator&quot;</span><span class="p">,</span>
-<a id="__codelineno-277-5" name="__codelineno-277-5" href="#__codelineno-277-5"></a><span class="w">    </span><span class="c1"># Allow SQLAlchemy&#39;s dynamic decorators, like `@field.expression`, to trigger class method treatment.</span>
-<a id="__codelineno-277-6" name="__codelineno-277-6" href="#__codelineno-277-6"></a><span class="w">    </span><span class="s2">&quot;declared_attr&quot;</span><span class="p">,</span>
-<a id="__codelineno-277-7" name="__codelineno-277-7" href="#__codelineno-277-7"></a><span class="w">    </span><span class="s2">&quot;expression&quot;</span><span class="p">,</span>
-<a id="__codelineno-277-8" name="__codelineno-277-8" href="#__codelineno-277-8"></a><span class="w">    </span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span>
-<a id="__codelineno-277-9" name="__codelineno-277-9" href="#__codelineno-277-9"></a><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-280-1" name="__codelineno-280-1" href="#__codelineno-280-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
+<a id="__codelineno-280-2" name="__codelineno-280-2" href="#__codelineno-280-2"></a><span class="n">classmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-280-3" name="__codelineno-280-3" href="#__codelineno-280-3"></a><span class="w">    </span><span class="c1"># Allow Pydantic&#39;s `@validator` decorator to trigger class method treatment.</span>
+<a id="__codelineno-280-4" name="__codelineno-280-4" href="#__codelineno-280-4"></a><span class="w">    </span><span class="s2">&quot;pydantic.validator&quot;</span><span class="p">,</span>
+<a id="__codelineno-280-5" name="__codelineno-280-5" href="#__codelineno-280-5"></a><span class="w">    </span><span class="c1"># Allow SQLAlchemy&#39;s dynamic decorators, like `@field.expression`, to trigger class method treatment.</span>
+<a id="__codelineno-280-6" name="__codelineno-280-6" href="#__codelineno-280-6"></a><span class="w">    </span><span class="s2">&quot;declared_attr&quot;</span><span class="p">,</span>
+<a id="__codelineno-280-7" name="__codelineno-280-7" href="#__codelineno-280-7"></a><span class="w">    </span><span class="s2">&quot;expression&quot;</span><span class="p">,</span>
+<a id="__codelineno-280-8" name="__codelineno-280-8" href="#__codelineno-280-8"></a><span class="w">    </span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span>
+<a id="__codelineno-280-9" name="__codelineno-280-9" href="#__codelineno-280-9"></a><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-278-1" name="__codelineno-278-1" href="#__codelineno-278-1"></a><span class="k">[lint.pep8-naming]</span>
-<a id="__codelineno-278-2" name="__codelineno-278-2" href="#__codelineno-278-2"></a><span class="n">classmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-278-3" name="__codelineno-278-3" href="#__codelineno-278-3"></a><span class="w">    </span><span class="c1"># Allow Pydantic&#39;s `@validator` decorator to trigger class method treatment.</span>
-<a id="__codelineno-278-4" name="__codelineno-278-4" href="#__codelineno-278-4"></a><span class="w">    </span><span class="s2">&quot;pydantic.validator&quot;</span><span class="p">,</span>
-<a id="__codelineno-278-5" name="__codelineno-278-5" href="#__codelineno-278-5"></a><span class="w">    </span><span class="c1"># Allow SQLAlchemy&#39;s dynamic decorators, like `@field.expression`, to trigger class method treatment.</span>
-<a id="__codelineno-278-6" name="__codelineno-278-6" href="#__codelineno-278-6"></a><span class="w">    </span><span class="s2">&quot;declared_attr&quot;</span><span class="p">,</span>
-<a id="__codelineno-278-7" name="__codelineno-278-7" href="#__codelineno-278-7"></a><span class="w">    </span><span class="s2">&quot;expression&quot;</span><span class="p">,</span>
-<a id="__codelineno-278-8" name="__codelineno-278-8" href="#__codelineno-278-8"></a><span class="w">    </span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span>
-<a id="__codelineno-278-9" name="__codelineno-278-9" href="#__codelineno-278-9"></a><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-281-1" name="__codelineno-281-1" href="#__codelineno-281-1"></a><span class="k">[lint.pep8-naming]</span>
+<a id="__codelineno-281-2" name="__codelineno-281-2" href="#__codelineno-281-2"></a><span class="n">classmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-281-3" name="__codelineno-281-3" href="#__codelineno-281-3"></a><span class="w">    </span><span class="c1"># Allow Pydantic&#39;s `@validator` decorator to trigger class method treatment.</span>
+<a id="__codelineno-281-4" name="__codelineno-281-4" href="#__codelineno-281-4"></a><span class="w">    </span><span class="s2">&quot;pydantic.validator&quot;</span><span class="p">,</span>
+<a id="__codelineno-281-5" name="__codelineno-281-5" href="#__codelineno-281-5"></a><span class="w">    </span><span class="c1"># Allow SQLAlchemy&#39;s dynamic decorators, like `@field.expression`, to trigger class method treatment.</span>
+<a id="__codelineno-281-6" name="__codelineno-281-6" href="#__codelineno-281-6"></a><span class="w">    </span><span class="s2">&quot;declared_attr&quot;</span><span class="p">,</span>
+<a id="__codelineno-281-7" name="__codelineno-281-7" href="#__codelineno-281-7"></a><span class="w">    </span><span class="s2">&quot;expression&quot;</span><span class="p">,</span>
+<a id="__codelineno-281-8" name="__codelineno-281-8" href="#__codelineno-281-8"></a><span class="w">    </span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span>
+<a id="__codelineno-281-9" name="__codelineno-281-9" href="#__codelineno-281-9"></a><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6620,13 +6642,13 @@ For more information on the glob syntax, refer to the <a href="https://docs.rs/g
 <div class="tabbed-set tabbed-alternate" data-tabs="130:2"><input checked="checked" id="__tabbed_130_1" name="__tabbed_130" type="radio" /><input id="__tabbed_130_2" name="__tabbed_130" type="radio" /><div class="tabbed-labels"><label for="__tabbed_130_1">pyproject.toml</label><label for="__tabbed_130_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-279-1" name="__codelineno-279-1" href="#__codelineno-279-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
-<a id="__codelineno-279-2" name="__codelineno-279-2" href="#__codelineno-279-2"></a><span class="n">extend-ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-282-1" name="__codelineno-282-1" href="#__codelineno-282-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
+<a id="__codelineno-282-2" name="__codelineno-282-2" href="#__codelineno-282-2"></a><span class="n">extend-ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-280-1" name="__codelineno-280-1" href="#__codelineno-280-1"></a><span class="k">[lint.pep8-naming]</span>
-<a id="__codelineno-280-2" name="__codelineno-280-2" href="#__codelineno-280-2"></a><span class="n">extend-ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-283-1" name="__codelineno-283-1" href="#__codelineno-283-1"></a><span class="k">[lint.pep8-naming]</span>
+<a id="__codelineno-283-2" name="__codelineno-283-2" href="#__codelineno-283-2"></a><span class="n">extend-ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6644,13 +6666,13 @@ For more information on the glob syntax, refer to the <a href="https://docs.rs/g
 <div class="tabbed-set tabbed-alternate" data-tabs="131:2"><input checked="checked" id="__tabbed_131_1" name="__tabbed_131" type="radio" /><input id="__tabbed_131_2" name="__tabbed_131" type="radio" /><div class="tabbed-labels"><label for="__tabbed_131_1">pyproject.toml</label><label for="__tabbed_131_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-281-1" name="__codelineno-281-1" href="#__codelineno-281-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
-<a id="__codelineno-281-2" name="__codelineno-281-2" href="#__codelineno-281-2"></a><span class="n">ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-284-1" name="__codelineno-284-1" href="#__codelineno-284-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
+<a id="__codelineno-284-2" name="__codelineno-284-2" href="#__codelineno-284-2"></a><span class="n">ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-282-1" name="__codelineno-282-1" href="#__codelineno-282-1"></a><span class="k">[lint.pep8-naming]</span>
-<a id="__codelineno-282-2" name="__codelineno-282-2" href="#__codelineno-282-2"></a><span class="n">ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-285-1" name="__codelineno-285-1" href="#__codelineno-285-1"></a><span class="k">[lint.pep8-naming]</span>
+<a id="__codelineno-285-2" name="__codelineno-285-2" href="#__codelineno-285-2"></a><span class="n">ignore-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;callMethod&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6672,15 +6694,15 @@ the last segment in case the decorator itself consists of a dotted name.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="132:2"><input checked="checked" id="__tabbed_132_1" name="__tabbed_132" type="radio" /><input id="__tabbed_132_2" name="__tabbed_132" type="radio" /><div class="tabbed-labels"><label for="__tabbed_132_1">pyproject.toml</label><label for="__tabbed_132_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-283-1" name="__codelineno-283-1" href="#__codelineno-283-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
-<a id="__codelineno-283-2" name="__codelineno-283-2" href="#__codelineno-283-2"></a><span class="c1"># Allow Belay&#39;s `@Device.teardown` decorator to trigger static method treatment.</span>
-<a id="__codelineno-283-3" name="__codelineno-283-3" href="#__codelineno-283-3"></a><span class="n">staticmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;belay.Device.teardown&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-286-1" name="__codelineno-286-1" href="#__codelineno-286-1"></a><span class="k">[tool.ruff.lint.pep8-naming]</span>
+<a id="__codelineno-286-2" name="__codelineno-286-2" href="#__codelineno-286-2"></a><span class="c1"># Allow Belay&#39;s `@Device.teardown` decorator to trigger static method treatment.</span>
+<a id="__codelineno-286-3" name="__codelineno-286-3" href="#__codelineno-286-3"></a><span class="n">staticmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;belay.Device.teardown&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-284-1" name="__codelineno-284-1" href="#__codelineno-284-1"></a><span class="k">[lint.pep8-naming]</span>
-<a id="__codelineno-284-2" name="__codelineno-284-2" href="#__codelineno-284-2"></a><span class="c1"># Allow Belay&#39;s `@Device.teardown` decorator to trigger static method treatment.</span>
-<a id="__codelineno-284-3" name="__codelineno-284-3" href="#__codelineno-284-3"></a><span class="n">staticmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;belay.Device.teardown&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-287-1" name="__codelineno-287-1" href="#__codelineno-287-1"></a><span class="k">[lint.pep8-naming]</span>
+<a id="__codelineno-287-2" name="__codelineno-287-2" href="#__codelineno-287-2"></a><span class="c1"># Allow Belay&#39;s `@Device.teardown` decorator to trigger static method treatment.</span>
+<a id="__codelineno-287-3" name="__codelineno-287-3" href="#__codelineno-287-3"></a><span class="n">staticmethod-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;belay.Device.teardown&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6698,13 +6720,13 @@ and "XXX"]).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="133:2"><input checked="checked" id="__tabbed_133_1" name="__tabbed_133" type="radio" /><input id="__tabbed_133_2" name="__tabbed_133" type="radio" /><div class="tabbed-labels"><label for="__tabbed_133_1">pyproject.toml</label><label for="__tabbed_133_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-285-1" name="__codelineno-285-1" href="#__codelineno-285-1"></a><span class="k">[tool.ruff.lint.pycodestyle]</span>
-<a id="__codelineno-285-2" name="__codelineno-285-2" href="#__codelineno-285-2"></a><span class="n">ignore-overlong-task-comments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-288-1" name="__codelineno-288-1" href="#__codelineno-288-1"></a><span class="k">[tool.ruff.lint.pycodestyle]</span>
+<a id="__codelineno-288-2" name="__codelineno-288-2" href="#__codelineno-288-2"></a><span class="n">ignore-overlong-task-comments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-286-1" name="__codelineno-286-1" href="#__codelineno-286-1"></a><span class="k">[lint.pycodestyle]</span>
-<a id="__codelineno-286-2" name="__codelineno-286-2" href="#__codelineno-286-2"></a><span class="n">ignore-overlong-task-comments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-289-1" name="__codelineno-289-1" href="#__codelineno-289-1"></a><span class="k">[lint.pycodestyle]</span>
+<a id="__codelineno-289-2" name="__codelineno-289-2" href="#__codelineno-289-2"></a><span class="n">ignore-overlong-task-comments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 </div>
 </div>
@@ -6724,13 +6746,13 @@ For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</
 <div class="tabbed-set tabbed-alternate" data-tabs="134:2"><input checked="checked" id="__tabbed_134_1" name="__tabbed_134" type="radio" /><input id="__tabbed_134_2" name="__tabbed_134" type="radio" /><div class="tabbed-labels"><label for="__tabbed_134_1">pyproject.toml</label><label for="__tabbed_134_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-287-1" name="__codelineno-287-1" href="#__codelineno-287-1"></a><span class="k">[tool.ruff.lint.pycodestyle]</span>
-<a id="__codelineno-287-2" name="__codelineno-287-2" href="#__codelineno-287-2"></a><span class="n">max-doc-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-290-1" name="__codelineno-290-1" href="#__codelineno-290-1"></a><span class="k">[tool.ruff.lint.pycodestyle]</span>
+<a id="__codelineno-290-2" name="__codelineno-290-2" href="#__codelineno-290-2"></a><span class="n">max-doc-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-288-1" name="__codelineno-288-1" href="#__codelineno-288-1"></a><span class="k">[lint.pycodestyle]</span>
-<a id="__codelineno-288-2" name="__codelineno-288-2" href="#__codelineno-288-2"></a><span class="n">max-doc-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-291-1" name="__codelineno-291-1" href="#__codelineno-291-1"></a><span class="k">[lint.pycodestyle]</span>
+<a id="__codelineno-291-2" name="__codelineno-291-2" href="#__codelineno-291-2"></a><span class="n">max-doc-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
 </code></pre></div>
 </div>
 </div>
@@ -6742,10 +6764,10 @@ For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</
 this is set to the value of the <a href="#line-length"><code>line-length</code></a> option.</p>
 <p>Use this option when you want to detect extra-long lines that the formatter can't automatically split by setting
 <code>pycodestyle.line-length</code> to a value larger than <a href="#line-length"><code>line-length</code></a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-289-1" name="__codelineno-289-1" href="#__codelineno-289-1"></a><span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span><span class="w"> </span><span class="c1"># The formatter wraps lines at a length of 88</span>
-<a id="__codelineno-289-2" name="__codelineno-289-2" href="#__codelineno-289-2"></a>
-<a id="__codelineno-289-3" name="__codelineno-289-3" href="#__codelineno-289-3"></a><span class="k">[pycodestyle]</span>
-<a id="__codelineno-289-4" name="__codelineno-289-4" href="#__codelineno-289-4"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="c1"># E501 reports lines that exceed the length of 100.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-292-1" name="__codelineno-292-1" href="#__codelineno-292-1"></a><span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span><span class="w"> </span><span class="c1"># The formatter wraps lines at a length of 88</span>
+<a id="__codelineno-292-2" name="__codelineno-292-2" href="#__codelineno-292-2"></a>
+<a id="__codelineno-292-3" name="__codelineno-292-3" href="#__codelineno-292-3"></a><span class="k">[pycodestyle]</span>
+<a id="__codelineno-292-4" name="__codelineno-292-4" href="#__codelineno-292-4"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="c1"># E501 reports lines that exceed the length of 100.</span>
 </code></pre></div>
 <p>The length is determined by the number of characters per line, except for lines containing East Asian characters or emojis.
 For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</a> of each character is added up to determine the length.</p>
@@ -6756,13 +6778,13 @@ For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</
 <div class="tabbed-set tabbed-alternate" data-tabs="135:2"><input checked="checked" id="__tabbed_135_1" name="__tabbed_135" type="radio" /><input id="__tabbed_135_2" name="__tabbed_135" type="radio" /><div class="tabbed-labels"><label for="__tabbed_135_1">pyproject.toml</label><label for="__tabbed_135_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-290-1" name="__codelineno-290-1" href="#__codelineno-290-1"></a><span class="k">[tool.ruff.lint.pycodestyle]</span>
-<a id="__codelineno-290-2" name="__codelineno-290-2" href="#__codelineno-290-2"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-293-1" name="__codelineno-293-1" href="#__codelineno-293-1"></a><span class="k">[tool.ruff.lint.pycodestyle]</span>
+<a id="__codelineno-293-2" name="__codelineno-293-2" href="#__codelineno-293-2"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-291-1" name="__codelineno-291-1" href="#__codelineno-291-1"></a><span class="k">[lint.pycodestyle]</span>
-<a id="__codelineno-291-2" name="__codelineno-291-2" href="#__codelineno-291-2"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-294-1" name="__codelineno-294-1" href="#__codelineno-294-1"></a><span class="k">[lint.pycodestyle]</span>
+<a id="__codelineno-294-2" name="__codelineno-294-2" href="#__codelineno-294-2"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
 </code></pre></div>
 </div>
 </div>
@@ -6779,27 +6801,27 @@ convention and then selectively enable or disable any additional rules
 on top of it.</p>
 <p>For example, to use Google-style conventions but avoid requiring
 documentation for every function parameter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-292-1" name="__codelineno-292-1" href="#__codelineno-292-1"></a><span class="k">[tool.ruff.lint]</span>
-<a id="__codelineno-292-2" name="__codelineno-292-2" href="#__codelineno-292-2"></a><span class="c1"># Enable all `pydocstyle` rules, limiting to those that adhere to the</span>
-<a id="__codelineno-292-3" name="__codelineno-292-3" href="#__codelineno-292-3"></a><span class="c1"># Google convention via `convention = &quot;google&quot;`, below.</span>
-<a id="__codelineno-292-4" name="__codelineno-292-4" href="#__codelineno-292-4"></a><span class="n">select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">]</span>
-<a id="__codelineno-292-5" name="__codelineno-292-5" href="#__codelineno-292-5"></a>
-<a id="__codelineno-292-6" name="__codelineno-292-6" href="#__codelineno-292-6"></a><span class="c1"># On top of the Google convention, disable `D417`, which requires</span>
-<a id="__codelineno-292-7" name="__codelineno-292-7" href="#__codelineno-292-7"></a><span class="c1"># documentation for every function parameter.</span>
-<a id="__codelineno-292-8" name="__codelineno-292-8" href="#__codelineno-292-8"></a><span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;D417&quot;</span><span class="p">]</span>
-<a id="__codelineno-292-9" name="__codelineno-292-9" href="#__codelineno-292-9"></a>
-<a id="__codelineno-292-10" name="__codelineno-292-10" href="#__codelineno-292-10"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
-<a id="__codelineno-292-11" name="__codelineno-292-11" href="#__codelineno-292-11"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-295-1" name="__codelineno-295-1" href="#__codelineno-295-1"></a><span class="k">[tool.ruff.lint]</span>
+<a id="__codelineno-295-2" name="__codelineno-295-2" href="#__codelineno-295-2"></a><span class="c1"># Enable all `pydocstyle` rules, limiting to those that adhere to the</span>
+<a id="__codelineno-295-3" name="__codelineno-295-3" href="#__codelineno-295-3"></a><span class="c1"># Google convention via `convention = &quot;google&quot;`, below.</span>
+<a id="__codelineno-295-4" name="__codelineno-295-4" href="#__codelineno-295-4"></a><span class="n">select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">]</span>
+<a id="__codelineno-295-5" name="__codelineno-295-5" href="#__codelineno-295-5"></a>
+<a id="__codelineno-295-6" name="__codelineno-295-6" href="#__codelineno-295-6"></a><span class="c1"># On top of the Google convention, disable `D417`, which requires</span>
+<a id="__codelineno-295-7" name="__codelineno-295-7" href="#__codelineno-295-7"></a><span class="c1"># documentation for every function parameter.</span>
+<a id="__codelineno-295-8" name="__codelineno-295-8" href="#__codelineno-295-8"></a><span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;D417&quot;</span><span class="p">]</span>
+<a id="__codelineno-295-9" name="__codelineno-295-9" href="#__codelineno-295-9"></a>
+<a id="__codelineno-295-10" name="__codelineno-295-10" href="#__codelineno-295-10"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
+<a id="__codelineno-295-11" name="__codelineno-295-11" href="#__codelineno-295-11"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
 </code></pre></div>
 <p>To enable an additional rule that's excluded from the convention,
 select the desired rule via its fully qualified rule code (e.g.,
 <code>D400</code> instead of <code>D4</code> or <code>D40</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-293-1" name="__codelineno-293-1" href="#__codelineno-293-1"></a><span class="k">[tool.ruff.lint]</span>
-<a id="__codelineno-293-2" name="__codelineno-293-2" href="#__codelineno-293-2"></a><span class="c1"># Enable D400 on top of the Google convention.</span>
-<a id="__codelineno-293-3" name="__codelineno-293-3" href="#__codelineno-293-3"></a><span class="n">extend-select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;D400&quot;</span><span class="p">]</span>
-<a id="__codelineno-293-4" name="__codelineno-293-4" href="#__codelineno-293-4"></a>
-<a id="__codelineno-293-5" name="__codelineno-293-5" href="#__codelineno-293-5"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
-<a id="__codelineno-293-6" name="__codelineno-293-6" href="#__codelineno-293-6"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-296-1" name="__codelineno-296-1" href="#__codelineno-296-1"></a><span class="k">[tool.ruff.lint]</span>
+<a id="__codelineno-296-2" name="__codelineno-296-2" href="#__codelineno-296-2"></a><span class="c1"># Enable D400 on top of the Google convention.</span>
+<a id="__codelineno-296-3" name="__codelineno-296-3" href="#__codelineno-296-3"></a><span class="n">extend-select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;D400&quot;</span><span class="p">]</span>
+<a id="__codelineno-296-4" name="__codelineno-296-4" href="#__codelineno-296-4"></a>
+<a id="__codelineno-296-5" name="__codelineno-296-5" href="#__codelineno-296-5"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
+<a id="__codelineno-296-6" name="__codelineno-296-6" href="#__codelineno-296-6"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
 </code></pre></div>
 <p><strong>Default value</strong>: <code>null</code></p>
 <p><strong>Type</strong>: <code>"google" | "numpy" | "pep257"</code></p>
@@ -6807,15 +6829,15 @@ select the desired rule via its fully qualified rule code (e.g.,
 <div class="tabbed-set tabbed-alternate" data-tabs="136:2"><input checked="checked" id="__tabbed_136_1" name="__tabbed_136" type="radio" /><input id="__tabbed_136_2" name="__tabbed_136" type="radio" /><div class="tabbed-labels"><label for="__tabbed_136_1">pyproject.toml</label><label for="__tabbed_136_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-294-1" name="__codelineno-294-1" href="#__codelineno-294-1"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
-<a id="__codelineno-294-2" name="__codelineno-294-2" href="#__codelineno-294-2"></a><span class="c1"># Use Google-style docstrings.</span>
-<a id="__codelineno-294-3" name="__codelineno-294-3" href="#__codelineno-294-3"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-297-1" name="__codelineno-297-1" href="#__codelineno-297-1"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
+<a id="__codelineno-297-2" name="__codelineno-297-2" href="#__codelineno-297-2"></a><span class="c1"># Use Google-style docstrings.</span>
+<a id="__codelineno-297-3" name="__codelineno-297-3" href="#__codelineno-297-3"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-295-1" name="__codelineno-295-1" href="#__codelineno-295-1"></a><span class="k">[lint.pydocstyle]</span>
-<a id="__codelineno-295-2" name="__codelineno-295-2" href="#__codelineno-295-2"></a><span class="c1"># Use Google-style docstrings.</span>
-<a id="__codelineno-295-3" name="__codelineno-295-3" href="#__codelineno-295-3"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-298-1" name="__codelineno-298-1" href="#__codelineno-298-1"></a><span class="k">[lint.pydocstyle]</span>
+<a id="__codelineno-298-2" name="__codelineno-298-2" href="#__codelineno-298-2"></a><span class="c1"># Use Google-style docstrings.</span>
+<a id="__codelineno-298-3" name="__codelineno-298-3" href="#__codelineno-298-3"></a><span class="n">convention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;google&quot;</span>
 </code></pre></div>
 </div>
 </div>
@@ -6831,13 +6853,13 @@ specified fully-qualified decorators.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="137:2"><input checked="checked" id="__tabbed_137_1" name="__tabbed_137" type="radio" /><input id="__tabbed_137_2" name="__tabbed_137" type="radio" /><div class="tabbed-labels"><label for="__tabbed_137_1">pyproject.toml</label><label for="__tabbed_137_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-296-1" name="__codelineno-296-1" href="#__codelineno-296-1"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
-<a id="__codelineno-296-2" name="__codelineno-296-2" href="#__codelineno-296-2"></a><span class="n">ignore-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;typing.overload&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-299-1" name="__codelineno-299-1" href="#__codelineno-299-1"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
+<a id="__codelineno-299-2" name="__codelineno-299-2" href="#__codelineno-299-2"></a><span class="n">ignore-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;typing.overload&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-297-1" name="__codelineno-297-1" href="#__codelineno-297-1"></a><span class="k">[lint.pydocstyle]</span>
-<a id="__codelineno-297-2" name="__codelineno-297-2" href="#__codelineno-297-2"></a><span class="n">ignore-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;typing.overload&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-300-1" name="__codelineno-300-1" href="#__codelineno-300-1"></a><span class="k">[lint.pydocstyle]</span>
+<a id="__codelineno-300-2" name="__codelineno-300-2" href="#__codelineno-300-2"></a><span class="n">ignore-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;typing.overload&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6856,13 +6878,13 @@ in this list can use a non-imperative summary line.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="138:2"><input checked="checked" id="__tabbed_138_1" name="__tabbed_138" type="radio" /><input id="__tabbed_138_2" name="__tabbed_138" type="radio" /><div class="tabbed-labels"><label for="__tabbed_138_1">pyproject.toml</label><label for="__tabbed_138_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-298-1" name="__codelineno-298-1" href="#__codelineno-298-1"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
-<a id="__codelineno-298-2" name="__codelineno-298-2" href="#__codelineno-298-2"></a><span class="n">property-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gi.repository.GObject.Property&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-301-1" name="__codelineno-301-1" href="#__codelineno-301-1"></a><span class="k">[tool.ruff.lint.pydocstyle]</span>
+<a id="__codelineno-301-2" name="__codelineno-301-2" href="#__codelineno-301-2"></a><span class="n">property-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gi.repository.GObject.Property&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-299-1" name="__codelineno-299-1" href="#__codelineno-299-1"></a><span class="k">[lint.pydocstyle]</span>
-<a id="__codelineno-299-2" name="__codelineno-299-2" href="#__codelineno-299-2"></a><span class="n">property-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gi.repository.GObject.Property&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-302-1" name="__codelineno-302-1" href="#__codelineno-302-1"></a><span class="k">[lint.pydocstyle]</span>
+<a id="__codelineno-302-2" name="__codelineno-302-2" href="#__codelineno-302-2"></a><span class="n">property-decorators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gi.repository.GObject.Property&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6882,13 +6904,13 @@ rather than <code>ForeignKey</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="139:2"><input checked="checked" id="__tabbed_139_1" name="__tabbed_139" type="radio" /><input id="__tabbed_139_2" name="__tabbed_139" type="radio" /><div class="tabbed-labels"><label for="__tabbed_139_1">pyproject.toml</label><label for="__tabbed_139_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-300-1" name="__codelineno-300-1" href="#__codelineno-300-1"></a><span class="k">[tool.ruff.lint.pyflakes]</span>
-<a id="__codelineno-300-2" name="__codelineno-300-2" href="#__codelineno-300-2"></a><span class="n">extend-generics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django.db.models.ForeignKey&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-303-1" name="__codelineno-303-1" href="#__codelineno-303-1"></a><span class="k">[tool.ruff.lint.pyflakes]</span>
+<a id="__codelineno-303-2" name="__codelineno-303-2" href="#__codelineno-303-2"></a><span class="n">extend-generics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django.db.models.ForeignKey&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-301-1" name="__codelineno-301-1" href="#__codelineno-301-1"></a><span class="k">[lint.pyflakes]</span>
-<a id="__codelineno-301-2" name="__codelineno-301-2" href="#__codelineno-301-2"></a><span class="n">extend-generics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django.db.models.ForeignKey&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-304-1" name="__codelineno-304-1" href="#__codelineno-304-1"></a><span class="k">[lint.pyflakes]</span>
+<a id="__codelineno-304-2" name="__codelineno-304-2" href="#__codelineno-304-2"></a><span class="n">extend-generics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;django.db.models.ForeignKey&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6905,13 +6927,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="140:2"><input checked="checked" id="__tabbed_140_1" name="__tabbed_140" type="radio" /><input id="__tabbed_140_2" name="__tabbed_140" type="radio" /><div class="tabbed-labels"><label for="__tabbed_140_1">pyproject.toml</label><label for="__tabbed_140_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-302-1" name="__codelineno-302-1" href="#__codelineno-302-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-302-2" name="__codelineno-302-2" href="#__codelineno-302-2"></a><span class="n">allow-dunder-method-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;__tablename__&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__table_args__&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-305-1" name="__codelineno-305-1" href="#__codelineno-305-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-305-2" name="__codelineno-305-2" href="#__codelineno-305-2"></a><span class="n">allow-dunder-method-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;__tablename__&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__table_args__&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-303-1" name="__codelineno-303-1" href="#__codelineno-303-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-303-2" name="__codelineno-303-2" href="#__codelineno-303-2"></a><span class="n">allow-dunder-method-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;__tablename__&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__table_args__&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-306-1" name="__codelineno-306-1" href="#__codelineno-306-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-306-2" name="__codelineno-306-2" href="#__codelineno-306-2"></a><span class="n">allow-dunder-method-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;__tablename__&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__table_args__&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6926,13 +6948,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="141:2"><input checked="checked" id="__tabbed_141_1" name="__tabbed_141" type="radio" /><input id="__tabbed_141_2" name="__tabbed_141" type="radio" /><div class="tabbed-labels"><label for="__tabbed_141_1">pyproject.toml</label><label for="__tabbed_141_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-304-1" name="__codelineno-304-1" href="#__codelineno-304-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-304-2" name="__codelineno-304-2" href="#__codelineno-304-2"></a><span class="n">allow-magic-value-types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-307-1" name="__codelineno-307-1" href="#__codelineno-307-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-307-2" name="__codelineno-307-2" href="#__codelineno-307-2"></a><span class="n">allow-magic-value-types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-305-1" name="__codelineno-305-1" href="#__codelineno-305-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-305-2" name="__codelineno-305-2" href="#__codelineno-305-2"></a><span class="n">allow-magic-value-types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-308-1" name="__codelineno-308-1" href="#__codelineno-308-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-308-2" name="__codelineno-308-2" href="#__codelineno-308-2"></a><span class="n">allow-magic-value-types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -6948,13 +6970,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="142:2"><input checked="checked" id="__tabbed_142_1" name="__tabbed_142" type="radio" /><input id="__tabbed_142_2" name="__tabbed_142" type="radio" /><div class="tabbed-labels"><label for="__tabbed_142_1">pyproject.toml</label><label for="__tabbed_142_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-306-1" name="__codelineno-306-1" href="#__codelineno-306-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-306-2" name="__codelineno-306-2" href="#__codelineno-306-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-309-1" name="__codelineno-309-1" href="#__codelineno-309-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-309-2" name="__codelineno-309-2" href="#__codelineno-309-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-307-1" name="__codelineno-307-1" href="#__codelineno-307-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-307-2" name="__codelineno-307-2" href="#__codelineno-307-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-310-1" name="__codelineno-310-1" href="#__codelineno-310-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-310-2" name="__codelineno-310-2" href="#__codelineno-310-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 </div>
@@ -6970,13 +6992,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="143:2"><input checked="checked" id="__tabbed_143_1" name="__tabbed_143" type="radio" /><input id="__tabbed_143_2" name="__tabbed_143" type="radio" /><div class="tabbed-labels"><label for="__tabbed_143_1">pyproject.toml</label><label for="__tabbed_143_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-308-1" name="__codelineno-308-1" href="#__codelineno-308-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-308-2" name="__codelineno-308-2" href="#__codelineno-308-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-311-1" name="__codelineno-311-1" href="#__codelineno-311-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-311-2" name="__codelineno-311-2" href="#__codelineno-311-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-309-1" name="__codelineno-309-1" href="#__codelineno-309-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-309-2" name="__codelineno-309-2" href="#__codelineno-309-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-312-1" name="__codelineno-312-1" href="#__codelineno-312-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-312-2" name="__codelineno-312-2" href="#__codelineno-312-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 </div>
@@ -6992,13 +7014,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="144:2"><input checked="checked" id="__tabbed_144_1" name="__tabbed_144" type="radio" /><input id="__tabbed_144_2" name="__tabbed_144" type="radio" /><div class="tabbed-labels"><label for="__tabbed_144_1">pyproject.toml</label><label for="__tabbed_144_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-310-1" name="__codelineno-310-1" href="#__codelineno-310-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-310-2" name="__codelineno-310-2" href="#__codelineno-310-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-313-1" name="__codelineno-313-1" href="#__codelineno-313-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-313-2" name="__codelineno-313-2" href="#__codelineno-313-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-311-1" name="__codelineno-311-1" href="#__codelineno-311-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-311-2" name="__codelineno-311-2" href="#__codelineno-311-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-314-1" name="__codelineno-314-1" href="#__codelineno-314-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-314-2" name="__codelineno-314-2" href="#__codelineno-314-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
 </code></pre></div>
 </div>
 </div>
@@ -7014,13 +7036,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="145:2"><input checked="checked" id="__tabbed_145_1" name="__tabbed_145" type="radio" /><input id="__tabbed_145_2" name="__tabbed_145" type="radio" /><div class="tabbed-labels"><label for="__tabbed_145_1">pyproject.toml</label><label for="__tabbed_145_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-312-1" name="__codelineno-312-1" href="#__codelineno-312-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-312-2" name="__codelineno-312-2" href="#__codelineno-312-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-315-1" name="__codelineno-315-1" href="#__codelineno-315-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-315-2" name="__codelineno-315-2" href="#__codelineno-315-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-313-1" name="__codelineno-313-1" href="#__codelineno-313-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-313-2" name="__codelineno-313-2" href="#__codelineno-313-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-316-1" name="__codelineno-316-1" href="#__codelineno-316-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-316-2" name="__codelineno-316-2" href="#__codelineno-316-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
 </code></pre></div>
 </div>
 </div>
@@ -7036,13 +7058,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="146:2"><input checked="checked" id="__tabbed_146_1" name="__tabbed_146" type="radio" /><input id="__tabbed_146_2" name="__tabbed_146" type="radio" /><div class="tabbed-labels"><label for="__tabbed_146_1">pyproject.toml</label><label for="__tabbed_146_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-314-1" name="__codelineno-314-1" href="#__codelineno-314-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-314-2" name="__codelineno-314-2" href="#__codelineno-314-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-317-1" name="__codelineno-317-1" href="#__codelineno-317-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-317-2" name="__codelineno-317-2" href="#__codelineno-317-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-315-1" name="__codelineno-315-1" href="#__codelineno-315-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-315-2" name="__codelineno-315-2" href="#__codelineno-315-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-318-1" name="__codelineno-318-1" href="#__codelineno-318-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-318-2" name="__codelineno-318-2" href="#__codelineno-318-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
 </div>
 </div>
@@ -7059,13 +7081,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="147:2"><input checked="checked" id="__tabbed_147_1" name="__tabbed_147" type="radio" /><input id="__tabbed_147_2" name="__tabbed_147" type="radio" /><div class="tabbed-labels"><label for="__tabbed_147_1">pyproject.toml</label><label for="__tabbed_147_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-316-1" name="__codelineno-316-1" href="#__codelineno-316-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-316-2" name="__codelineno-316-2" href="#__codelineno-316-2"></a><span class="n">max-positional-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-319-1" name="__codelineno-319-1" href="#__codelineno-319-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-319-2" name="__codelineno-319-2" href="#__codelineno-319-2"></a><span class="n">max-positional-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-317-1" name="__codelineno-317-1" href="#__codelineno-317-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-317-2" name="__codelineno-317-2" href="#__codelineno-317-2"></a><span class="n">max-positional-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-320-1" name="__codelineno-320-1" href="#__codelineno-320-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-320-2" name="__codelineno-320-2" href="#__codelineno-320-2"></a><span class="n">max-positional-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 </code></pre></div>
 </div>
 </div>
@@ -7080,13 +7102,13 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="148:2"><input checked="checked" id="__tabbed_148_1" name="__tabbed_148" type="radio" /><input id="__tabbed_148_2" name="__tabbed_148" type="radio" /><div class="tabbed-labels"><label for="__tabbed_148_1">pyproject.toml</label><label for="__tabbed_148_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-318-1" name="__codelineno-318-1" href="#__codelineno-318-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-318-2" name="__codelineno-318-2" href="#__codelineno-318-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-321-1" name="__codelineno-321-1" href="#__codelineno-321-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-321-2" name="__codelineno-321-2" href="#__codelineno-321-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-319-1" name="__codelineno-319-1" href="#__codelineno-319-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-319-2" name="__codelineno-319-2" href="#__codelineno-319-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-322-1" name="__codelineno-322-1" href="#__codelineno-322-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-322-2" name="__codelineno-322-2" href="#__codelineno-322-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
 </code></pre></div>
 </div>
 </div>
@@ -7102,13 +7124,13 @@ body (see <code>PLR0911</code>)</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="149:2"><input checked="checked" id="__tabbed_149_1" name="__tabbed_149" type="radio" /><input id="__tabbed_149_2" name="__tabbed_149" type="radio" /><div class="tabbed-labels"><label for="__tabbed_149_1">pyproject.toml</label><label for="__tabbed_149_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-320-1" name="__codelineno-320-1" href="#__codelineno-320-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-320-2" name="__codelineno-320-2" href="#__codelineno-320-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-323-1" name="__codelineno-323-1" href="#__codelineno-323-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-323-2" name="__codelineno-323-2" href="#__codelineno-323-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-321-1" name="__codelineno-321-1" href="#__codelineno-321-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-321-2" name="__codelineno-321-2" href="#__codelineno-321-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-324-1" name="__codelineno-324-1" href="#__codelineno-324-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-324-2" name="__codelineno-324-2" href="#__codelineno-324-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
 </code></pre></div>
 </div>
 </div>
@@ -7124,13 +7146,13 @@ body (see <code>PLR0911</code>)</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="150:2"><input checked="checked" id="__tabbed_150_1" name="__tabbed_150" type="radio" /><input id="__tabbed_150_2" name="__tabbed_150" type="radio" /><div class="tabbed-labels"><label for="__tabbed_150_1">pyproject.toml</label><label for="__tabbed_150_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-322-1" name="__codelineno-322-1" href="#__codelineno-322-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-322-2" name="__codelineno-322-2" href="#__codelineno-322-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-325-1" name="__codelineno-325-1" href="#__codelineno-325-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
+<a id="__codelineno-325-2" name="__codelineno-325-2" href="#__codelineno-325-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-323-1" name="__codelineno-323-1" href="#__codelineno-323-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-323-2" name="__codelineno-323-2" href="#__codelineno-323-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-326-1" name="__codelineno-326-1" href="#__codelineno-326-1"></a><span class="k">[lint.pylint]</span>
+<a id="__codelineno-326-2" name="__codelineno-326-2" href="#__codelineno-326-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
 </code></pre></div>
 </div>
 </div>
@@ -7156,12 +7178,12 @@ version.</p>
 presence of <code>from __future__ import annotations</code>, the use of <code>str| int</code>
 prior to Python 3.10 will cause Pydantic to raise a <code>TypeError</code> at
 runtime:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-324-1" name="__codelineno-324-1" href="#__codelineno-324-1"></a><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<a id="__codelineno-324-2" name="__codelineno-324-2" href="#__codelineno-324-2"></a>
-<a id="__codelineno-324-3" name="__codelineno-324-3" href="#__codelineno-324-3"></a><span class="kn">import</span> <span class="nn">pydantic</span>
-<a id="__codelineno-324-4" name="__codelineno-324-4" href="#__codelineno-324-4"></a>
-<a id="__codelineno-324-5" name="__codelineno-324-5" href="#__codelineno-324-5"></a><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-324-6" name="__codelineno-324-6" href="#__codelineno-324-6"></a>   <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-327-1" name="__codelineno-327-1" href="#__codelineno-327-1"></a><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<a id="__codelineno-327-2" name="__codelineno-327-2" href="#__codelineno-327-2"></a>
+<a id="__codelineno-327-3" name="__codelineno-327-3" href="#__codelineno-327-3"></a><span class="kn">import</span> <span class="nn">pydantic</span>
+<a id="__codelineno-327-4" name="__codelineno-327-4" href="#__codelineno-327-4"></a>
+<a id="__codelineno-327-5" name="__codelineno-327-5" href="#__codelineno-327-5"></a><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-327-6" name="__codelineno-327-6" href="#__codelineno-327-6"></a>   <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>
 </code></pre></div>
 <p><strong>Default value</strong>: <code>false</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
@@ -7169,15 +7191,15 @@ runtime:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="151:2"><input checked="checked" id="__tabbed_151_1" name="__tabbed_151" type="radio" /><input id="__tabbed_151_2" name="__tabbed_151" type="radio" /><div class="tabbed-labels"><label for="__tabbed_151_1">pyproject.toml</label><label for="__tabbed_151_2">ruff.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-325-1" name="__codelineno-325-1" href="#__codelineno-325-1"></a><span class="k">[tool.ruff.lint.pyupgrade]</span>
-<a id="__codelineno-325-2" name="__codelineno-325-2" href="#__codelineno-325-2"></a><span class="c1"># Preserve types, even if a file imports `from __future__ import annotations`.</span>
-<a id="__codelineno-325-3" name="__codelineno-325-3" href="#__codelineno-325-3"></a><span class="n">keep-runtime-typing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-328-1" name="__codelineno-328-1" href="#__codelineno-328-1"></a><span class="k">[tool.ruff.lint.pyupgrade]</span>
+<a id="__codelineno-328-2" name="__codelineno-328-2" href="#__codelineno-328-2"></a><span class="c1"># Preserve types, even if a file imports `from __future__ import annotations`.</span>
+<a id="__codelineno-328-3" name="__codelineno-328-3" href="#__codelineno-328-3"></a><span class="n">keep-runtime-typing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-326-1" name="__codelineno-326-1" href="#__codelineno-326-1"></a><span class="k">[lint.pyupgrade]</span>
-<a id="__codelineno-326-2" name="__codelineno-326-2" href="#__codelineno-326-2"></a><span class="c1"># Preserve types, even if a file imports `from __future__ import annotations`.</span>
-<a id="__codelineno-326-3" name="__codelineno-326-3" href="#__codelineno-326-3"></a><span class="n">keep-runtime-typing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-329-1" name="__codelineno-329-1" href="#__codelineno-329-1"></a><span class="k">[lint.pyupgrade]</span>
+<a id="__codelineno-329-2" name="__codelineno-329-2" href="#__codelineno-329-2"></a><span class="c1"># Preserve types, even if a file imports `from __future__ import annotations`.</span>
+<a id="__codelineno-329-3" name="__codelineno-329-3" href="#__codelineno-329-3"></a><span class="n">keep-runtime-typing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 </div>
 </div>
