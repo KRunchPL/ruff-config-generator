@@ -431,13 +431,6 @@ fixable = [
 # ignore, respectively), more specific prefixes override less
 # specific prefixes.
 ignore = []
-# Avoid automatically removing unused imports in __init__.py files. Such
-# imports will still be flagged, but with a dedicated message suggesting
-# that the import is either added to the module's __all__ symbol, or
-# re-exported with a redundant alias (e.g., import os as os).
-# This option is enabled by default, but you can opt-in to removal of imports
-# via an unsafe fix.
-ignore-init-module-imports = true
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.
 # This is useful for ensuring proper diagnostics (e.g., to identify

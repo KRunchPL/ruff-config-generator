@@ -4449,6 +4449,10 @@ specific prefixes.</p>
 <hr />
 <h4 id="lint_ignore-init-module-imports"><a href="#lint_ignore-init-module-imports"><code>ignore-init-module-imports</code></a><a class="headerlink" href="#lint_ignore-init-module-imports" title="Permanent link">#</a></h4>
 <p><span id="ignore-init-module-imports"></span></p>
+<div class="admonition warning">
+<p class="admonition-title">Deprecated</p>
+<p>This option has been deprecated in 0.4.4. <code>ignore-init-module-imports</code> will be removed in a future version because F401 now recommends appropriate fixes for unused imports in <code>__init__.py</code> (currently in preview mode). See documentation for more information and please update your configuration.</p>
+</div>
 <p>Avoid automatically removing unused imports in <code>__init__.py</code> files. Such
 imports will still be flagged, but with a dedicated message suggesting
 that the import is either added to the module's <code>__all__</code> symbol, or
