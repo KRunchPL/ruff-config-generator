@@ -1009,12 +1009,7 @@ max-complexity = 10
 # Expects to receive a list of fully-qualified names (e.g., pydantic.validator,
 # rather than validator) or alternatively a plain name which is then matched against
 # the last segment in case the decorator itself consists of a dotted name.
-classmethod-decorators = [
-    "pydantic.validator",
-    "pydantic.root_validator",
-    "sqlalchemy.orm.declared_attr",
-    "sqlalchemy.ext.declarative.declared_attr",
-]
+classmethod-decorators = []
 # Additional names (or patterns) to ignore when considering pep8-naming violations,
 # in addition to those included in ignore-names
 # Supports glob patterns. For example, to ignore all names starting with
