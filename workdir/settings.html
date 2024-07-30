@@ -399,6 +399,187 @@
   
   
   
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    
+  
+    Editors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Editors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editors/setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editors/features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editors/settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editors/migration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from ruff-lsp
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
     <li class="md-nav__item">
       <a href="../configuration/" class="md-nav__link">
         
@@ -3247,7 +3428,7 @@ in the current configuration file.</p>
 <hr />
 <h4 id="extend-exclude"><a href="#extend-exclude"><code>extend-exclude</code></a><a class="headerlink" href="#extend-exclude" title="Permanent link">#</a></h4>
 <p>A list of file patterns to omit from formatting and linting, in addition to those
-specified by <code>exclude</code>.</p>
+specified by <a href="#exclude"><code>exclude</code></a>.</p>
 <p>Exclusions are based on globs, and can be either:</p>
 <ul>
 <li>Single-path patterns, like <code>.mypy_cache</code> (to exclude any directory
@@ -3280,7 +3461,7 @@ specified by <code>exclude</code>.</p>
 <hr />
 <h4 id="extend-include"><a href="#extend-include"><code>extend-include</code></a><a class="headerlink" href="#extend-include" title="Permanent link">#</a></h4>
 <p>A list of file patterns to include when linting, in addition to those
-specified by <code>include</code>.</p>
+specified by <a href="#include"><code>include</code></a>.</p>
 <p>Inclusion are based on globs, and should be single-path patterns, like
 <code>*.pyw</code>, to include any file with the <code>.pyw</code> extension.</p>
 <p>For more information on the glob syntax, refer to the <a href="https://docs.rs/globset/latest/globset/#syntax"><code>globset</code> documentation</a>.</p>
@@ -3325,7 +3506,7 @@ Only includes automatic fixes unless <code>--unsafe-fixes</code> is provided.</p
 </div>
 <hr />
 <h4 id="fix-only"><a href="#fix-only"><code>fix-only</code></a><a class="headerlink" href="#fix-only" title="Permanent link">#</a></h4>
-<p>Like <code>fix</code>, but disables reporting on leftover violation. Implies <code>fix</code>.</p>
+<p>Like <a href="#fix"><code>fix</code></a>, but disables reporting on leftover violation. Implies <a href="#fix"><code>fix</code></a>.</p>
 <p><strong>Default value</strong>: <code>false</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -3344,8 +3525,8 @@ Only includes automatic fixes unless <code>--unsafe-fixes</code> is provided.</p
 </div>
 <hr />
 <h4 id="force-exclude"><a href="#force-exclude"><code>force-exclude</code></a><a class="headerlink" href="#force-exclude" title="Permanent link">#</a></h4>
-<p>Whether to enforce <code>exclude</code> and <code>extend-exclude</code> patterns, even for
-paths that are passed to Ruff explicitly. Typically, Ruff will lint
+<p>Whether to enforce <a href="#exclude"><code>exclude</code></a> and <a href="#extend-exclude"><code>extend-exclude</code></a> patterns,
+even for paths that are passed to Ruff explicitly. Typically, Ruff will lint
 any paths passed in directly, even if they would typically be
 excluded. Setting <code>force-exclude = true</code> will cause Ruff to
 respect these exclusions unequivocally.</p>
@@ -3469,12 +3650,12 @@ as if they contained an <code>__init__.py</code> file.</p>
 </div>
 <hr />
 <h4 id="output-format"><a href="#output-format"><code>output-format</code></a><a class="headerlink" href="#output-format" title="Permanent link">#</a></h4>
-<p>The style in which violation messages should be formatted: <code>"full"</code>
-(shows source),<code>"concise"</code> (default), <code>"grouped"</code> (group messages by file), <code>"json"</code>
+<p>The style in which violation messages should be formatted: <code>"full"</code> (default)
+(shows source), <code>"concise"</code>, <code>"grouped"</code> (group messages by file), <code>"json"</code>
 (machine-readable), <code>"junit"</code> (machine-readable XML), <code>"github"</code> (GitHub
 Actions annotations), <code>"gitlab"</code> (GitLab CI code quality report),
 <code>"pylint"</code> (Pylint text format) or <code>"azure"</code> (Azure Pipeline logging commands).</p>
-<p><strong>Default value</strong>: <code>"concise"</code></p>
+<p><strong>Default value</strong>: <code>"full"</code></p>
 <p><strong>Type</strong>: <code>"full" | "concise" | "grouped" | "json" | "junit" | "github" | "gitlab" | "pylint" | "azure"</code></p>
 <p><strong>Example usage</strong>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">pyproject.toml</label><label for="__tabbed_14_2">ruff.toml</label></div>
@@ -3521,7 +3702,7 @@ If the version of Ruff does not meet the requirement, Ruff will exit
 with an error.</p>
 <p>Useful for unifying results across many environments, e.g., with a
 <code>pyproject.toml</code> file.</p>
-<p>Accepts a PEP 440 specifier, like <code>==0.3.1</code> or <code>&gt;=0.3.1</code>.</p>
+<p>Accepts a <a href="https://peps.python.org/pep-0440/">PEP 440</a> specifier, like <code>==0.3.1</code> or <code>&gt;=0.3.1</code>.</p>
 <p><strong>Default value</strong>: <code>null</code></p>
 <p><strong>Type</strong>: <code>str</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -3680,7 +3861,7 @@ If set to false, the hint will be hidden.</p>
 </div>
 <hr />
 <h3 id="format"><code>format</code><a class="headerlink" href="#format" title="Permanent link">#</a></h3>
-<p>Configures the way ruff formats your code.</p>
+<p>Configures the way Ruff formats your code.</p>
 <h4 id="format_docstring-code-format"><a href="#format_docstring-code-format"><code>docstring-code-format</code></a><a class="headerlink" href="#format_docstring-code-format" title="Permanent link">#</a></h4>
 <p><span id="docstring-code-format"></span></p>
 <p>Whether to format code snippets in docstrings.</p>
@@ -3784,8 +3965,8 @@ examples in docstrings. When set to a fixed integer, the indent of the
 docstring is not taken into account. That is, this may result in lines
 in the reformatted code example that exceed the globally configured
 line length limit.</p>
-<p>For example, when this is set to <code>20</code> and <code>docstring-code-format</code> is
-enabled, then this code:</p>
+<p>For example, when this is set to <code>20</code> and <a href="#docstring-code-format"><code>docstring-code-format</code></a>
+is enabled, then this code:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="sd">    Something about `f`. And an example:</span>
@@ -3876,7 +4057,7 @@ to their defaults) as:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
 <a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span> <span class="c1">#  Spaces indent the `print` statement.</span>
 </code></pre></div>
-<p><code>indent-style = "tab""</code>:</p>
+<p><code>indent-style = "tab"</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
 <a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span> <span class="c1">#  A tab `\t` indents the `print` statement.</span>
 </code></pre></div>
@@ -3970,7 +4151,7 @@ escaping quote characters inside the string:</p>
 <a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a><span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;It&#39;s monday morning&quot;</span>
 </code></pre></div>
 <p>Ruff will change the quotes of the string assigned to <code>a</code> to single quotes when using <code>quote-style = "single"</code>.
-However, ruff uses double quotes for he string assigned to <code>b</code> because using single quotes would require escaping the <code>'</code>,
+However, Ruff uses double quotes for the string assigned to <code>b</code> because using single quotes would require escaping the <code>'</code>,
 which leads to the less readable code: <code>'It\'s monday morning'</code>.</p>
 <p>In addition, Ruff supports the quote style <code>preserve</code> for projects that already use
 a mixture of single and double quotes and can't migrate to the <code>double</code> or <code>single</code> style.
@@ -4001,7 +4182,7 @@ The quote style <code>preserve</code> leaves the quotes of all strings unchanged
 If this option is set to <code>true</code>, the magic trailing comma is ignored.</p>
 <p>For example, Ruff leaves the arguments separate even though
 collapsing the arguments to a single line doesn't exceed the line length if <code>skip-magic-trailing-comma = false</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a> <span class="c1"># The arguments remain on separate lines because of the trailing comma after `b`</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="c1"># The arguments remain on separate lines because of the trailing comma after `b`</span>
 <a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
 <a id="__codelineno-65-3" name="__codelineno-65-3" href="#__codelineno-65-3"></a>    <span class="n">a</span><span class="p">,</span>
 <a id="__codelineno-65-4" name="__codelineno-65-4" href="#__codelineno-65-4"></a>    <span class="n">b</span><span class="p">,</span>
@@ -4031,7 +4212,7 @@ collapsing the arguments to a single line doesn't exceed the line length if <cod
 </div>
 <hr />
 <h3 id="lint"><code>lint</code><a class="headerlink" href="#lint" title="Permanent link">#</a></h3>
-<p>Configures how ruff checks your code.</p>
+<p>Configures how Ruff checks your code.</p>
 <p>Options specified in the <code>lint</code> section take precedence over the deprecated top-level settings.</p>
 <h4 id="lint_allowed-confusables"><a href="#lint_allowed-confusables"><code>allowed-confusables</code></a><a class="headerlink" href="#lint_allowed-confusables" title="Permanent link">#</a></h4>
 <p><span id="allowed-confusables"></span></p>
@@ -4144,7 +4325,7 @@ preview rule will be required to enable the rule.</p>
 <h4 id="lint_extend-fixable"><a href="#lint_extend-fixable"><code>extend-fixable</code></a><a class="headerlink" href="#lint_extend-fixable" title="Permanent link">#</a></h4>
 <p><span id="extend-fixable"></span></p>
 <p>A list of rule codes or prefixes to consider fixable, in addition to those
-specified by <code>fixable</code>.</p>
+specified by <a href="#lint_fixable"><code>fixable</code></a>.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[RuleSelector]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -4169,7 +4350,7 @@ specified by <code>fixable</code>.</p>
 <p><span id="extend-ignore"></span></p>
 <div class="admonition warning">
 <p class="admonition-title">Deprecated</p>
-<p>This option has been deprecated. The <code>extend-ignore</code> option is now interchangeable with <code>ignore</code>. Please update your configuration to use the <code>ignore</code> option instead.</p>
+<p>This option has been deprecated. The <code>extend-ignore</code> option is now interchangeable with <a href="#lint_ignore"><code>ignore</code></a>. Please update your configuration to use the <a href="#lint_ignore"><code>ignore</code></a> option instead.</p>
 </div>
 <p>A list of rule codes or prefixes to ignore, in addition to those
 specified by <code>ignore</code>.</p>
@@ -4196,7 +4377,7 @@ specified by <code>ignore</code>.</p>
 <h4 id="lint_extend-per-file-ignores"><a href="#lint_extend-per-file-ignores"><code>extend-per-file-ignores</code></a><a class="headerlink" href="#lint_extend-per-file-ignores" title="Permanent link">#</a></h4>
 <p><span id="extend-per-file-ignores"></span></p>
 <p>A list of mappings from file pattern to rule codes or prefixes to
-exclude, in addition to any rules excluded by <code>per-file-ignores</code>.</p>
+exclude, in addition to any rules excluded by <a href="#lint_per-file-ignores"><code>per-file-ignores</code></a>.</p>
 <p><strong>Default value</strong>: <code>{}</code></p>
 <p><strong>Type</strong>: <code>dict[str, list[RuleSelector]]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -4244,7 +4425,7 @@ safe.</p>
 <h4 id="lint_extend-select"><a href="#lint_extend-select"><code>extend-select</code></a><a class="headerlink" href="#lint_extend-select" title="Permanent link">#</a></h4>
 <p><span id="extend-select"></span></p>
 <p>A list of rule codes or prefixes to enable, in addition to those
-specified by <code>select</code>.</p>
+specified by <a href="#lint_select"><code>select</code></a>.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[RuleSelector]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -4521,7 +4702,7 @@ specific prefixes.</p>
 <p>A list of task tags to recognize (e.g., "TODO", "FIXME", "XXX").</p>
 <p>Comments starting with these tags will be ignored by commented-out code
 detection (<code>ERA</code>), and skipped by line-length rules (<code>E501</code>) if
-<code>ignore-overlong-task-comments</code> is set to <code>true</code>.</p>
+<a href="#lint_pycodestyle_ignore-overlong-task-comments"><code>ignore-overlong-task-comments</code></a> is set to <code>true</code>.</p>
 <p><strong>Default value</strong>: <code>["TODO", "FIXME", "XXX"]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -4755,7 +4936,7 @@ disallowed for <code>Exception</code> and <code>BaseException</code>.</p>
 <h4 id="lint_flake8-bandit_hardcoded-tmp-directory-extend"><a href="#lint_flake8-bandit_hardcoded-tmp-directory-extend"><code>hardcoded-tmp-directory-extend</code></a><a class="headerlink" href="#lint_flake8-bandit_hardcoded-tmp-directory-extend" title="Permanent link">#</a></h4>
 <p><span id="hardcoded-tmp-directory-extend"></span></p>
 <p>A list of directories to consider temporary, in addition to those
-specified by <code>hardcoded-tmp-directory</code>.</p>
+specified by <a href="#lint_flake8-bandit_hardcoded-tmp-directory"><code>hardcoded-tmp-directory</code></a>.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -4974,7 +5155,7 @@ the following:</p>
 <h4 id="lint_flake8-gettext_extend-function-names"><a href="#lint_flake8-gettext_extend-function-names"><code>extend-function-names</code></a><a class="headerlink" href="#lint_flake8-gettext_extend-function-names" title="Permanent link">#</a></h4>
 <p><span id="extend-function-names"></span></p>
 <p>Additional function names to consider as internationalization calls, in addition to those
-included in <code>function-names</code>.</p>
+included in <a href="#lint_flake8-gettext_function-names"><code>function-names</code></a>.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5047,7 +5228,7 @@ as violations.</p>
 <h4 id="lint_flake8-import-conventions_aliases"><a href="#lint_flake8-import-conventions_aliases"><code>aliases</code></a><a class="headerlink" href="#lint_flake8-import-conventions_aliases" title="Permanent link">#</a></h4>
 <p><span id="aliases"></span></p>
 <p>The conventional aliases for imports. These aliases can be extended by
-the <code>extend-aliases</code> option.</p>
+the <a href="#lint_flake8-import-conventions_extend-aliases"><code>extend-aliases</code></a> option.</p>
 <p><strong>Default value</strong>: <code>{"altair": "alt", "matplotlib": "mpl", "matplotlib.pyplot": "plt", "numpy": "np", "pandas": "pd", "seaborn": "sns", "tensorflow": "tf", "tkinter":  "tk", "holoviews": "hv", "panel": "pn", "plotly.express": "px", "polars": "pl", "pyarrow": "pa"}</code></p>
 <p><strong>Type</strong>: <code>dict[str, str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5130,7 +5311,7 @@ would be disallowed, while <code>import pandas</code> would be allowed.</p>
 <h4 id="lint_flake8-import-conventions_extend-aliases"><a href="#lint_flake8-import-conventions_extend-aliases"><code>extend-aliases</code></a><a class="headerlink" href="#lint_flake8-import-conventions_extend-aliases" title="Permanent link">#</a></h4>
 <p><span id="extend-aliases"></span></p>
 <p>A mapping from module to conventional import alias. These aliases will
-be added to the <code>aliases</code> mapping.</p>
+be added to the <a href="#lint_flake8-import-conventions_aliases"><code>aliases</code></a> mapping.</p>
 <p><strong>Default value</strong>: <code>{}</code></p>
 <p><strong>Type</strong>: <code>dict[str, str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5138,13 +5319,13 @@ be added to the <code>aliases</code> mapping.</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a><span class="k">[tool.ruff.lint.flake8-import-conventions.extend-aliases]</span>
-<a id="__codelineno-156-2" name="__codelineno-156-2" href="#__codelineno-156-2"></a><span class="c1"># Declare a custom alias for the `matplotlib` module.</span>
+<a id="__codelineno-156-2" name="__codelineno-156-2" href="#__codelineno-156-2"></a><span class="c1"># Declare a custom alias for the `dask` module.</span>
 <a id="__codelineno-156-3" name="__codelineno-156-3" href="#__codelineno-156-3"></a><span class="s2">&quot;dask.dataframe&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dd&quot;</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-157-1" name="__codelineno-157-1" href="#__codelineno-157-1"></a><span class="k">[lint.flake8-import-conventions.extend-aliases]</span>
-<a id="__codelineno-157-2" name="__codelineno-157-2" href="#__codelineno-157-2"></a><span class="c1"># Declare a custom alias for the `matplotlib` module.</span>
+<a id="__codelineno-157-2" name="__codelineno-157-2" href="#__codelineno-157-2"></a><span class="c1"># Declare a custom alias for the `dask` module.</span>
 <a id="__codelineno-157-3" name="__codelineno-157-3" href="#__codelineno-157-3"></a><span class="s2">&quot;dask.dataframe&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dd&quot;</span>
 </code></pre></div>
 </div>
@@ -5159,6 +5340,8 @@ should have parentheses. If the option is set to <code>true</code> (the
 default), <code>@pytest.fixture()</code> is valid and <code>@pytest.fixture</code> is
 invalid. If set to <code>false</code>, <code>@pytest.fixture</code> is valid and
 <code>@pytest.fixture()</code> is invalid.</p>
+<p>If <a href="https://docs.astral.sh/ruff/preview/">preview</a> is enabled, defaults to
+<code>false</code>.</p>
 <p><strong>Default value</strong>: <code>true</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5182,8 +5365,10 @@ invalid. If set to <code>false</code>, <code>@pytest.fixture</code> is valid and
 <p>Boolean flag specifying whether <code>@pytest.mark.foo()</code> without parameters
 should have parentheses. If the option is set to <code>true</code> (the
 default), <code>@pytest.mark.foo()</code> is valid and <code>@pytest.mark.foo</code> is
-invalid. If set to <code>false</code>, <code>@pytest.fixture</code> is valid and
+invalid. If set to <code>false</code>, <code>@pytest.mark.foo</code> is valid and
 <code>@pytest.mark.foo()</code> is invalid.</p>
+<p>If <a href="https://docs.astral.sh/ruff/preview/">preview</a> is enabled, defaults to
+<code>false</code>.</p>
 <p><strong>Default value</strong>: <code>true</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5208,10 +5393,10 @@ invalid. If set to <code>false</code>, <code>@pytest.fixture</code> is valid and
 The following values are supported:</p>
 <ul>
 <li><code>csv</code> — a comma-separated list, e.g.
-  <code>@pytest.mark.parametrize('name1,name2', ...)</code></li>
+  <code>@pytest.mark.parametrize("name1,name2", ...)</code></li>
 <li><code>tuple</code> (default) — e.g.
-  <code>@pytest.mark.parametrize(('name1', 'name2'), ...)</code></li>
-<li><code>list</code> — e.g. <code>@pytest.mark.parametrize(['name1', 'name2'], ...)</code></li>
+  <code>@pytest.mark.parametrize(("name1", "name2"), ...)</code></li>
+<li><code>list</code> — e.g. <code>@pytest.mark.parametrize(["name1", "name2"], ...)</code></li>
 </ul>
 <p><strong>Default value</strong>: <code>tuple</code></p>
 <p><strong>Type</strong>: <code>"csv" | "tuple" | "list"</code></p>
@@ -5237,9 +5422,9 @@ The following values are supported:</p>
 case of multiple parameters. The following values are supported:</p>
 <ul>
 <li><code>tuple</code> (default) — e.g.
-  <code>@pytest.mark.parametrize(('name1', 'name2'), [(1, 2), (3, 4)])</code></li>
+  <code>@pytest.mark.parametrize(("name1", "name2"), [(1, 2), (3, 4)])</code></li>
 <li><code>list</code> — e.g.
-  <code>@pytest.mark.parametrize(('name1', 'name2'), [[1, 2], [3, 4]])</code></li>
+  <code>@pytest.mark.parametrize(("name1", "name2"), [[1, 2], [3, 4]])</code></li>
 </ul>
 <p><strong>Default value</strong>: <code>tuple</code></p>
 <p><strong>Type</strong>: <code>"tuple" | "list"</code></p>
@@ -5264,8 +5449,8 @@ case of multiple parameters. The following values are supported:</p>
 <p>Expected type for the list of values rows in <code>@pytest.mark.parametrize</code>.
 The following values are supported:</p>
 <ul>
-<li><code>tuple</code> — e.g. <code>@pytest.mark.parametrize('name', (1, 2, 3))</code></li>
-<li><code>list</code> (default) — e.g. <code>@pytest.mark.parametrize('name', [1, 2, 3])</code></li>
+<li><code>tuple</code> — e.g. <code>@pytest.mark.parametrize("name", (1, 2, 3))</code></li>
+<li><code>list</code> (default) — e.g. <code>@pytest.mark.parametrize("name", [1, 2, 3])</code></li>
 </ul>
 <p><strong>Default value</strong>: <code>list</code></p>
 <p><strong>Type</strong>: <code>"tuple" | "list"</code></p>
@@ -5392,7 +5577,7 @@ enforces double quotes for docstrings strings.</p>
 <p><span id="inline-quotes"></span></p>
 <p>Quote style to prefer for inline strings (either "single" or
 "double").</p>
-<p>When using the formatter, ensure that <code>format.quote-style</code> is set to
+<p>When using the formatter, ensure that <a href="#format_quote-style"><code>format.quote-style</code></a> is set to
 the same preferred quote style.</p>
 <p><strong>Default value</strong>: <code>"double"</code></p>
 <p><strong>Type</strong>: <code>"single" | "double"</code></p>
@@ -5440,7 +5625,7 @@ enforces double quotes for multiline strings.</p>
 <h4 id="lint_flake8-self_extend-ignore-names"><a href="#lint_flake8-self_extend-ignore-names"><code>extend-ignore-names</code></a><a class="headerlink" href="#lint_flake8-self_extend-ignore-names" title="Permanent link">#</a></h4>
 <p><span id="extend-ignore-names"></span></p>
 <p>Additional names to ignore when considering <code>flake8-self</code> violations,
-in addition to those included in <code>ignore-names</code>.</p>
+in addition to those included in <a href="#lint_flake8-self_ignore-names"><code>ignore-names</code></a>.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5690,7 +5875,7 @@ decorators from being moved into type-checking blocks.</p>
 <hr />
 <h4 id="lint_flake8-type-checking_strict"><a href="#lint_flake8-type-checking_strict"><code>strict</code></a><a class="headerlink" href="#lint_flake8-type-checking_strict" title="Permanent link">#</a></h4>
 <p><span id="strict"></span></p>
-<p>Enforce TC001, TC002, and TC003 rules even when valid runtime imports
+<p>Enforce <code>TC001</code>, <code>TC002</code>, and <code>TC003</code> rules even when valid runtime imports
 are present for the same module.</p>
 <p>See flake8-type-checking's <a href="https://github.com/snok/flake8-type-checking#strict">strict</a> option.</p>
 <p><strong>Default value</strong>: <code>false</code></p>
@@ -5758,7 +5943,7 @@ are present for the same module.</p>
 <h4 id="lint_isort_classes"><a href="#lint_isort_classes"><code>classes</code></a><a class="headerlink" href="#lint_isort_classes" title="Permanent link">#</a></h4>
 <p><span id="classes"></span></p>
 <p>An override list of tokens to always recognize as a Class for
-<code>order-by-type</code> regardless of casing.</p>
+<a href="#lint_isort_order-by-type"><code>order-by-type</code></a> regardless of casing.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5802,7 +5987,7 @@ option.</p>
 <h4 id="lint_isort_constants"><a href="#lint_isort_constants"><code>constants</code></a><a class="headerlink" href="#lint_isort_constants" title="Permanent link">#</a></h4>
 <p><span id="constants"></span></p>
 <p>An override list of tokens to always recognize as a CONSTANT
-for <code>order-by-type</code> regardless of casing.</p>
+for <a href="#lint_isort_order-by-type"><code>order-by-type</code></a> regardless of casing.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5823,7 +6008,7 @@ for <code>order-by-type</code> regardless of casing.</p>
 <hr />
 <h4 id="lint_isort_default-section"><a href="#lint_isort_default-section"><code>default-section</code></a><a class="headerlink" href="#lint_isort_default-section" title="Permanent link">#</a></h4>
 <p><span id="default-section"></span></p>
-<p>Define a default section for any imports that don't fit into the specified <code>section-order</code>.</p>
+<p>Define a default section for any imports that don't fit into the specified <a href="#lint_isort_section-order"><code>section-order</code></a>.</p>
 <p><strong>Default value</strong>: <code>third-party</code></p>
 <p><strong>Type</strong>: <code>str</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -5831,12 +6016,12 @@ for <code>order-by-type</code> regardless of casing.</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-212-1" name="__codelineno-212-1" href="#__codelineno-212-1"></a><span class="k">[tool.ruff.lint.isort]</span>
-<a id="__codelineno-212-2" name="__codelineno-212-2" href="#__codelineno-212-2"></a><span class="n">default-section</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;third-party&quot;</span>
+<a id="__codelineno-212-2" name="__codelineno-212-2" href="#__codelineno-212-2"></a><span class="n">default-section</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;first-party&quot;</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-213-1" name="__codelineno-213-1" href="#__codelineno-213-1"></a><span class="k">[lint.isort]</span>
-<a id="__codelineno-213-2" name="__codelineno-213-2" href="#__codelineno-213-2"></a><span class="n">default-section</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;third-party&quot;</span>
+<a id="__codelineno-213-2" name="__codelineno-213-2" href="#__codelineno-213-2"></a><span class="n">default-section</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;first-party&quot;</span>
 </code></pre></div>
 </div>
 </div>
@@ -5969,10 +6154,10 @@ rather than condensing to a single line:</p>
 <a id="__codelineno-224-4" name="__codelineno-224-4" href="#__codelineno-224-4"></a><span class="p">)</span>
 </code></pre></div>
 <p>Note that this setting is only effective when combined with
-<code>combine-as-imports = true</code>. When <code>combine-as-imports</code> isn't
+<code>combine-as-imports = true</code>. When <a href="#lint_isort_combine-as-imports"><code>combine-as-imports</code></a> isn't
 enabled, every aliased <code>import from</code> will be given its own line, in
 which case, wrapping is not necessary.</p>
-<p>When using the formatter, ensure that <code>format.skip-magic-trailing-comma</code> is set to <code>false</code> (default)
+<p>When using the formatter, ensure that <a href="#format_skip-magic-trailing-comma"><code>format.skip-magic-trailing-comma</code></a> is set to <code>false</code> (default)
 when enabling <code>force-wrap-aliases</code> to avoid that the formatter collapses members if they all fit on a single line.</p>
 <p><strong>Default value</strong>: <code>false</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
@@ -6154,7 +6339,7 @@ appear before longer imports, as in:
 <hr />
 <h4 id="lint_isort_length-sort-straight"><a href="#lint_isort_length-sort-straight"><code>length-sort-straight</code></a><a class="headerlink" href="#lint_isort_length-sort-straight" title="Permanent link">#</a></h4>
 <p><span id="length-sort-straight"></span></p>
-<p>Sort straight imports by their string length. Similar to <code>length-sort</code>,
+<p>Sort straight imports by their string length. Similar to <a href="#lint_isort_length-sort"><code>length-sort</code></a>,
 but applies only to straight imports and doesn't affect <code>from</code> imports.</p>
 <p><strong>Default value</strong>: <code>false</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
@@ -6260,8 +6445,8 @@ section via empty lines.</p>
 <a id="__codelineno-251-5" name="__codelineno-251-5" href="#__codelineno-251-5"></a><span class="kn">import</span> <span class="nn">pandas</span>
 </code></pre></div></p>
 <p>Setting <code>no-sections = true</code> will instead group all imports into a single section:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-252-1" name="__codelineno-252-1" href="#__codelineno-252-1"></a><span class="kn">import</span> <span class="nn">os</span>
-<a id="__codelineno-252-2" name="__codelineno-252-2" href="#__codelineno-252-2"></a><span class="kn">import</span> <span class="nn">numpy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-252-1" name="__codelineno-252-1" href="#__codelineno-252-1"></a><span class="kn">import</span> <span class="nn">numpy</span>
+<a id="__codelineno-252-2" name="__codelineno-252-2" href="#__codelineno-252-2"></a><span class="kn">import</span> <span class="nn">os</span>
 <a id="__codelineno-252-3" name="__codelineno-252-3" href="#__codelineno-252-3"></a><span class="kn">import</span> <span class="nn">pandas</span>
 <a id="__codelineno-252-4" name="__codelineno-252-4" href="#__codelineno-252-4"></a><span class="kn">import</span> <span class="nn">sys</span>
 </code></pre></div></p>
@@ -6311,7 +6496,7 @@ alphabetically.</p>
 before "further" imports (more <code>.</code> characters, least local), or vice
 versa.</p>
 <p>The default ("furthest-to-closest") is equivalent to isort's
-<code>reverse-relative</code> default (<code>reverse-relative = false</code>); setting
+<a href="https://pycqa.github.io/isort/docs/configuration/options.html#reverse-relative"><code>reverse-relative</code></a> default (<code>reverse-relative = false</code>); setting
 this to "closest-to-furthest" is equivalent to isort's
 <code>reverse-relative = true</code>.</p>
 <p><strong>Default value</strong>: <code>furthest-to-closest</code></p>
@@ -6387,7 +6572,7 @@ override the built-in sections.</p>
 the LangChain ecosystem (<code>langchain-core</code>, <code>langchain-openai</code>, etc.):
 <div class="highlight"><pre><span></span><code><a id="__codelineno-264-1" name="__codelineno-264-1" href="#__codelineno-264-1"></a><span class="n">langchain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;langchain-*&quot;</span><span class="p">]</span>
 </code></pre></div></p>
-<p>Custom sections should typically be inserted into the <code>section-order</code> list to ensure that
+<p>Custom sections should typically be inserted into the <a href="#lint_isort_section-order"><code>section-order</code></a> list to ensure that
 they're displayed as a standalone group and in the intended order, as in:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-265-1" name="__codelineno-265-1" href="#__codelineno-265-1"></a><span class="n">section-order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-265-2" name="__codelineno-265-2" href="#__codelineno-265-2"></a><span class="w">  </span><span class="s2">&quot;future&quot;</span><span class="p">,</span>
@@ -6398,8 +6583,8 @@ they're displayed as a standalone group and in the intended order, as in:
 <a id="__codelineno-265-7" name="__codelineno-265-7" href="#__codelineno-265-7"></a><span class="w">  </span><span class="s2">&quot;testing&quot;</span>
 <a id="__codelineno-265-8" name="__codelineno-265-8" href="#__codelineno-265-8"></a><span class="p">]</span>
 </code></pre></div></p>
-<p>If a custom section is omitted from <code>section-order</code>, imports in that section will be
-assigned to the <code>default-section</code> (which defaults to <code>third-party</code>).</p>
+<p>If a custom section is omitted from <a href="#lint_isort_section-order"><code>section-order</code></a>, imports in that section will be
+assigned to the <a href="#lint_isort_default-section"><code>default-section</code></a> (which defaults to <code>third-party</code>).</p>
 <p><strong>Default value</strong>: <code>{}</code></p>
 <p><strong>Type</strong>: <code>dict[str, list[str]]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6446,7 +6631,7 @@ assigned to the <code>default-section</code> (which defaults to <code>third-part
 <p>If a comma is placed after the last member in a multi-line import, then
 the imports will never be folded into one line.</p>
 <p>See isort's <a href="https://pycqa.github.io/isort/docs/configuration/options.html#split-on-trailing-comma"><code>split-on-trailing-comma</code></a> option.</p>
-<p>When using the formatter, ensure that <code>format.skip-magic-trailing-comma</code> is set to <code>false</code> (default) when enabling <code>split-on-trailing-comma</code>
+<p>When using the formatter, ensure that <a href="#format_skip-magic-trailing-comma"><code>format.skip-magic-trailing-comma</code></a> is set to <code>false</code> (default) when enabling <code>split-on-trailing-comma</code>
 to avoid that the formatter removes the trailing commas.</p>
 <p><strong>Default value</strong>: <code>true</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
@@ -6469,7 +6654,7 @@ to avoid that the formatter removes the trailing commas.</p>
 <h4 id="lint_isort_variables"><a href="#lint_isort_variables"><code>variables</code></a><a class="headerlink" href="#lint_isort_variables" title="Permanent link">#</a></h4>
 <p><span id="variables"></span></p>
 <p>An override list of tokens to always recognize as a var
-for <code>order-by-type</code> regardless of casing.</p>
+for <a href="#lint_isort_order-by-type"><code>order-by-type</code></a> regardless of casing.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6558,8 +6743,8 @@ the last segment in case the decorator itself consists of a dotted name.</p>
 <h4 id="lint_pep8-naming_extend-ignore-names"><a href="#lint_pep8-naming_extend-ignore-names"><code>extend-ignore-names</code></a><a class="headerlink" href="#lint_pep8-naming_extend-ignore-names" title="Permanent link">#</a></h4>
 <p><span id="extend-ignore-names"></span></p>
 <p>Additional names (or patterns) to ignore when considering <code>pep8-naming</code> violations,
-in addition to those included in <code>ignore-names</code></p>
-<p>Supports glob patterns. For example, to ignore all names starting with
+in addition to those included in <a href="#lint_pep8-naming_ignore-names"><code>ignore-names</code></a>.</p>
+<p>Supports glob patterns. For example, to ignore all names starting with <code>test_</code>
 or ending with <code>_test</code>, you could use <code>ignore-names = ["test_*", "*_test"]</code>.
 For more information on the glob syntax, refer to the <a href="https://docs.rs/globset/latest/globset/#syntax"><code>globset</code> documentation</a>.</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
@@ -6583,7 +6768,7 @@ For more information on the glob syntax, refer to the <a href="https://docs.rs/g
 <h4 id="lint_pep8-naming_ignore-names"><a href="#lint_pep8-naming_ignore-names"><code>ignore-names</code></a><a class="headerlink" href="#lint_pep8-naming_ignore-names" title="Permanent link">#</a></h4>
 <p><span id="ignore-names"></span></p>
 <p>A list of names (or patterns) to ignore when considering <code>pep8-naming</code> violations.</p>
-<p>Supports glob patterns. For example, to ignore all names starting with
+<p>Supports glob patterns. For example, to ignore all names starting with <code>test_</code>
 or ending with <code>_test</code>, you could use <code>ignore-names = ["test_*", "*_test"]</code>.
 For more information on the glob syntax, refer to the <a href="https://docs.rs/globset/latest/globset/#syntax"><code>globset</code> documentation</a>.</p>
 <p><strong>Default value</strong>: <code>["setUp", "tearDown", "setUpClass", "tearDownClass", "setUpModule", "tearDownModule", "asyncSetUp", "asyncTearDown", "setUpTestData", "failureException", "longMessage", "maxDiff"]</code></p>
@@ -6638,7 +6823,7 @@ the last segment in case the decorator itself consists of a dotted name.</p>
 <h4 id="lint_pycodestyle_ignore-overlong-task-comments"><a href="#lint_pycodestyle_ignore-overlong-task-comments"><code>ignore-overlong-task-comments</code></a><a class="headerlink" href="#lint_pycodestyle_ignore-overlong-task-comments" title="Permanent link">#</a></h4>
 <p><span id="ignore-overlong-task-comments"></span></p>
 <p>Whether line-length violations (<code>E501</code>) should be triggered for
-comments starting with <code>task-tags</code> (by default: ["TODO", "FIXME",
+comments starting with <a href="#lint_task-tags"><code>task-tags</code></a> (by default: ["TODO", "FIXME",
 and "XXX"]).</p>
 <p><strong>Default value</strong>: <code>false</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>
@@ -6662,7 +6847,7 @@ and "XXX"]).</p>
 <p><span id="max-doc-length"></span></p>
 <p>The maximum line length to allow for <a href="https://docs.astral.sh/ruff/rules/doc-line-too-long/"><code>doc-line-too-long</code></a> violations within
 documentation (<code>W505</code>), including standalone comments. By default,
-this is set to null which disables reporting violations.</p>
+this is set to <code>null</code> which disables reporting violations.</p>
 <p>The length is determined by the number of characters per line, except for lines containing Asian characters or emojis.
 For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</a> of each character is added up to determine the length.</p>
 <p>See the <a href="https://docs.astral.sh/ruff/rules/doc-line-too-long/"><code>doc-line-too-long</code></a> rule for more information.</p>
@@ -6690,10 +6875,12 @@ For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</
 this is set to the value of the <a href="#line-length"><code>line-length</code></a> option.</p>
 <p>Use this option when you want to detect extra-long lines that the formatter can't automatically split by setting
 <code>pycodestyle.line-length</code> to a value larger than <a href="#line-length"><code>line-length</code></a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-288-1" name="__codelineno-288-1" href="#__codelineno-288-1"></a><span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span><span class="w"> </span><span class="c1"># The formatter wraps lines at a length of 88</span>
-<a id="__codelineno-288-2" name="__codelineno-288-2" href="#__codelineno-288-2"></a>
-<a id="__codelineno-288-3" name="__codelineno-288-3" href="#__codelineno-288-3"></a><span class="k">[pycodestyle]</span>
-<a id="__codelineno-288-4" name="__codelineno-288-4" href="#__codelineno-288-4"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="c1"># E501 reports lines that exceed the length of 100.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-288-1" name="__codelineno-288-1" href="#__codelineno-288-1"></a><span class="c1"># The formatter wraps lines at a length of 88.</span>
+<a id="__codelineno-288-2" name="__codelineno-288-2" href="#__codelineno-288-2"></a><span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
+<a id="__codelineno-288-3" name="__codelineno-288-3" href="#__codelineno-288-3"></a>
+<a id="__codelineno-288-4" name="__codelineno-288-4" href="#__codelineno-288-4"></a><span class="k">[pycodestyle]</span>
+<a id="__codelineno-288-5" name="__codelineno-288-5" href="#__codelineno-288-5"></a><span class="c1"># E501 reports lines that exceed the length of 100.</span>
+<a id="__codelineno-288-6" name="__codelineno-288-6" href="#__codelineno-288-6"></a><span class="n">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
 </code></pre></div>
 <p>The length is determined by the number of characters per line, except for lines containing East Asian characters or emojis.
 For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</a> of each character is added up to determine the length.</p>
@@ -6719,7 +6906,7 @@ For these lines, the <a href="https://unicode.org/reports/tr11/">unicode width</
 <h3 id="lintpydocstyle"><code>lint.pydocstyle</code><a class="headerlink" href="#lintpydocstyle" title="Permanent link">#</a></h3>
 <h4 id="lint_pydocstyle_convention"><a href="#lint_pydocstyle_convention"><code>convention</code></a><a class="headerlink" href="#lint_pydocstyle_convention" title="Permanent link">#</a></h4>
 <p><span id="convention"></span></p>
-<p>Whether to use Google-style or NumPy-style conventions or the <a href="https://peps.python.org/pep-0257/">PEP 257</a>
+<p>Whether to use Google-style, NumPy-style conventions, or the <a href="https://peps.python.org/pep-0257/">PEP 257</a>
 defaults when analyzing docstring sections.</p>
 <p>Enabling a convention will disable all rules that are not included in
 the specified convention. As such, the intended workflow is to enable a
@@ -6846,7 +7033,7 @@ rather than <code>ForeignKey</code>).</p>
 <h4 id="lint_pylint_allow-dunder-method-names"><a href="#lint_pylint_allow-dunder-method-names"><code>allow-dunder-method-names</code></a><a class="headerlink" href="#lint_pylint_allow-dunder-method-names" title="Permanent link">#</a></h4>
 <p><span id="allow-dunder-method-names"></span></p>
 <p>Dunder methods name to allow, in addition to the default set from the
-Python standard library (see: <code>PLW3201</code>).</p>
+Python standard library (see <code>PLW3201</code>).</p>
 <p><strong>Default value</strong>: <code>[]</code></p>
 <p><strong>Type</strong>: <code>list[str]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6867,7 +7054,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <hr />
 <h4 id="lint_pylint_allow-magic-value-types"><a href="#lint_pylint_allow-magic-value-types"><code>allow-magic-value-types</code></a><a class="headerlink" href="#lint_pylint_allow-magic-value-types" title="Permanent link">#</a></h4>
 <p><span id="allow-magic-value-types"></span></p>
-<p>Constant types to ignore when used as "magic values" (see: <code>PLR2004</code>).</p>
+<p>Constant types to ignore when used as "magic values" (see <code>PLR2004</code>).</p>
 <p><strong>Default value</strong>: <code>["str", "bytes"]</code></p>
 <p><strong>Type</strong>: <code>list["str" | "bytes" | "complex" | "float" | "int"]</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6889,7 +7076,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <h4 id="lint_pylint_max-args"><a href="#lint_pylint_max-args"><code>max-args</code></a><a class="headerlink" href="#lint_pylint_max-args" title="Permanent link">#</a></h4>
 <p><span id="max-args"></span></p>
 <p>Maximum number of arguments allowed for a function or method definition
-(see: <code>PLR0913</code>).</p>
+(see <code>PLR0913</code>).</p>
 <p><strong>Default value</strong>: <code>5</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6897,12 +7084,12 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-305-1" name="__codelineno-305-1" href="#__codelineno-305-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-305-2" name="__codelineno-305-2" href="#__codelineno-305-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-305-2" name="__codelineno-305-2" href="#__codelineno-305-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-306-1" name="__codelineno-306-1" href="#__codelineno-306-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-306-2" name="__codelineno-306-2" href="#__codelineno-306-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-306-2" name="__codelineno-306-2" href="#__codelineno-306-2"></a><span class="n">max-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 </div>
@@ -6911,7 +7098,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <h4 id="lint_pylint_max-bool-expr"><a href="#lint_pylint_max-bool-expr"><code>max-bool-expr</code></a><a class="headerlink" href="#lint_pylint_max-bool-expr" title="Permanent link">#</a></h4>
 <p><span id="max-bool-expr"></span></p>
 <p>Maximum number of Boolean expressions allowed within a single <code>if</code> statement
-(see: <code>PLR0916</code>).</p>
+(see <code>PLR0916</code>).</p>
 <p><strong>Default value</strong>: <code>5</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6919,12 +7106,12 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-307-1" name="__codelineno-307-1" href="#__codelineno-307-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-307-2" name="__codelineno-307-2" href="#__codelineno-307-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-307-2" name="__codelineno-307-2" href="#__codelineno-307-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-308-1" name="__codelineno-308-1" href="#__codelineno-308-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-308-2" name="__codelineno-308-2" href="#__codelineno-308-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-308-2" name="__codelineno-308-2" href="#__codelineno-308-2"></a><span class="n">max-bool-expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 </div>
@@ -6932,8 +7119,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <hr />
 <h4 id="lint_pylint_max-branches"><a href="#lint_pylint_max-branches"><code>max-branches</code></a><a class="headerlink" href="#lint_pylint_max-branches" title="Permanent link">#</a></h4>
 <p><span id="max-branches"></span></p>
-<p>Maximum number of branches allowed for a function or method body (see:
-<code>PLR0912</code>).</p>
+<p>Maximum number of branches allowed for a function or method body (see <code>PLR0912</code>).</p>
 <p><strong>Default value</strong>: <code>12</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6941,12 +7127,12 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-309-1" name="__codelineno-309-1" href="#__codelineno-309-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-309-2" name="__codelineno-309-2" href="#__codelineno-309-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<a id="__codelineno-309-2" name="__codelineno-309-2" href="#__codelineno-309-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-310-1" name="__codelineno-310-1" href="#__codelineno-310-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-310-2" name="__codelineno-310-2" href="#__codelineno-310-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<a id="__codelineno-310-2" name="__codelineno-310-2" href="#__codelineno-310-2"></a><span class="n">max-branches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
 </code></pre></div>
 </div>
 </div>
@@ -6954,8 +7140,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <hr />
 <h4 id="lint_pylint_max-locals"><a href="#lint_pylint_max-locals"><code>max-locals</code></a><a class="headerlink" href="#lint_pylint_max-locals" title="Permanent link">#</a></h4>
 <p><span id="max-locals"></span></p>
-<p>Maximum number of local variables allowed for a function or method body (see:
-<code>PLR0914</code>).</p>
+<p>Maximum number of local variables allowed for a function or method body (see <code>PLR0914</code>).</p>
 <p><strong>Default value</strong>: <code>15</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6963,12 +7148,12 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-311-1" name="__codelineno-311-1" href="#__codelineno-311-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-311-2" name="__codelineno-311-2" href="#__codelineno-311-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<a id="__codelineno-311-2" name="__codelineno-311-2" href="#__codelineno-311-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-312-1" name="__codelineno-312-1" href="#__codelineno-312-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-312-2" name="__codelineno-312-2" href="#__codelineno-312-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<a id="__codelineno-312-2" name="__codelineno-312-2" href="#__codelineno-312-2"></a><span class="n">max-locals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
 </code></pre></div>
 </div>
 </div>
@@ -6977,7 +7162,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <h4 id="lint_pylint_max-nested-blocks"><a href="#lint_pylint_max-nested-blocks"><code>max-nested-blocks</code></a><a class="headerlink" href="#lint_pylint_max-nested-blocks" title="Permanent link">#</a></h4>
 <p><span id="max-nested-blocks"></span></p>
 <p>Maximum number of nested blocks allowed within a function or method body
-(see: <code>PLR1702</code>).</p>
+(see <code>PLR1702</code>).</p>
 <p><strong>Default value</strong>: <code>5</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -6985,12 +7170,12 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-313-1" name="__codelineno-313-1" href="#__codelineno-313-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-313-2" name="__codelineno-313-2" href="#__codelineno-313-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-313-2" name="__codelineno-313-2" href="#__codelineno-313-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-314-1" name="__codelineno-314-1" href="#__codelineno-314-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-314-2" name="__codelineno-314-2" href="#__codelineno-314-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-314-2" name="__codelineno-314-2" href="#__codelineno-314-2"></a><span class="n">max-nested-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 </div>
@@ -6999,7 +7184,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <h4 id="lint_pylint_max-positional-args"><a href="#lint_pylint_max-positional-args"><code>max-positional-args</code></a><a class="headerlink" href="#lint_pylint_max-positional-args" title="Permanent link">#</a></h4>
 <p><span id="max-positional-args"></span></p>
 <p>Maximum number of positional arguments allowed for a function or method definition
-(see: <code>PLR0917</code>).</p>
+(see <code>PLR0917</code>).</p>
 <p>If not specified, defaults to the value of <code>max-args</code>.</p>
 <p><strong>Default value</strong>: <code>5</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
@@ -7021,7 +7206,7 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <hr />
 <h4 id="lint_pylint_max-public-methods"><a href="#lint_pylint_max-public-methods"><code>max-public-methods</code></a><a class="headerlink" href="#lint_pylint_max-public-methods" title="Permanent link">#</a></h4>
 <p><span id="max-public-methods"></span></p>
-<p>Maximum number of public methods allowed for a class (see: <code>PLR0904</code>).</p>
+<p>Maximum number of public methods allowed for a class (see <code>PLR0904</code>).</p>
 <p><strong>Default value</strong>: <code>20</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -7029,12 +7214,12 @@ Python standard library (see: <code>PLW3201</code>).</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-317-1" name="__codelineno-317-1" href="#__codelineno-317-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-317-2" name="__codelineno-317-2" href="#__codelineno-317-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<a id="__codelineno-317-2" name="__codelineno-317-2" href="#__codelineno-317-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-318-1" name="__codelineno-318-1" href="#__codelineno-318-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-318-2" name="__codelineno-318-2" href="#__codelineno-318-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<a id="__codelineno-318-2" name="__codelineno-318-2" href="#__codelineno-318-2"></a><span class="n">max-public-methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
 </code></pre></div>
 </div>
 </div>
@@ -7051,12 +7236,12 @@ body (see <code>PLR0911</code>)</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-319-1" name="__codelineno-319-1" href="#__codelineno-319-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-319-2" name="__codelineno-319-2" href="#__codelineno-319-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<a id="__codelineno-319-2" name="__codelineno-319-2" href="#__codelineno-319-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-320-1" name="__codelineno-320-1" href="#__codelineno-320-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-320-2" name="__codelineno-320-2" href="#__codelineno-320-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<a id="__codelineno-320-2" name="__codelineno-320-2" href="#__codelineno-320-2"></a><span class="n">max-returns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
 </div>
 </div>
@@ -7064,8 +7249,7 @@ body (see <code>PLR0911</code>)</p>
 <hr />
 <h4 id="lint_pylint_max-statements"><a href="#lint_pylint_max-statements"><code>max-statements</code></a><a class="headerlink" href="#lint_pylint_max-statements" title="Permanent link">#</a></h4>
 <p><span id="max-statements"></span></p>
-<p>Maximum number of statements allowed for a function or method body (see:
-<code>PLR0915</code>).</p>
+<p>Maximum number of statements allowed for a function or method body (see <code>PLR0915</code>).</p>
 <p><strong>Default value</strong>: <code>50</code></p>
 <p><strong>Type</strong>: <code>int</code></p>
 <p><strong>Example usage</strong>:</p>
@@ -7073,12 +7257,12 @@ body (see <code>PLR0911</code>)</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-321-1" name="__codelineno-321-1" href="#__codelineno-321-1"></a><span class="k">[tool.ruff.lint.pylint]</span>
-<a id="__codelineno-321-2" name="__codelineno-321-2" href="#__codelineno-321-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<a id="__codelineno-321-2" name="__codelineno-321-2" href="#__codelineno-321-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">75</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-322-1" name="__codelineno-322-1" href="#__codelineno-322-1"></a><span class="k">[lint.pylint]</span>
-<a id="__codelineno-322-2" name="__codelineno-322-2" href="#__codelineno-322-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<a id="__codelineno-322-2" name="__codelineno-322-2" href="#__codelineno-322-2"></a><span class="n">max-statements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">75</span>
 </code></pre></div>
 </div>
 </div>
@@ -7087,7 +7271,7 @@ body (see <code>PLR0911</code>)</p>
 <h3 id="lintpyupgrade"><code>lint.pyupgrade</code><a class="headerlink" href="#lintpyupgrade" title="Permanent link">#</a></h3>
 <h4 id="lint_pyupgrade_keep-runtime-typing"><a href="#lint_pyupgrade_keep-runtime-typing"><code>keep-runtime-typing</code></a><a class="headerlink" href="#lint_pyupgrade_keep-runtime-typing" title="Permanent link">#</a></h4>
 <p><span id="keep-runtime-typing"></span></p>
-<p>Whether to avoid PEP 585 (<code>List[int]</code> -&gt; <code>list[int]</code>) and PEP 604
+<p>Whether to avoid <a href="https://peps.python.org/pep-0585/">PEP 585</a> (<code>List[int]</code> -&gt; <code>list[int]</code>) and <a href="https://peps.python.org/pep-0604/">PEP 604</a>
 (<code>Union[str, int]</code> -&gt; <code>str | int</code>) rewrites even if a file imports
 <code>from __future__ import annotations</code>.</p>
 <p>This setting is only applicable when the target Python version is below
@@ -7101,7 +7285,7 @@ int</code>). However, libraries that rely on runtime type annotations will
 break if the annotations are incompatible with the current Python
 version.</p>
 <p>For example, while the following is valid Python 3.8 code due to the
-presence of <code>from __future__ import annotations</code>, the use of <code>str| int</code>
+presence of <code>from __future__ import annotations</code>, the use of <code>str | int</code>
 prior to Python 3.10 will cause Pydantic to raise a <code>TypeError</code> at
 runtime:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-323-1" name="__codelineno-323-1" href="#__codelineno-323-1"></a><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -7109,7 +7293,7 @@ runtime:</p>
 <a id="__codelineno-323-3" name="__codelineno-323-3" href="#__codelineno-323-3"></a><span class="kn">import</span> <span class="nn">pydantic</span>
 <a id="__codelineno-323-4" name="__codelineno-323-4" href="#__codelineno-323-4"></a>
 <a id="__codelineno-323-5" name="__codelineno-323-5" href="#__codelineno-323-5"></a><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-323-6" name="__codelineno-323-6" href="#__codelineno-323-6"></a>   <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>
+<a id="__codelineno-323-6" name="__codelineno-323-6" href="#__codelineno-323-6"></a>    <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>
 </code></pre></div>
 <p><strong>Default value</strong>: <code>false</code></p>
 <p><strong>Type</strong>: <code>bool</code></p>

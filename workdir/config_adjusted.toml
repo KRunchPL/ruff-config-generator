@@ -74,8 +74,8 @@ extend-include = []
 fix = false
 # Like fix, but disables reporting on leftover violation. Implies fix.
 fix-only = false
-# Whether to enforce exclude and extend-exclude patterns, even for
-# paths that are passed to Ruff explicitly. Typically, Ruff will lint
+# Whether to enforce exclude and extend-exclude patterns,
+# even for paths that are passed to Ruff explicitly. Typically, Ruff will lint
 # any paths passed in directly, even if they would typically be
 # excluded. Setting force-exclude = true will cause Ruff to
 # respect these exclusions unequivocally.
@@ -116,12 +116,12 @@ line-length = 110
 # module resolution, Ruff will treat those directories and all their subdirectories
 # as if they contained an __init__.py file.
 namespace-packages = []
-# The style in which violation messages should be formatted: "full"
-# (shows source),"concise" (default), "grouped" (group messages by file), "json"
+# The style in which violation messages should be formatted: "full" (default)
+# (shows source), "concise", "grouped" (group messages by file), "json"
 # (machine-readable), "junit" (machine-readable XML), "github" (GitHub
 # Actions annotations), "gitlab" (GitLab CI code quality report),
 # "pylint" (Pylint text format) or "azure" (Azure Pipeline logging commands).
-output-format = "concise"
+output-format = "full"
 # Whether to enable preview mode. When preview mode is enabled, Ruff will
 # use unstable rules, fixes, and formatting.
 preview = false
@@ -269,8 +269,8 @@ docstring-code-format = true
 # docstring is not taken into account. That is, this may result in lines
 # in the reformatted code example that exceed the globally configured
 # line length limit.
-# For example, when this is set to 20 and docstring-code-format is
-# enabled, then this code:
+# For example, when this is set to 20 and docstring-code-format
+# is enabled, then this code:
 # ---
 # def f(x):
 #     '''
@@ -322,7 +322,7 @@ exclude = []
 # def f():
 #     print("Hello") #  Spaces indent the `print` statement.
 # ---
-# indent-style = "tab"":
+# indent-style = "tab":
 # ---
 # def f():
 #     print("Hello") #  A tab `\t` indents the `print` statement.
@@ -351,7 +351,7 @@ preview = false
 # b = "It's monday morning"
 # ---
 # Ruff will change the quotes of the string assigned to a to single quotes when using quote-style = "single".
-# However, ruff uses double quotes for he string assigned to b because using single quotes would require escaping the ',
+# However, Ruff uses double quotes for the string assigned to b because using single quotes would require escaping the ',
 # which leads to the less readable code: 'It\'s monday morning'.
 # In addition, Ruff supports the quote style preserve for projects that already use
 # a mixture of single and double quotes and can't migrate to the double or single style.
@@ -362,7 +362,7 @@ quote-style = "single"
 # For example, Ruff leaves the arguments separate even though
 # collapsing the arguments to a single line doesn't exceed the line length if skip-magic-trailing-comma = false:
 # ---
-#  # The arguments remain on separate lines because of the trailing comma after `b`
+# # The arguments remain on separate lines because of the trailing comma after `b`
 # def test(
 #     a,
 #     b,
@@ -656,32 +656,36 @@ extend-aliases = {}
 # default), @pytest.fixture() is valid and @pytest.fixture is
 # invalid. If set to false, @pytest.fixture is valid and
 # @pytest.fixture() is invalid.
+# If preview is enabled, defaults to
+# false.
 fixture-parentheses = false
 # Boolean flag specifying whether @pytest.mark.foo() without parameters
 # should have parentheses. If the option is set to true (the
 # default), @pytest.mark.foo() is valid and @pytest.mark.foo is
-# invalid. If set to false, @pytest.fixture is valid and
+# invalid. If set to false, @pytest.mark.foo is valid and
 # @pytest.mark.foo() is invalid.
+# If preview is enabled, defaults to
+# false.
 mark-parentheses = false
 # Expected type for multiple argument names in @pytest.mark.parametrize.
 # The following values are supported:
 # - csv — a comma-separated list, e.g.
-#   @pytest.mark.parametrize('name1,name2', ...)
+#   @pytest.mark.parametrize("name1,name2", ...)
 # - tuple (default) — e.g.
-#   @pytest.mark.parametrize(('name1', 'name2'), ...)
-# - list — e.g. @pytest.mark.parametrize(['name1', 'name2'], ...)
+#   @pytest.mark.parametrize(("name1", "name2"), ...)
+# - list — e.g. @pytest.mark.parametrize(["name1", "name2"], ...)
 parametrize-names-type = "list"
 # Expected type for each row of values in @pytest.mark.parametrize in
 # case of multiple parameters. The following values are supported:
 # - tuple (default) — e.g.
-#   @pytest.mark.parametrize(('name1', 'name2'), [(1, 2), (3, 4)])
+#   @pytest.mark.parametrize(("name1", "name2"), [(1, 2), (3, 4)])
 # - list — e.g.
-#   @pytest.mark.parametrize(('name1', 'name2'), [[1, 2], [3, 4]])
+#   @pytest.mark.parametrize(("name1", "name2"), [[1, 2], [3, 4]])
 parametrize-values-row-type = "tuple"
 # Expected type for the list of values rows in @pytest.mark.parametrize.
 # The following values are supported:
-# - tuple — e.g. @pytest.mark.parametrize('name', (1, 2, 3))
-# - list (default) — e.g. @pytest.mark.parametrize('name', [1, 2, 3])
+# - tuple — e.g. @pytest.mark.parametrize("name", (1, 2, 3))
+# - list (default) — e.g. @pytest.mark.parametrize("name", [1, 2, 3])
 parametrize-values-type = "list"
 # List of additional exception names that require a match= parameter in a
 # pytest.raises() call. This extends the default list of exceptions
@@ -936,8 +940,8 @@ no-lines-before = []
 # import numpy
 # import pandas
 # Setting no-sections = true will instead group all imports into a single section:
-# import os
 # import numpy
+# import os
 # import pandas
 # import sys
 no-sections = false
@@ -1011,13 +1015,13 @@ max-complexity = 10
 # the last segment in case the decorator itself consists of a dotted name.
 classmethod-decorators = []
 # Additional names (or patterns) to ignore when considering pep8-naming violations,
-# in addition to those included in ignore-names
-# Supports glob patterns. For example, to ignore all names starting with
+# in addition to those included in ignore-names.
+# Supports glob patterns. For example, to ignore all names starting with test_
 # or ending with _test, you could use ignore-names = ["test_*", "*_test"].
 # For more information on the glob syntax, refer to the globset documentation.
 extend-ignore-names = []
 # A list of names (or patterns) to ignore when considering pep8-naming violations.
-# Supports glob patterns. For example, to ignore all names starting with
+# Supports glob patterns. For example, to ignore all names starting with test_
 # or ending with _test, you could use ignore-names = ["test_*", "*_test"].
 # For more information on the glob syntax, refer to the globset documentation.
 ignore-names = [
@@ -1056,16 +1060,18 @@ ignore-overlong-task-comments = false
 # The length is determined by the number of characters per line, except for lines containing Asian characters or emojis.
 # For these lines, the unicode width of each character is added up to determine the length.
 # See the doc-line-too-long rule for more information.
-max-doc-length = 110
+#max-doc-length =
 # The maximum line length to allow for line-too-long violations. By default,
 # this is set to the value of the line-length option.
 # Use this option when you want to detect extra-long lines that the formatter can't automatically split by setting
 # pycodestyle.line-length to a value larger than line-length.
 # ---
-# line-length = 88 # The formatter wraps lines at a length of 88
+# # The formatter wraps lines at a length of 88.
+# line-length = 88
 #
 # [pycodestyle]
-# max-line-length = 100 # E501 reports lines that exceed the length of 100.
+# # E501 reports lines that exceed the length of 100.
+# max-line-length = 100
 # ---
 # The length is determined by the number of characters per line, except for lines containing East Asian characters or emojis.
 # For these lines, the unicode width of each character is added up to determine the length.
@@ -1073,7 +1079,7 @@ max-doc-length = 110
 #max-line-length =
 
 [lint.pydocstyle]
-# Whether to use Google-style or NumPy-style conventions or the PEP 257
+# Whether to use Google-style, NumPy-style conventions, or the PEP 257
 # defaults when analyzing docstring sections.
 # Enabling a convention will disable all rules that are not included in
 # the specified convention. As such, the intended workflow is to enable a
@@ -1126,39 +1132,36 @@ extend-generics = []
 
 [lint.pylint]
 # Dunder methods name to allow, in addition to the default set from the
-# Python standard library (see: PLW3201).
+# Python standard library (see PLW3201).
 allow-dunder-method-names = []
-# Constant types to ignore when used as "magic values" (see: PLR2004).
+# Constant types to ignore when used as "magic values" (see PLR2004).
 allow-magic-value-types = [
     "str",
     "bytes",
 ]
 # Maximum number of arguments allowed for a function or method definition
-# (see: PLR0913).
+# (see PLR0913).
 max-args = 5
 # Maximum number of Boolean expressions allowed within a single if statement
-# (see: PLR0916).
+# (see PLR0916).
 max-bool-expr = 5
-# Maximum number of branches allowed for a function or method body (see:
-# PLR0912).
+# Maximum number of branches allowed for a function or method body (see PLR0912).
 max-branches = 12
-# Maximum number of local variables allowed for a function or method body (see:
-# PLR0914).
+# Maximum number of local variables allowed for a function or method body (see PLR0914).
 max-locals = 15
 # Maximum number of nested blocks allowed within a function or method body
-# (see: PLR1702).
+# (see PLR1702).
 max-nested-blocks = 5
 # Maximum number of positional arguments allowed for a function or method definition
-# (see: PLR0917).
+# (see PLR0917).
 # If not specified, defaults to the value of max-args.
 max-positional-args = 5
-# Maximum number of public methods allowed for a class (see: PLR0904).
+# Maximum number of public methods allowed for a class (see PLR0904).
 max-public-methods = 20
 # Maximum number of return statements allowed for a function or method
 # body (see PLR0911)
 max-returns = 6
-# Maximum number of statements allowed for a function or method body (see:
-# PLR0915).
+# Maximum number of statements allowed for a function or method body (see PLR0915).
 max-statements = 50
 
 [lint.pyupgrade]
@@ -1176,7 +1179,7 @@ max-statements = 50
 # break if the annotations are incompatible with the current Python
 # version.
 # For example, while the following is valid Python 3.8 code due to the
-# presence of from __future__ import annotations, the use of str| int
+# presence of from __future__ import annotations, the use of str | int
 # prior to Python 3.10 will cause Pydantic to raise a TypeError at
 # runtime:
 # ---
@@ -1185,6 +1188,6 @@ max-statements = 50
 # import pydantic
 #
 # class Foo(pydantic.BaseModel):
-#    bar: str | int
+#     bar: str | int
 # ---
 keep-runtime-typing = false
