@@ -89,10 +89,12 @@ force-exclude = false
 # *.pyw, to include any file with the .pyw extension. pyproject.toml is
 # included here not for configuration but because we lint whether e.g. the
 # [project] matches the schema.
+# Notebook files (.ipynb extension) are included by default on Ruff 0.6.0+.
 # For more information on the glob syntax, refer to the globset documentation.
 include = [
     "*.py",
     "*.pyi",
+    "*.ipynb",
     "**/pyproject.toml",
 ]
 # The number of spaces per indentation level (tab).
@@ -141,29 +143,30 @@ respect-gitignore = true
 show-fixes = false
 # The directories to consider when resolving first- vs. third-party
 # imports.
-# As an example: given a Python package structure like:
+# When omitted, the src directory will typically default to including both:
+# These defaults ensure that uv supports both flat layouts and src layouts out-of-the-box.
+# (If a configuration file is explicitly provided (e.g., via the --config command-line
+# flag), the current working directory will be considered the project root.)
+# As an example, consider an alternative project structure, like:
 # ---
 # my_project
 # ├── pyproject.toml
-# └── src
+# └── lib
 #     └── my_package
 #         ├── __init__.py
 #         ├── foo.py
 #         └── bar.py
 # ---
-# The ./src directory should be included in the src option
-# (e.g., src = ["src"]), such that when resolving imports,
-# my_package.foo is considered a first-party import.
-# When omitted, the src directory will typically default to the
-# directory containing the nearest pyproject.toml, ruff.toml, or
-# .ruff.toml file (the "project root"), unless a configuration file
-# is explicitly provided (e.g., via the --config command-line flag).
+# In this case, the ./lib directory should be included in the src option
+# (e.g., src = ["lib"]), such that when resolving imports, my_package.foo
+# is considered first-party.
 # This field supports globs. For example, if you have a series of Python
 # packages in a python_modules directory, src = ["python_modules/*"]
-# would expand to incorporate all of the packages in that directory. User
-# home directory and environment variables will also be expanded.
+# would expand to incorporate all packages in that directory. User home
+# directory and environment variables will also be expanded.
 src = [
     ".",
+    "src",
 ]
 # The minimum Python version to target, e.g., when considering automatic
 # code upgrades, like rewriting type annotations. Ruff will not propose
@@ -567,6 +570,8 @@ extend-allowed-calls = []
 extend-immutable-calls = []
 
 [lint.flake8-builtins]
+# List of builtin module names to allow.
+builtins-allowed-modules = []
 # Ignore list of builtins.
 builtins-ignorelist = []
 
@@ -612,10 +617,11 @@ function-names = [
 # By default, implicit concatenations of multiline strings are
 # allowed (but continuation lines, delimited with a backslash, are
 # prohibited).
-# Note that setting allow-multiline = false should typically be coupled
-# with disabling explicit-string-concatenation (ISC003). Otherwise,
-# both explicit and implicit multiline string concatenations will be seen
-# as violations.
+# Setting allow-multiline = false will automatically disable the
+# explicit-string-concatenation (ISC003) rule. Otherwise, both
+# implicit and explicit multiline string concatenations would be seen
+# as violations, making it impossible to write a linter-compliant multiline
+# string.
 allow-multiline = true
 
 [lint.flake8-import-conventions]
@@ -649,23 +655,20 @@ extend-aliases = {}
 "plotly.express" = "px"
 "polars" = "pl"
 "pyarrow" = "pa"
+"xml.etree.ElementTree" = "ET"
 
 [lint.flake8-pytest-style]
 # Boolean flag specifying whether @pytest.fixture() without parameters
-# should have parentheses. If the option is set to true (the
-# default), @pytest.fixture() is valid and @pytest.fixture is
-# invalid. If set to false, @pytest.fixture is valid and
-# @pytest.fixture() is invalid.
-# If preview is enabled, defaults to
-# false.
+# should have parentheses. If the option is set to false (the default),
+# @pytest.fixture is valid and @pytest.fixture() is invalid. If set
+# to true, @pytest.fixture() is valid and @pytest.fixture is
+# invalid.
 fixture-parentheses = false
 # Boolean flag specifying whether @pytest.mark.foo() without parameters
-# should have parentheses. If the option is set to true (the
-# default), @pytest.mark.foo() is valid and @pytest.mark.foo is
-# invalid. If set to false, @pytest.mark.foo is valid and
-# @pytest.mark.foo() is invalid.
-# If preview is enabled, defaults to
-# false.
+# should have parentheses. If the option is set to false (the
+# default), @pytest.mark.foo is valid and @pytest.mark.foo() is
+# invalid. If set to true, @pytest.mark.foo() is valid and
+# @pytest.mark.foo is invalid.
 mark-parentheses = false
 # Expected type for multiple argument names in @pytest.mark.parametrize.
 # The following values are supported:
@@ -1191,3 +1194,8 @@ max-statements = 50
 #     bar: str | int
 # ---
 keep-runtime-typing = false
+
+[lint.ruff]
+# Whether to prefer accessing items keyed by tuples with
+# parentheses around the tuple (see RUF031).
+parenthesize-tuple-in-subscript = false
