@@ -1054,8 +1054,8 @@ staticmethod-decorators = []
 
 [lint.pycodestyle]
 # Whether line-length violations (E501) should be triggered for
-# comments starting with task-tags (by default: ["TODO", "FIXME",
-# and "XXX"]).
+# comments starting with task-tags (by default: "TODO", "FIXME",
+# and "XXX").
 ignore-overlong-task-comments = false
 # The maximum line length to allow for doc-line-too-long violations within
 # documentation (W505), including standalone comments. By default,
