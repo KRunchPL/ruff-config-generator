@@ -183,11 +183,46 @@ src = [
 # ---
 # If both are specified, target-version takes precedence over
 # requires-python.
+# Note that a stub file can sometimes make use of a typing feature
+# before it is available at runtime, as long as the stub does not make
+# use of new syntax. For example, a type checker will understand
+# int | str in a stub as being a Union type annotation, even if the
+# type checker is run using Python 3.9, despite the fact that the |
+# operator can only be used to create union types at runtime on Python
+# 3.10+. As such, Ruff will often recommend newer features in a stub
+# file than it would for an equivalent runtime file with the same target
+# version.
 target-version = "py310"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
 #unsafe-fixes =
+
+[analyze]
+# Whether to detect imports from string literals. When enabled, Ruff will search for string
+# literals that "look like" import paths, and include them in the import map, if they resolve
+# to valid Python modules.
+detect-string-imports = false
+# Whether to generate a map from file to files that it depends on (dependencies) or files that
+# depend on it (dependents).
+direction = "dependencies"
+# A list of file patterns to exclude from analysis in addition to the files excluded globally (see exclude, and extend-exclude).
+# Exclusions are based on globs, and can be either:
+# - Single-path patterns, like .mypy_cache (to exclude any directory
+#   named .mypy_cache in the tree), foo.py (to exclude any file named
+#   foo.py), or foo_*.py (to exclude any file matching foo_*.py ).
+# - Relative patterns, like directory/foo.py (to exclude that specific
+#   file) or directory/*.py (to exclude any Python files in
+#   directory). Note that these paths are relative to the project root
+#   (e.g., the directory containing your pyproject.toml).
+# For more information on the glob syntax, refer to the globset documentation.
+exclude = []
+# A map from file path to the list of file paths or globs that should be considered
+# dependencies of that file, regardless of whether relevant imports are detected.
+include-dependencies = {}
+# Whether to enable preview mode. When preview mode is enabled, Ruff will expose unstable
+# commands.
+preview = false
 
 [format]
 # Whether to format code snippets in docstrings.
@@ -383,6 +418,10 @@ skip-magic-trailing-comma = false
 # A list of allowed "confusable" Unicode characters to ignore when
 # enforcing RUF001, RUF002, and RUF003.
 allowed-confusables = []
+# A list of modules which is allowed even thought they are not used
+# in the code.
+# This is useful when a module has a side effect when imported.
+allowed-unused-imports = []
 # A regular expression used to identify "dummy" variables, or those which
 # should be ignored when enforcing (e.g.) unused-variable rules. The
 # default expression matches _, __, and _var, but not _var_.
@@ -1126,6 +1165,13 @@ ignore-decorators = []
 property-decorators = []
 
 [lint.pyflakes]
+# A list of modules to ignore when considering unused imports.
+# Used to prevent violations for specific modules that are known to have side effects on
+# import (e.g., hvplot.pandas).
+# Modules in this list are expected to be fully-qualified names (e.g., hvplot.pandas). Any
+# submodule of a given module will also be ignored (e.g., given hvplot, hvplot.pandas
+# will also be ignored).
+allowed-unused-imports = []
 # Additional functions or classes to consider generic, such that any
 # subscripts should be treated as type annotation (e.g., ForeignKey in
 # django.db.models.ForeignKey["User"].

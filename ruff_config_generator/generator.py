@@ -110,7 +110,7 @@ def generate_toml_configuration() -> None:  # noqa: C901, PLR0912
 
     for tag in article.children:  # type: ignore [union-attr]
         if tag.name in ('h2', 'h3'):  # type: ignore [union-attr]
-            sections.append(Section(tag.text[:-1]))
+            sections.append(Section(tag.text))
         elif tag.name == 'h4':  # type: ignore [union-attr]
             assert current_config is None
             current_config = Setting()
