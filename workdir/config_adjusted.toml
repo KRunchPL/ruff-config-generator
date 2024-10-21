@@ -418,10 +418,6 @@ skip-magic-trailing-comma = false
 # A list of allowed "confusable" Unicode characters to ignore when
 # enforcing RUF001, RUF002, and RUF003.
 allowed-confusables = []
-# A list of modules which is allowed even thought they are not used
-# in the code.
-# This is useful when a module has a side effect when imported.
-allowed-unused-imports = []
 # A regular expression used to identify "dummy" variables, or those which
 # should be ignored when enforcing (e.g.) unused-variable rules. The
 # default expression matches _, __, and _var, but not _var_.
