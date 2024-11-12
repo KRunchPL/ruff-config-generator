@@ -144,7 +144,7 @@ show-fixes = false
 # The directories to consider when resolving first- vs. third-party
 # imports.
 # When omitted, the src directory will typically default to including both:
-# These defaults ensure that uv supports both flat layouts and src layouts out-of-the-box.
+# These defaults ensure that Ruff supports both flat layouts and src layouts out-of-the-box.
 # (If a configuration file is explicitly provided (e.g., via the --config command-line
 # flag), the current working directory will be considered the project root.)
 # As an example, consider an alternative project structure, like:
