@@ -1202,6 +1202,10 @@ max-statements = 50
 keep-runtime-typing = false
 
 [lint.ruff]
+# A list of additional callable names that behave like [markupsafe.Markup].
+# Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
+# literal).
+extend-markup-names = []
 # Whether to prefer accessing items keyed by tuples with
 # parentheses around the tuple (see RUF031).
 parenthesize-tuple-in-subscript = false
