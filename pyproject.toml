@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ruff-config-generator"
-version = "0.1.0-dev"
+version = "0.1.0"
 description = "Generates ruff default configuration"
 authors = ["KRunchPL <krunchfrompoland@gmail.com>"]
 readme = "README.md"
