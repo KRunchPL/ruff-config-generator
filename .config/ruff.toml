@@ -39,7 +39,6 @@ exclude = [
     "__pypackages__",
     "_build",
     "buck-out",
-    "build",
     "dist",
     "node_modules",
     "venv",
@@ -75,8 +74,8 @@ extend-include = []
 fix = false
 # Like fix, but disables reporting on leftover violation. Implies fix.
 fix-only = false
-# Whether to enforce exclude and extend-exclude patterns, even for
-# paths that are passed to Ruff explicitly. Typically, Ruff will lint
+# Whether to enforce exclude and extend-exclude patterns,
+# even for paths that are passed to Ruff explicitly. Typically, Ruff will lint
 # any paths passed in directly, even if they would typically be
 # excluded. Setting force-exclude = true will cause Ruff to
 # respect these exclusions unequivocally.
@@ -90,10 +89,12 @@ force-exclude = false
 # *.pyw, to include any file with the .pyw extension. pyproject.toml is
 # included here not for configuration but because we lint whether e.g. the
 # [project] matches the schema.
+# Notebook files (.ipynb extension) are included by default on Ruff 0.6.0+.
 # For more information on the glob syntax, refer to the globset documentation.
 include = [
     "*.py",
     "*.pyi",
+    "*.ipynb",
     "**/pyproject.toml",
 ]
 # The number of spaces per indentation level (tab).
@@ -114,11 +115,11 @@ indent-width = 4
 # See pycodestyle.max-line-length to configure different lengths for E501 and the formatter.
 line-length = 110
 # Mark the specified directories as namespace packages. For the purpose of
-# module resolution, Ruff will treat those directories as if they
-# contained an __init__.py file.
+# module resolution, Ruff will treat those directories and all their subdirectories
+# as if they contained an __init__.py file.
 namespace-packages = []
-# The style in which violation messages should be formatted: "full"
-# (shows source),"concise" (default), "grouped" (group messages by file), "json"
+# The style in which violation messages should be formatted: "full" (default)
+# (shows source), "concise", "grouped" (group messages by file), "json"
 # (machine-readable), "junit" (machine-readable XML), "github" (GitHub
 # Actions annotations), "gitlab" (GitLab CI code quality report),
 # "pylint" (Pylint text format) or "azure" (Azure Pipeline logging commands).
@@ -126,9 +127,12 @@ output-format = "concise"
 # Whether to enable preview mode. When preview mode is enabled, Ruff will
 # use unstable rules, fixes, and formatting.
 preview = false
-# Require a specific version of Ruff to be running (useful for unifying
-# results across many environments, e.g., with a pyproject.toml
-# file).
+# Enforce a requirement on the version of Ruff, to enforce at runtime.
+# If the version of Ruff does not meet the requirement, Ruff will exit
+# with an error.
+# Useful for unifying results across many environments, e.g., with a
+# pyproject.toml file.
+# Accepts a PEP 440 specifier, like ==0.3.1 or >=0.3.1.
 #required-version =
 # Whether to automatically exclude files that are ignored by .ignore,
 # .gitignore, .git/info/exclude, and global gitignore files.
@@ -139,29 +143,30 @@ respect-gitignore = true
 show-fixes = false
 # The directories to consider when resolving first- vs. third-party
 # imports.
-# As an example: given a Python package structure like:
+# When omitted, the src directory will typically default to including both:
+# These defaults ensure that Ruff supports both flat layouts and src layouts out-of-the-box.
+# (If a configuration file is explicitly provided (e.g., via the --config command-line
+# flag), the current working directory will be considered the project root.)
+# As an example, consider an alternative project structure, like:
 # ---
 # my_project
 # ├── pyproject.toml
-# └── src
+# └── lib
 #     └── my_package
 #         ├── __init__.py
 #         ├── foo.py
 #         └── bar.py
 # ---
-# The ./src directory should be included in the src option
-# (e.g., src = ["src"]), such that when resolving imports,
-# my_package.foo is considered a first-party import.
-# When omitted, the src directory will typically default to the
-# directory containing the nearest pyproject.toml, ruff.toml, or
-# .ruff.toml file (the "project root"), unless a configuration file
-# is explicitly provided (e.g., via the --config command-line flag).
+# In this case, the ./lib directory should be included in the src option
+# (e.g., src = ["lib"]), such that when resolving imports, my_package.foo
+# is considered first-party.
 # This field supports globs. For example, if you have a series of Python
 # packages in a python_modules directory, src = ["python_modules/*"]
-# would expand to incorporate all of the packages in that directory. User
-# home directory and environment variables will also be expanded.
+# would expand to incorporate all packages in that directory. User home
+# directory and environment variables will also be expanded.
 src = [
     ".",
+    "src",
 ]
 # The minimum Python version to target, e.g., when considering automatic
 # code upgrades, like rewriting type annotations. Ruff will not propose
@@ -178,11 +183,46 @@ src = [
 # ---
 # If both are specified, target-version takes precedence over
 # requires-python.
+# Note that a stub file can sometimes make use of a typing feature
+# before it is available at runtime, as long as the stub does not make
+# use of new syntax. For example, a type checker will understand
+# int | str in a stub as being a Union type annotation, even if the
+# type checker is run using Python 3.9, despite the fact that the |
+# operator can only be used to create union types at runtime on Python
+# 3.10+. As such, Ruff will often recommend newer features in a stub
+# file than it would for an equivalent runtime file with the same target
+# version.
 target-version = "py311"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
-unsafe-fixes = false
+#unsafe-fixes =
+
+[analyze]
+# Whether to detect imports from string literals. When enabled, Ruff will search for string
+# literals that "look like" import paths, and include them in the import map, if they resolve
+# to valid Python modules.
+detect-string-imports = false
+# Whether to generate a map from file to files that it depends on (dependencies) or files that
+# depend on it (dependents).
+direction = "Dependencies"
+# A list of file patterns to exclude from analysis in addition to the files excluded globally (see exclude, and extend-exclude).
+# Exclusions are based on globs, and can be either:
+# - Single-path patterns, like .mypy_cache (to exclude any directory
+#   named .mypy_cache in the tree), foo.py (to exclude any file named
+#   foo.py), or foo_*.py (to exclude any file matching foo_*.py ).
+# - Relative patterns, like directory/foo.py (to exclude that specific
+#   file) or directory/*.py (to exclude any Python files in
+#   directory). Note that these paths are relative to the project root
+#   (e.g., the directory containing your pyproject.toml).
+# For more information on the glob syntax, refer to the globset documentation.
+exclude = []
+# A map from file path to the list of file paths or globs that should be considered
+# dependencies of that file, regardless of whether relevant imports are detected.
+include-dependencies = {}
+# Whether to enable preview mode. When preview mode is enabled, Ruff will expose unstable
+# commands.
+preview = false
 
 [format]
 # Whether to format code snippets in docstrings.
@@ -243,7 +283,7 @@ unsafe-fixes = false
 #     """
 #     pass
 # ---
-# If a code snippt in a docstring contains invalid Python code or if the
+# If a code snippet in a docstring contains invalid Python code or if the
 # formatter would otherwise write invalid Python code, then the code
 # example is ignored by the formatter and kept as-is.
 # Currently, doctest, Markdown, reStructuredText literal blocks, and
@@ -267,8 +307,8 @@ docstring-code-format = true
 # docstring is not taken into account. That is, this may result in lines
 # in the reformatted code example that exceed the globally configured
 # line length limit.
-# For example, when this is set to 20 and docstring-code-format is
-# enabled, then this code:
+# For example, when this is set to 20 and docstring-code-format
+# is enabled, then this code:
 # ---
 # def f(x):
 #     '''
@@ -320,7 +360,7 @@ exclude = []
 # def f():
 #     print("Hello") #  Spaces indent the `print` statement.
 # ---
-# indent-style = "tab"":
+# indent-style = "tab":
 # ---
 # def f():
 #     print("Hello") #  A tab `\t` indents the `print` statement.
@@ -337,30 +377,30 @@ indent-style = "space"
 line-ending = "lf"
 # Whether to enable the unstable preview style formatting.
 preview = false
-# Configures the preferred quote character for strings. Valid options are:
+# Configures the preferred quote character for strings. The recommended options are
 # - double (default): Use double quotes "
 # - single: Use single quotes '
-# - preserve (preview only): Keeps the existing quote character. We don't recommend using this option except for projects
-#    that already use a mixture of single and double quotes and can't migrate to using double or single quotes.
 # In compliance with PEP 8 and PEP 257,
-# Ruff prefers double quotes for multiline strings and docstrings, regardless of the
-# configured quote style.
-# Ruff may also deviate from using the configured quotes if doing so requires
-# escaping quote characters within the string. For example, given:
+# Ruff prefers double quotes for triple quoted strings and docstrings even when using quote-style = "single".
+# Ruff deviates from using the configured quotes if doing so prevents the need for
+# escaping quote characters inside the string:
 # ---
 # a = "a string without any quotes"
 # b = "It's monday morning"
 # ---
-# Ruff will change a to use single quotes when using quote-style = "single". However,
-# b remains unchanged, as converting to single quotes requires escaping the inner ',
-# which leads to less readable code: 'It\'s monday morning'. This does not apply when using preserve.
+# Ruff will change the quotes of the string assigned to a to single quotes when using quote-style = "single".
+# However, Ruff uses double quotes for the string assigned to b because using single quotes would require escaping the ',
+# which leads to the less readable code: 'It\'s monday morning'.
+# In addition, Ruff supports the quote style preserve for projects that already use
+# a mixture of single and double quotes and can't migrate to the double or single style.
+# The quote style preserve leaves the quotes of all strings unchanged.
 quote-style = "single"
 # Ruff uses existing trailing commas as an indication that short lines should be left separate.
 # If this option is set to true, the magic trailing comma is ignored.
 # For example, Ruff leaves the arguments separate even though
 # collapsing the arguments to a single line doesn't exceed the line length if skip-magic-trailing-comma = false:
 # ---
-#  # The arguments remain on separate lines because of the trailing comma after `b`
+# # The arguments remain on separate lines because of the trailing comma after `b`
 # def test(
 #     a,
 #     b,
@@ -416,7 +456,9 @@ extend-unsafe-fixes = []
 # preserved when (e.g.) validating # noqa directives. Useful for
 # retaining # noqa directives that cover plugins not yet implemented
 # by Ruff.
-external = []
+external = [
+    "DAR",
+]
 # A list of rule codes or prefixes to consider fixable. By default,
 # all rules are considered fixable.
 fixable = [
@@ -429,8 +471,6 @@ fixable = [
 # ignore, respectively), more specific prefixes override less
 # specific prefixes.
 ignore = [
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in classmethod
     "B005",    # Using .strip() with multi-character strings is misleading
     "D100",    # Missing docstring in public module
     "D104",    # Missing docstring in public package
@@ -441,16 +481,11 @@ ignore = [
     "D212",    # Multi-line docstring summary should start at the first line
     "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
     "S101",    # Use of `assert` detected
-    "TCH001",  # [*] Move application import into a type-checking block
-    "TCH002",  # [*] Move third-party import into a type-checking block
-    "TCH003",  # [*] Move standard library import into a type-checking block
+    "TC001",   # Move application import into a type-checking block
+    "TC002",   # Move third-party import into a type-checking block
+    "TC003",   # Move standard library import into a type-checking block
     "PYI041",  # Use `float` instead of `int | float`
 ]
-# Avoid automatically removing unused imports in __init__.py files. Such
-# imports will still be flagged, but with a dedicated message suggesting
-# that the import is either added to the module's __all__ symbol, or
-# re-exported with a redundant alias (e.g., import os as os).
-ignore-init-module-imports = false
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.
 # This is useful for ensuring proper diagnostics (e.g., to identify
@@ -497,18 +532,25 @@ typing-modules = []
 # A list of rule codes or prefixes to consider non-fixable.
 unfixable = []
 # A list of mappings from file pattern to rule codes or prefixes to
-# exclude, when considering any matching files.
+# exclude, when considering any matching files. An initial '!' negates
+# the file pattern.
 [lint.per-file-ignores]
+"!tests/*" = [
+    "PT",       # flake8-pytest-style
+]
 "tests/*" = [
-    "ANN",  # flake8-annotations
-    "SLF001",  # Private member accessed
-    "FBT001",  # Boolean-typed positional argument in function definition
+    "SLF001",   # Private member accessed
+    "FBT001",   # Boolean-typed positional argument in function definition
     "PLR0913",  # Too many arguments to function call
+    "RUF018",   # Avoid assignment expressions in `assert` statements
 ]
 "tests/**/test_*" = [
-    "D101",  # Missing docstring in public class
-    "D103",  # Missing docstring in public function
-    "B011",  # [*] Do not `assert False` (`python -O` removes these calls), raise `AssertionError()`
+    "ANN",      # flake8-annotations
+    "D101",     # Missing docstring in public class
+    "D102",     # Missing docstring in public method
+    "D103",     # Missing docstring in public function
+    "B011",     # [*] Do not `assert False` (`python -O` removes these calls), raise `AssertionError()`
+    "PLR2004",  # Magic value used in comparison
 ]
 
 [lint.flake8-annotations]
@@ -537,15 +579,21 @@ suppress-none-returning = false
 # exception types. By default, try-except-pass is only
 # disallowed for Exception and BaseException.
 check-typed-exception = false
-# A list of directories to consider temporary.
+# A list of directories to consider temporary (see S108).
 hardcoded-tmp-directory = [
     "/tmp",
     "/var/tmp",
     "/dev/shm",
 ]
 # A list of directories to consider temporary, in addition to those
-# specified by hardcoded-tmp-directory.
+# specified by hardcoded-tmp-directory (see S108).
 hardcoded-tmp-directory-extend = []
+
+[lint.flake8-boolean-trap]
+# Additional callable functions with which to allow boolean traps.
+# Expects to receive a list of fully-qualified names (e.g., pydantic.Field, rather than
+# Field).
+extend-allowed-calls = []
 
 [lint.flake8-bugbear]
 # Additional callable functions to consider "immutable" when evaluating, e.g., the
@@ -556,10 +604,10 @@ hardcoded-tmp-directory-extend = []
 extend-immutable-calls = []
 
 [lint.flake8-builtins]
+# List of builtin module names to allow.
+builtins-allowed-modules = []
 # Ignore list of builtins.
-builtins-ignorelist = [
-    'id',
-]
+builtins-ignorelist = []
 
 [lint.flake8-comprehensions]
 # Allow dict calls that make use of keyword arguments (e.g., dict(a=1, b=2)).
@@ -574,13 +622,14 @@ allow-dict-calls-with-keyword-arguments = false
 min-file-size = 0
 # The regular expression used to match the copyright notice, compiled
 # with the regex crate.
-# Defaults to (?i)Copyright\s+(\(C\)\s+)?\d{4}(-\d{4})*, which matches
+# Defaults to (?i)Copyright\s+((?:\(C\)|©)\s+)?\d{4}((-|,\s)\d{4})*, which matches
 # the following:
 # - Copyright 2023
 # - Copyright (C) 2023
 # - Copyright 2021-2023
 # - Copyright (C) 2021-2023
-notice-rgx = "(?i)Copyright\\s+(\\(C\\)\\s+)?\\d{4}([-,]\\d{4})*"
+# - Copyright (C) 2021, 2023
+notice-rgx = "(?i)Copyright\\s+((?:\\(C\\)|©)\\s+)?\\d{4}((-|,\\s)\\d{4})*"
 
 [lint.flake8-errmsg]
 # Maximum string length for string literals in exception messages.
@@ -602,10 +651,11 @@ function-names = [
 # By default, implicit concatenations of multiline strings are
 # allowed (but continuation lines, delimited with a backslash, are
 # prohibited).
-# Note that setting allow-multiline = false should typically be coupled
-# with disabling explicit-string-concatenation (ISC003). Otherwise,
-# both explicit and implicit multiline string concatenations will be seen
-# as violations.
+# Setting allow-multiline = false will automatically disable the
+# explicit-string-concatenation (ISC003) rule. Otherwise, both
+# implicit and explicit multiline string concatenations would be seen
+# as violations, making it impossible to write a linter-compliant multiline
+# string.
 allow-multiline = true
 
 [lint.flake8-import-conventions]
@@ -618,13 +668,14 @@ banned-aliases = {}
 banned-from = [
     "yaml",
     "json",
+    "tomllib",
 ]
 # A mapping from module to conventional import alias. These aliases will
 # be added to the aliases mapping.
 extend-aliases = {}
 
 # The conventional aliases for imports. These aliases can be extended by
-# the extend_aliases option.
+# the extend-aliases option.
 [lint.flake8-import-conventions.aliases]
 "altair" = "alt"
 "matplotlib" = "mpl"
@@ -639,39 +690,40 @@ extend-aliases = {}
 "plotly.express" = "px"
 "polars" = "pl"
 "pyarrow" = "pa"
+"xml.etree.ElementTree" = "ET"
 
 [lint.flake8-pytest-style]
 # Boolean flag specifying whether @pytest.fixture() without parameters
-# should have parentheses. If the option is set to true (the
-# default), @pytest.fixture() is valid and @pytest.fixture is
-# invalid. If set to false, @pytest.fixture is valid and
-# @pytest.fixture() is invalid.
+# should have parentheses. If the option is set to false (the default),
+# @pytest.fixture is valid and @pytest.fixture() is invalid. If set
+# to true, @pytest.fixture() is valid and @pytest.fixture is
+# invalid.
 fixture-parentheses = false
 # Boolean flag specifying whether @pytest.mark.foo() without parameters
-# should have parentheses. If the option is set to true (the
-# default), @pytest.mark.foo() is valid and @pytest.mark.foo is
-# invalid. If set to false, @pytest.fixture is valid and
-# @pytest.mark.foo() is invalid.
+# should have parentheses. If the option is set to false (the
+# default), @pytest.mark.foo is valid and @pytest.mark.foo() is
+# invalid. If set to true, @pytest.mark.foo() is valid and
+# @pytest.mark.foo is invalid.
 mark-parentheses = false
 # Expected type for multiple argument names in @pytest.mark.parametrize.
 # The following values are supported:
 # - csv — a comma-separated list, e.g.
-#   @pytest.mark.parametrize('name1,name2', ...)
+#   @pytest.mark.parametrize("name1,name2", ...)
 # - tuple (default) — e.g.
-#   @pytest.mark.parametrize(('name1', 'name2'), ...)
-# - list — e.g. @pytest.mark.parametrize(['name1', 'name2'], ...)
+#   @pytest.mark.parametrize(("name1", "name2"), ...)
+# - list — e.g. @pytest.mark.parametrize(["name1", "name2"], ...)
 parametrize-names-type = "list"
 # Expected type for each row of values in @pytest.mark.parametrize in
 # case of multiple parameters. The following values are supported:
 # - tuple (default) — e.g.
-#   @pytest.mark.parametrize(('name1', 'name2'), [(1, 2), (3, 4)])
+#   @pytest.mark.parametrize(("name1", "name2"), [(1, 2), (3, 4)])
 # - list — e.g.
-#   @pytest.mark.parametrize(('name1', 'name2'), [[1, 2], [3, 4]])
+#   @pytest.mark.parametrize(("name1", "name2"), [[1, 2], [3, 4]])
 parametrize-values-row-type = "tuple"
 # Expected type for the list of values rows in @pytest.mark.parametrize.
 # The following values are supported:
-# - tuple — e.g. @pytest.mark.parametrize('name', (1, 2, 3))
-# - list (default) — e.g. @pytest.mark.parametrize('name', [1, 2, 3])
+# - tuple — e.g. @pytest.mark.parametrize("name", (1, 2, 3))
+# - list (default) — e.g. @pytest.mark.parametrize("name", [1, 2, 3])
 parametrize-values-type = "list"
 # List of additional exception names that require a match= parameter in a
 # pytest.raises() call. This extends the default list of exceptions
@@ -822,6 +874,8 @@ combine-as-imports = true
 # An override list of tokens to always recognize as a CONSTANT
 # for order-by-type regardless of casing.
 constants = []
+# Define a default section for any imports that don't fit into the specified section-order.
+default-section = "third-party"
 # Whether to automatically mark imports from within the same package as first-party.
 # For example, when detect-same-package = true, then when analyzing files within the
 # foo package, any imports from within the foo package will be considered first-party.
@@ -904,6 +958,8 @@ length-sort = false
 length-sort-straight = false
 # The number of blank lines to place after imports.
 # Use -1 for automatic determination.
+# Ruff uses at most one blank line after imports in typing stub files (files with .pyi extension) in accordance to
+# the typing style recommendations (source).
 # When using the formatter, only the values -1, 1, and 2 are compatible because
 # it enforces at least one empty and at most two empty lines after imports.
 lines-after-imports = 2
@@ -922,8 +978,8 @@ no-lines-before = []
 # import numpy
 # import pandas
 # Setting no-sections = true will instead group all imports into a single section:
-# import os
 # import numpy
+# import os
 # import pandas
 # import sys
 no-sections = false
@@ -949,7 +1005,26 @@ section-order = [
     "local-folder",
 ]
 # A list of mappings from section names to modules.
-# By default custom sections are output last, but this can be overridden with section-order.
+# By default, imports are categorized according to their type (e.g., future, third-party,
+# and so on). This setting allows you to group modules into custom sections, to augment or
+# override the built-in sections.
+# For example, to group all testing utilities, you could create a testing section:
+# testing = ["pytest", "hypothesis"]
+# The values in the list are treated as glob patterns. For example, to match all packages in
+# the LangChain ecosystem (langchain-core, langchain-openai, etc.):
+# langchain = ["langchain-*"]
+# Custom sections should typically be inserted into the section-order list to ensure that
+# they're displayed as a standalone group and in the intended order, as in:
+# section-order = [
+#   "future",
+#   "standard-library",
+#   "third-party",
+#   "first-party",
+#   "local-folder",
+#   "testing"
+# ]
+# If a custom section is omitted from section-order, imports in that section will be
+# assigned to the default-section (which defaults to third-party).
 sections = {}
 # One or more modules to exclude from the single line rule.
 single-line-exclusions = []
@@ -976,20 +1051,15 @@ max-complexity = 10
 # Expects to receive a list of fully-qualified names (e.g., pydantic.validator,
 # rather than validator) or alternatively a plain name which is then matched against
 # the last segment in case the decorator itself consists of a dotted name.
-classmethod-decorators = [
-    "pydantic.validator",
-    "pydantic.root_validator",
-    "sqlalchemy.orm.declared_attr",
-    "sqlalchemy.ext.declarative.declared_attr",
-]
+classmethod-decorators = []
 # Additional names (or patterns) to ignore when considering pep8-naming violations,
-# in addition to those included in ignore-names
-# Supports glob patterns. For example, to ignore all names starting with
+# in addition to those included in ignore-names.
+# Supports glob patterns. For example, to ignore all names starting with test_
 # or ending with _test, you could use ignore-names = ["test_*", "*_test"].
 # For more information on the glob syntax, refer to the globset documentation.
 extend-ignore-names = []
 # A list of names (or patterns) to ignore when considering pep8-naming violations.
-# Supports glob patterns. For example, to ignore all names starting with
+# Supports glob patterns. For example, to ignore all names starting with test_
 # or ending with _test, you could use ignore-names = ["test_*", "*_test"].
 # For more information on the glob syntax, refer to the globset documentation.
 ignore-names = [
@@ -1019,8 +1089,8 @@ staticmethod-decorators = []
 
 [lint.pycodestyle]
 # Whether line-length violations (E501) should be triggered for
-# comments starting with task-tags (by default: ["TODO", "FIXME",
-# and "XXX"]).
+# comments starting with task-tags (by default: "TODO", "FIXME",
+# and "XXX").
 ignore-overlong-task-comments = false
 # The maximum line length to allow for doc-line-too-long violations within
 # documentation (W505), including standalone comments. By default,
@@ -1034,10 +1104,12 @@ max-doc-length = 110
 # Use this option when you want to detect extra-long lines that the formatter can't automatically split by setting
 # pycodestyle.line-length to a value larger than line-length.
 # ---
-# line-length = 88 # The formatter wraps lines at a length of 88
+# # The formatter wraps lines at a length of 88.
+# line-length = 88
 #
 # [pycodestyle]
-# max-line-length = 100 # E501 reports lines that exceed the length of 100.
+# # E501 reports lines that exceed the length of 100.
+# max-line-length = 100
 # ---
 # The length is determined by the number of characters per line, except for lines containing East Asian characters or emojis.
 # For these lines, the unicode width of each character is added up to determine the length.
@@ -1045,7 +1117,7 @@ max-doc-length = 110
 #max-line-length =
 
 [lint.pydocstyle]
-# Whether to use Google-style or NumPy-style conventions or the PEP 257
+# Whether to use Google-style, NumPy-style conventions, or the PEP 257
 # defaults when analyzing docstring sections.
 # Enabling a convention will disable all rules that are not included in
 # the specified convention. As such, the intended workflow is to enable a
@@ -1089,6 +1161,13 @@ ignore-decorators = []
 property-decorators = []
 
 [lint.pyflakes]
+# A list of modules to ignore when considering unused imports.
+# Used to prevent violations for specific modules that are known to have side effects on
+# import (e.g., hvplot.pandas).
+# Modules in this list are expected to be fully-qualified names (e.g., hvplot.pandas). Any
+# submodule of a given module will also be ignored (e.g., given hvplot, hvplot.pandas
+# will also be ignored).
+allowed-unused-imports = []
 # Additional functions or classes to consider generic, such that any
 # subscripts should be treated as type annotation (e.g., ForeignKey in
 # django.db.models.ForeignKey["User"].
@@ -1098,39 +1177,36 @@ extend-generics = []
 
 [lint.pylint]
 # Dunder methods name to allow, in addition to the default set from the
-# Python standard library (see: PLW3201).
+# Python standard library (see PLW3201).
 allow-dunder-method-names = []
-# Constant types to ignore when used as "magic values" (see: PLR2004).
+# Constant types to ignore when used as "magic values" (see PLR2004).
 allow-magic-value-types = [
     "str",
     "bytes",
 ]
 # Maximum number of arguments allowed for a function or method definition
-# (see: PLR0913).
+# (see PLR0913).
 max-args = 5
 # Maximum number of Boolean expressions allowed within a single if statement
-# (see: PLR0916).
+# (see PLR0916).
 max-bool-expr = 5
-# Maximum number of branches allowed for a function or method body (see:
-# PLR0912).
+# Maximum number of branches allowed for a function or method body (see PLR0912).
 max-branches = 12
-# Maximum number of local variables allowed for a function or method body (see:
-# PLR0914).
+# Maximum number of local variables allowed for a function or method body (see PLR0914).
 max-locals = 15
 # Maximum number of nested blocks allowed within a function or method body
-# (see: PLR1702).
+# (see PLR1702).
 max-nested-blocks = 5
 # Maximum number of positional arguments allowed for a function or method definition
-# (see: PLR0917).
+# (see PLR0917).
 # If not specified, defaults to the value of max-args.
 max-positional-args = 5
-# Maximum number of public methods allowed for a class (see: PLR0904).
+# Maximum number of public methods allowed for a class (see PLR0904).
 max-public-methods = 20
 # Maximum number of return statements allowed for a function or method
 # body (see PLR0911)
 max-returns = 6
-# Maximum number of statements allowed for a function or method body (see:
-# PLR0915).
+# Maximum number of statements allowed for a function or method body (see PLR0915).
 max-statements = 50
 
 [lint.pyupgrade]
@@ -1148,7 +1224,7 @@ max-statements = 50
 # break if the annotations are incompatible with the current Python
 # version.
 # For example, while the following is valid Python 3.8 code due to the
-# presence of from __future__ import annotations, the use of str| int
+# presence of from __future__ import annotations, the use of str | int
 # prior to Python 3.10 will cause Pydantic to raise a TypeError at
 # runtime:
 # ---
@@ -1157,6 +1233,15 @@ max-statements = 50
 # import pydantic
 #
 # class Foo(pydantic.BaseModel):
-#    bar: str | int
+#     bar: str | int
 # ---
 keep-runtime-typing = false
+
+[lint.ruff]
+# A list of additional callable names that behave like [markupsafe.Markup].
+# Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
+# literal).
+extend-markup-names = []
+# Whether to prefer accessing items keyed by tuples with
+# parentheses around the tuple (see RUF031).
+parenthesize-tuple-in-subscript = false
