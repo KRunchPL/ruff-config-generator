@@ -192,7 +192,7 @@ src = [
 # 3.10+. As such, Ruff will often recommend newer features in a stub
 # file than it would for an equivalent runtime file with the same target
 # version.
-target-version = "py38"
+target-version = "py39"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
@@ -548,14 +548,14 @@ suppress-none-returning = false
 # exception types. By default, try-except-pass is only
 # disallowed for Exception and BaseException.
 check-typed-exception = false
-# A list of directories to consider temporary.
+# A list of directories to consider temporary (see S108).
 hardcoded-tmp-directory = [
     "/tmp",
     "/var/tmp",
     "/dev/shm",
 ]
 # A list of directories to consider temporary, in addition to those
-# specified by hardcoded-tmp-directory.
+# specified by hardcoded-tmp-directory (see S108).
 hardcoded-tmp-directory-extend = []
 
 [lint.flake8-boolean-trap]

@@ -471,8 +471,6 @@ fixable = [
 # ignore, respectively), more specific prefixes override less
 # specific prefixes.
 ignore = [
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in classmethod
     "B005",    # Using .strip() with multi-character strings is misleading
     "D100",    # Missing docstring in public module
     "D104",    # Missing docstring in public package
@@ -483,9 +481,9 @@ ignore = [
     "D212",    # Multi-line docstring summary should start at the first line
     "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
     "S101",    # Use of `assert` detected
-    "TCH001",  # Move application import into a type-checking block
-    "TCH002",  # Move third-party import into a type-checking block
-    "TCH003",  # Move standard library import into a type-checking block
+    "TC001",   # Move application import into a type-checking block
+    "TC002",   # Move third-party import into a type-checking block
+    "TC003",   # Move standard library import into a type-checking block
     "PYI041",  # Use `float` instead of `int | float`
 ]
 # A list of objects that should be treated equivalently to a
@@ -581,14 +579,14 @@ suppress-none-returning = false
 # exception types. By default, try-except-pass is only
 # disallowed for Exception and BaseException.
 check-typed-exception = false
-# A list of directories to consider temporary.
+# A list of directories to consider temporary (see S108).
 hardcoded-tmp-directory = [
     "/tmp",
     "/var/tmp",
     "/dev/shm",
 ]
 # A list of directories to consider temporary, in addition to those
-# specified by hardcoded-tmp-directory.
+# specified by hardcoded-tmp-directory (see S108).
 hardcoded-tmp-directory-extend = []
 
 [lint.flake8-boolean-trap]
