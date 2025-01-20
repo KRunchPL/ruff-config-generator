@@ -749,6 +749,26 @@ raises-require-match-for = [
     "EnvironmentError",
     "socket.error",
 ]
+# List of additional warning names that require a match= parameter in a
+# pytest.warns() call. This extends the default list of warnings that
+# require a match= parameter.
+# This option is useful if you want to extend the default list of warnings
+# that require a match= parameter without having to specify the entire
+# list.
+# Note that this option does not remove any warnings from the default
+# list.
+# Supports glob patterns. For more information on the glob syntax, refer
+# to the globset documentation.
+warns-extend-require-match-for = []
+# List of warning names that require a match= parameter in a
+# pytest.warns() call.
+# Supports glob patterns. For more information on the glob syntax, refer
+# to the globset documentation.
+warns-require-match-for = [
+    "Warning",
+    "UserWarning",
+    "DeprecationWarning",
+]
 
 [lint.flake8-quotes]
 # Whether to avoid using single quotes if a string contains single quotes,
