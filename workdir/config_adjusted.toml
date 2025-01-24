@@ -1146,6 +1146,12 @@ max-doc-length = 110
 # See the line-too-long rule for more information.
 #max-line-length =
 
+[lint.pydoclint]
+# Skip docstrings which fit on a single line.
+# Note: The corresponding setting in pydoclint
+# is named skip-checking-short-docstrings.
+ignore-one-line-docstrings = false
+
 [lint.pydocstyle]
 # Whether to use Google-style, NumPy-style conventions, or the PEP 257
 # defaults when analyzing docstring sections.
