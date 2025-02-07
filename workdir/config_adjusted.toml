@@ -469,7 +469,8 @@ fixable = [
 # between.
 # When breaking ties between enabled and disabled rules (via select and
 # ignore, respectively), more specific prefixes override less
-# specific prefixes.
+# specific prefixes. ignore takes precedence over select if the same
+# prefix appears in both.
 ignore = [
     "B005",    # Using .strip() with multi-character strings is misleading
     "D100",    # Missing docstring in public module
@@ -508,7 +509,8 @@ preview = false
 # between.
 # When breaking ties between enabled and disabled rules (via select and
 # ignore, respectively), more specific prefixes override less
-# specific prefixes.
+# specific prefixes. ignore takes precedence over select if the
+# same prefix appears in both.
 select = [
     "ALL",
 ]

@@ -467,7 +467,8 @@ fixable = [
 # between.
 # When breaking ties between enabled and disabled rules (via select and
 # ignore, respectively), more specific prefixes override less
-# specific prefixes.
+# specific prefixes. ignore takes precedence over select if the same
+# prefix appears in both.
 ignore = []
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.
@@ -495,7 +496,8 @@ preview = false
 # between.
 # When breaking ties between enabled and disabled rules (via select and
 # ignore, respectively), more specific prefixes override less
-# specific prefixes.
+# specific prefixes. ignore takes precedence over select if the
+# same prefix appears in both.
 select = [
     "E4",
     "E7",
