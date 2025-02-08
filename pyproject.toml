@@ -1,33 +1,41 @@
-[tool.poetry]
+[project]
 name = "ruff-config-generator"
-version = "0.1.0"
-description = "Generates ruff default configuration"
-authors = ["KRunchPL <krunchfrompoland@gmail.com>"]
+description = "Generates ruff configuration"
+version = "1.0.0"
+authors = [
+    { name = "KRunchPL", email = "krunchfrompoland@gmail.com" },
+]
+license = "Apache-2.0"
 readme = "README.md"
+requires-python = ">=3.12,<4"
+dependencies = [
+    "beautifulsoup4 ==4.13.3",
+    "requests ==2.32.3",
+]
+
+[project.urls]
 homepage = "https://github.com/KRunchPL/ruff-config-generator"
 repository = "https://github.com/KRunchPL/ruff-config-generator"
 documentation = "https://github.com/KRunchPL/ruff-config-generator"
-license = "Apache-2.0"
+
+[tool.hatch.build.targets.wheel]
 packages = [
-    { include = "ruff_config_generator" },
+    "src/ruff_config_generator",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-requests = "^2.32.3"
-beautifulsoup4 = "^4.12.3"
-
-[tool.poetry.group.dev.dependencies]
-darglint = "^1.8.1"
-flake8 = "^7.1.1"
-ruff = "^0.8.0"
-mypy = "~1.13.0"
-pytest = "^8.3.3"
-pytest-cov = "^6.0.0"
-pytest-mock = "^3.14.0"
-types-requests = "^2.32.0.20241016"
-types-beautifulsoup4 = "^4.12.0.20241020"
+[dependency-groups]
+dev = [
+    "darglint ==1.8.1",
+    "flake8 ==7.1.1",
+    "mypy ==1.15.0",
+    "pytest ==8.3.4",
+    "pytest-cov ==6.0.0",
+    "pytest-mock ==3.14.0",
+    "ruff >=0.9.5",
+    "types-beautifulsoup4 ==4.12.0.20250204",
+    "types-requests ==2.32.0.20241016",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

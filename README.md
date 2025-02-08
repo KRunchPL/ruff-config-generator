@@ -1,19 +1,18 @@
-# Ruff Default Configuration Generator
+# Ruff Configuration Generator
 
-Tool that generates [`ruff`](https://github.com/astral-sh/ruff) configuration with all available options set to their defualt values.
+Tool that generates [`ruff`](https://github.com/astral-sh/ruff) configuration with all available options.
 
 ## Usage
 
 ```console
-python -m ruff_config_generator download
-python -m ruff_config_generator generate
+python -m ruff_config_generator
 ```
 
-The first command will download the settings HTML page and the second will analyze it and generate `toml` file with all available options set to their defualt values. The file will also contain options descriptions as comments.
+The command will download the settings HTML page, analyze it, and generate two `toml` files. Both `toml` files will contain all available `ruff` options along with their descriptions. The difference between the two files is that one will have all settings set to their default values, while the other will have values adjusted to my personal preferences.
 
-Output files will be saved in the `workdir` folder as `settings.html` and `config.toml`.
+Output files will be saved in the `workdir` folder as `settings.html`, `config.toml` (default values) and `config_adjusted.toml`.
 
-On the repository, the `workdir` folder contains result of the above commands for latest ruff version I have been using. It also contains `config_adjusted.toml` which contains latest configuration with values adjusted to my personal projects.
+On the repository, the `workdir` folder contains result of the above command for latest ruff version I have been using.
 
 ## Additional documentation
 

@@ -8,30 +8,37 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12"]
-        poetry-version: ["1.8.2"]
+        python-version: ["3.11", "3.12"]
+        uv-version: ["0.5.29"]
         os: ["ubuntu-latest"]
     runs-on: ${{ matrix.os }}
     steps:
+
     - name: Checkout repo
       uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: ${{ matrix.uv-version }}
+
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Set up Poetry ${{ matrix.poetry-version }}
-      run: |
-        python -m pip install poetry==${{ matrix.poetry-version }}
-        poetry config virtualenvs.create false
+
     - name: Install package with dependencies
-      run: poetry install --no-root
+      run: uv sync
+
     - name: Linter
       run: |
-        ruff check .
-        flake8
-        ruff format .
+        uv run ruff check .
+        uv run flake8
+        uv run ruff format .
         git diff-index --quiet HEAD -- || (echo "The following files must be ruff formatted:"; git diff --name-only; exit 1)
+
     - name: Typing checker
-      run: mypy
+      run: uv run mypy
+
     - name: Unit tests
-      run: pytest
+      run: uv run pytest

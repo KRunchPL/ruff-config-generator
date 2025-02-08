@@ -1,3 +1,5 @@
+### Configuration created for ruff==0.9.5
+
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
 builtins = []

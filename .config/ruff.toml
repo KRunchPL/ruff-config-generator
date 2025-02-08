@@ -217,8 +217,8 @@ direction = "Dependencies"
 #   (e.g., the directory containing your pyproject.toml).
 # For more information on the glob syntax, refer to the globset documentation.
 exclude = []
-# A map from file path to the list of file paths or globs that should be considered
-# dependencies of that file, regardless of whether relevant imports are detected.
+# A map from file path to the list of Python or non-Python file paths or globs that should be
+# considered dependencies of that file, regardless of whether relevant imports are detected.
 include-dependencies = {}
 # Whether to enable preview mode. When preview mode is enabled, Ruff will expose unstable
 # commands.
@@ -469,7 +469,8 @@ fixable = [
 # between.
 # When breaking ties between enabled and disabled rules (via select and
 # ignore, respectively), more specific prefixes override less
-# specific prefixes.
+# specific prefixes. ignore takes precedence over select if the same
+# prefix appears in both.
 ignore = [
     "B005",    # Using .strip() with multi-character strings is misleading
     "D100",    # Missing docstring in public module
@@ -508,7 +509,8 @@ preview = false
 # between.
 # When breaking ties between enabled and disabled rules (via select and
 # ignore, respectively), more specific prefixes override less
-# specific prefixes.
+# specific prefixes. ignore takes precedence over select if the
+# same prefix appears in both.
 select = [
     "ALL",
 ]
@@ -749,6 +751,26 @@ raises-require-match-for = [
     "EnvironmentError",
     "socket.error",
 ]
+# List of additional warning names that require a match= parameter in a
+# pytest.warns() call. This extends the default list of warnings that
+# require a match= parameter.
+# This option is useful if you want to extend the default list of warnings
+# that require a match= parameter without having to specify the entire
+# list.
+# Note that this option does not remove any warnings from the default
+# list.
+# Supports glob patterns. For more information on the glob syntax, refer
+# to the globset documentation.
+warns-extend-require-match-for = []
+# List of warning names that require a match= parameter in a
+# pytest.warns() call.
+# Supports glob patterns. For more information on the glob syntax, refer
+# to the globset documentation.
+warns-require-match-for = [
+    "Warning",
+    "UserWarning",
+    "DeprecationWarning",
+]
 
 [lint.flake8-quotes]
 # Whether to avoid using single quotes if a string contains single quotes,
@@ -852,6 +874,16 @@ runtime-evaluated-base-classes = []
 # decorators from being moved into type-checking blocks.
 # Common examples include Pydantic's @pydantic.validate_call decorator
 # (for functions) and attrs' @attrs.define decorator (for classes).
+# This also supports framework decorators like FastAPI's fastapi.FastAPI.get
+# which will work across assignments in the same module.
+# For example:
+# import fastapi
+#
+# app = FastAPI("app")
+#
+# @app.get("/home")
+# def home() -> str: ...
+# Here app.get will correctly be identified as fastapi.FastAPI.get.
 runtime-evaluated-decorators = []
 # Enforce TC001, TC002, and TC003 rules even when valid runtime imports
 # are present for the same module.
@@ -1116,6 +1148,12 @@ max-doc-length = 110
 # See the line-too-long rule for more information.
 #max-line-length =
 
+[lint.pydoclint]
+# Skip docstrings which fit on a single line.
+# Note: The corresponding setting in pydoclint
+# is named skip-checking-short-docstrings.
+ignore-one-line-docstrings = false
+
 [lint.pydocstyle]
 # Whether to use Google-style, NumPy-style conventions, or the PEP 257
 # defaults when analyzing docstring sections.
@@ -1153,6 +1191,8 @@ max-doc-length = 110
 # Ignore docstrings for functions or methods decorated with the
 # specified fully-qualified decorators.
 ignore-decorators = []
+# If set to true, ignore missing documentation for *args and **kwargs parameters.
+ignore-var-parameters = false
 # A list of decorators that, when applied to a method, indicate that the
 # method should be treated as a property (in addition to the builtin
 # @property and standard-library @functools.cached_property).
@@ -1238,7 +1278,28 @@ max-statements = 50
 keep-runtime-typing = false
 
 [lint.ruff]
-# A list of additional callable names that behave like [markupsafe.Markup].
+# A list of callable names, whose result may be safely passed into
+# markupsafe.Markup.
+# Expects to receive a list of fully-qualified names (e.g., bleach.clean, rather than clean).
+# This setting helps you avoid false positives in code like:
+# ---
+# from bleach import clean
+# from markupsafe import Markup
+#
+# cleaned_markup = Markup(clean(some_user_input))
+# ---
+# Where the use of bleach.clean
+# usually ensures that there's no XSS vulnerability.
+# Although it is not recommended, you may also use this setting to whitelist other
+# kinds of calls, e.g. calls to i18n translation functions, where how safe that is
+# will depend on the implementation and how well the translations are audited.
+# Another common use-case is to wrap the output of functions that generate markup
+# like xml.etree.ElementTree.tostring
+# or template rendering engines where sanitization of potential user input is either
+# already baked in or has to happen before rendering.
+allowed-markup-calls = []
+# A list of additional callable names that behave like
+# markupsafe.Markup.
 # Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
 # literal).
 extend-markup-names = []

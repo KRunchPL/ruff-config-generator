@@ -4,7 +4,7 @@ This file contains the most important developer information for the repository.
 
 ## Cloning the repository
 
-Of course this repository is cloned as all others, with `git clone` command, but there is one additional issuee you should be aware of before proceeding.
+Of course this repository is cloned as all others, with `git clone` command, but there is one additional issue you should be aware of before proceeding.
 
 ## Symlinks
 
@@ -97,52 +97,26 @@ git config --unset core.symlinks
 
 Python part of the code shall follow those base guidelines:
 
-* is compatible with Python version >=3.12.0,
+* is compatible with Python version >=3.11.0,
 * all code shall pass configured static code checks,
-* all defined unit test shall pass,
+* all defined test shall pass,
 * all code shall be covered by unit tests.
+
+Project metadata, including dependencies is being kept in `pyproject.toml`, as defined in [the specification](https://packaging.python.org/en/latest/specifications/pyproject-toml/).
 
 ### Library dependencies
 
-Project is using [Poetry](https://python-poetry.org/) to manage dependencies and building packages.
+Project is using [UV](https://github.com/astral-sh/uv) to manage dependencies and building packages.
 
-To install Poetry on your system follow the guide here: [Poetry Installation](https://python-poetry.org/docs/#installation)
+The [UV documentation](https://docs.astral.sh/uv/) describes how to install and use UV.
 
-If you want to have virtualenv created in `.venv` folder in repository root, configure Poetry with following command:
+### Tests
 
-```console
-poetry config virtualenvs.in-project true
-```
+Tests shall be written using pytest and put in the `tests` directory in the repository root.
 
-To create a venv and install all dependencies:
+Dependencies required only by tests shall not be added to package dependencies, but to `dev` dependency group.
 
-```console
-poetry install --no-root --sync
-```
-
-To add a production dependency:
-
-```console
-poetry add <dependency name>
-```
-
-To add a development dependency (like one used by tests):
-
-```console
-poetry add --group dev <dependency name>
-```
-
-To build new package:
-
-```console
-poetry build
-```
-
-### Unit tests
-
-Unit tests shall be written using pytest and put in the `tests` directory in the repository root. For dependencies handling see [Dependencies section](#library-dependencies).
-
-To run all the unit tests use the `pytest` command without any parameters in the main folder of the repo. This will start all the unit tests from the `tests` package and count coverage for every python file in the project package.
+To run all tests use the `pytest` command without any parameters in the main folder of the repo. This will execute all the tests defined in the `tests` package and count coverage for every python file in the `src` folder.
 
 Results will be written to standard output. Coverage can be found in the `.coverage` file and the HTML version of the report will be put in the `coverage-report` directory.
 

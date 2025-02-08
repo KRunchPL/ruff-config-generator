@@ -1,3 +1,5 @@
+### Configuration created for ruff==0.9.5
+
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
 builtins = []
@@ -472,20 +474,20 @@ fixable = [
 # specific prefixes. ignore takes precedence over select if the same
 # prefix appears in both.
 ignore = [
-    "B005",    # Using .strip() with multi-character strings is misleading
-    "D100",    # Missing docstring in public module
-    "D104",    # Missing docstring in public package
-    "D105",    # Missing docstring in magic method
-    "D107",    # Missing docstring in `__init__`
-    "D200",    # One-line docstring should fit on one line
-    "D203",    # 1 blank line required before class docstring
-    "D212",    # Multi-line docstring summary should start at the first line
-    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
-    "S101",    # Use of `assert` detected
-    "TC001",   # Move application import into a type-checking block
-    "TC002",   # Move third-party import into a type-checking block
-    "TC003",   # Move standard library import into a type-checking block
-    "PYI041",  # Use `float` instead of `int | float`
+    "B005",     # Using .strip() with multi-character strings is misleading
+    "D100",     # Missing docstring in public module
+    "D104",     # Missing docstring in public package
+    "D105",     # Missing docstring in magic method
+    "D107",     # Missing docstring in `__init__`
+    "D200",     # One-line docstring should fit on one line
+    "D203",     # 1 blank line required before class docstring
+    "D212",     # Multi-line docstring summary should start at the first line
+    "RUF012",   # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S101",     # Use of `assert` detected
+    "TC001",    # Move application import into a type-checking block
+    "TC002",    # Move third-party import into a type-checking block
+    "TC003",    # Move standard library import into a type-checking block
+    "PYI041",   # Use `float` instead of `int | float`
 ]
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.
@@ -533,6 +535,7 @@ task-tags = [
 typing-modules = []
 # A list of rule codes or prefixes to consider non-fixable.
 unfixable = []
+
 # A list of mappings from file pattern to rule codes or prefixes to
 # exclude, when considering any matching files. An initial '!' negates
 # the file pattern.
