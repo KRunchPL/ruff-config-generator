@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.9.5
+### Configuration created for ruff==0.9.6
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -613,6 +613,8 @@ extend-immutable-calls = []
 builtins-allowed-modules = []
 # Ignore list of builtins.
 builtins-ignorelist = []
+# Compare module names instead of full module paths.
+builtins-strict-checking = true
 
 [lint.flake8-comprehensions]
 # Allow dict calls that make use of keyword arguments (e.g., dict(a=1, b=2)).
