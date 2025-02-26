@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.9.6
+### Configuration created for ruff==0.9.7
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -582,6 +582,8 @@ builtins-allowed-modules = []
 # Ignore list of builtins.
 builtins-ignorelist = []
 # Compare module names instead of full module paths.
+# Used by A005 - stdlib-module-shadowing.
+# In preview mode the default value is false rather than true.
 builtins-strict-checking = true
 
 [lint.flake8-comprehensions]
