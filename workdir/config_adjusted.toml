@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.9.7
+### Configuration created for ruff==0.9.9
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -126,6 +126,17 @@ namespace-packages = []
 # Actions annotations), "gitlab" (GitLab CI code quality report),
 # "pylint" (Pylint text format) or "azure" (Azure Pipeline logging commands).
 output-format = "concise"
+# A list of mappings from glob-style file pattern to Python version to use when checking the
+# corresponding file(s).
+# This may be useful for overriding the global Python version settings in target-version or
+# requires-python for a subset of files. For example, if you have a project with a minimum
+# supported Python version of 3.9 but a subdirectory of developer scripts that want to use a
+# newer feature like the match statement from Python 3.10, you can use
+# per-file-target-version to specify "developer_scripts/*.py" = "py310".
+# This setting is used by the linter to enforce any enabled version-specific lint rules, as
+# well as by the formatter for any version-specific formatting options, such as parenthesizing
+# context managers on Python 3.10+.
+per-file-target-version = {}
 # Whether to enable preview mode. When preview mode is enabled, Ruff will
 # use unstable rules, fixes, and formatting.
 preview = false
