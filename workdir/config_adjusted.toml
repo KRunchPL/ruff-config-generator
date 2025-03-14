@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.9.10
+### Configuration created for ruff==0.10.0
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -195,7 +195,9 @@ src = [
 # requires-python = ">=3.8"
 # ---
 # If both are specified, target-version takes precedence over
-# requires-python.
+# requires-python. See Inferring the Python version
+# for a complete description of how the target-version is determined
+# when left unspecified.
 # Note that a stub file can sometimes make use of a typing feature
 # before it is available at runtime, as long as the stub does not make
 # use of new syntax. For example, a type checker will understand
@@ -591,10 +593,35 @@ suppress-dummy-args = false
 suppress-none-returning = false
 
 [lint.flake8-bandit]
+# A list of callable names, whose result may be safely passed into
+# markupsafe.Markup.
+# Expects to receive a list of fully-qualified names (e.g., bleach.clean, rather than clean).
+# This setting helps you avoid false positives in code like:
+# ---
+# from bleach import clean
+# from markupsafe import Markup
+#
+# cleaned_markup = Markup(clean(some_user_input))
+# ---
+# Where the use of bleach.clean
+# usually ensures that there's no XSS vulnerability.
+# Although it is not recommended, you may also use this setting to whitelist other
+# kinds of calls, e.g. calls to i18n translation functions, where how safe that is
+# will depend on the implementation and how well the translations are audited.
+# Another common use-case is to wrap the output of functions that generate markup
+# like xml.etree.ElementTree.tostring
+# or template rendering engines where sanitization of potential user input is either
+# already baked in or has to happen before rendering.
+allowed-markup-calls = []
 # Whether to disallow try-except-pass (S110) for specific
 # exception types. By default, try-except-pass is only
 # disallowed for Exception and BaseException.
 check-typed-exception = false
+# A list of additional callable names that behave like
+# markupsafe.Markup.
+# Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
+# literal).
+extend-markup-names = []
 # A list of directories to consider temporary (see S108).
 hardcoded-tmp-directory = [
     "/tmp",
@@ -621,13 +648,12 @@ extend-immutable-calls = []
 
 [lint.flake8-builtins]
 # List of builtin module names to allow.
-builtins-allowed-modules = []
+allowed-modules = []
 # Ignore list of builtins.
-builtins-ignorelist = []
+ignorelist = []
 # Compare module names instead of full module paths.
 # Used by A005 - stdlib-module-shadowing.
-# In preview mode the default value is false rather than true.
-builtins-strict-checking = true
+strict-checking = false
 
 [lint.flake8-comprehensions]
 # Allow dict calls that make use of keyword arguments (e.g., dict(a=1, b=2)).
@@ -1296,31 +1322,6 @@ max-statements = 50
 keep-runtime-typing = false
 
 [lint.ruff]
-# A list of callable names, whose result may be safely passed into
-# markupsafe.Markup.
-# Expects to receive a list of fully-qualified names (e.g., bleach.clean, rather than clean).
-# This setting helps you avoid false positives in code like:
-# ---
-# from bleach import clean
-# from markupsafe import Markup
-#
-# cleaned_markup = Markup(clean(some_user_input))
-# ---
-# Where the use of bleach.clean
-# usually ensures that there's no XSS vulnerability.
-# Although it is not recommended, you may also use this setting to whitelist other
-# kinds of calls, e.g. calls to i18n translation functions, where how safe that is
-# will depend on the implementation and how well the translations are audited.
-# Another common use-case is to wrap the output of functions that generate markup
-# like xml.etree.ElementTree.tostring
-# or template rendering engines where sanitization of potential user input is either
-# already baked in or has to happen before rendering.
-allowed-markup-calls = []
-# A list of additional callable names that behave like
-# markupsafe.Markup.
-# Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
-# literal).
-extend-markup-names = []
 # Whether to prefer accessing items keyed by tuples with
 # parentheses around the tuple (see RUF031).
 parenthesize-tuple-in-subscript = false
