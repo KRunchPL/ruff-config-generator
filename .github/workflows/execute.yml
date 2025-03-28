@@ -37,7 +37,7 @@ jobs:
       run: |
         uv run python -m ruff_config_generator
         git add workdir
-        git diff-index --quiet HEAD -- && (echo "No new ruff version found"; exit 1)
+        git diff-index --quiet HEAD -- || (echo "New ruff version found"; exit 1)
 
     - name: Push and create PR
       if: ${{ failure() }}
