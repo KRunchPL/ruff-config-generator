@@ -1,3 +1,5 @@
+### Configuration created for ruff==0.11.2
+
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
 builtins = []
@@ -124,6 +126,17 @@ namespace-packages = []
 # Actions annotations), "gitlab" (GitLab CI code quality report),
 # "pylint" (Pylint text format) or "azure" (Azure Pipeline logging commands).
 output-format = "concise"
+# A list of mappings from glob-style file pattern to Python version to use when checking the
+# corresponding file(s).
+# This may be useful for overriding the global Python version settings in target-version or
+# requires-python for a subset of files. For example, if you have a project with a minimum
+# supported Python version of 3.9 but a subdirectory of developer scripts that want to use a
+# newer feature like the match statement from Python 3.10, you can use
+# per-file-target-version to specify "developer_scripts/*.py" = "py310".
+# This setting is used by the linter to enforce any enabled version-specific lint rules, as
+# well as by the formatter for any version-specific formatting options, such as parenthesizing
+# context managers on Python 3.10+.
+per-file-target-version = {}
 # Whether to enable preview mode. When preview mode is enabled, Ruff will
 # use unstable rules, fixes, and formatting.
 preview = false
@@ -182,7 +195,9 @@ src = [
 # requires-python = ">=3.8"
 # ---
 # If both are specified, target-version takes precedence over
-# requires-python.
+# requires-python. See Inferring the Python version
+# for a complete description of how the target-version is determined
+# when left unspecified.
 # Note that a stub file can sometimes make use of a typing feature
 # before it is available at runtime, as long as the stub does not make
 # use of new syntax. For example, a type checker will understand
@@ -472,20 +487,20 @@ fixable = [
 # specific prefixes. ignore takes precedence over select if the same
 # prefix appears in both.
 ignore = [
-    "B005",    # Using .strip() with multi-character strings is misleading
-    "D100",    # Missing docstring in public module
-    "D104",    # Missing docstring in public package
-    "D105",    # Missing docstring in magic method
-    "D107",    # Missing docstring in `__init__`
-    "D200",    # One-line docstring should fit on one line
-    "D203",    # 1 blank line required before class docstring
-    "D212",    # Multi-line docstring summary should start at the first line
-    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
-    "S101",    # Use of `assert` detected
-    "TC001",   # Move application import into a type-checking block
-    "TC002",   # Move third-party import into a type-checking block
-    "TC003",   # Move standard library import into a type-checking block
-    "PYI041",  # Use `float` instead of `int | float`
+    "B005",     # Using .strip() with multi-character strings is misleading
+    "D100",     # Missing docstring in public module
+    "D104",     # Missing docstring in public package
+    "D105",     # Missing docstring in magic method
+    "D107",     # Missing docstring in `__init__`
+    "D200",     # One-line docstring should fit on one line
+    "D203",     # 1 blank line required before class docstring
+    "D212",     # Multi-line docstring summary should start at the first line
+    "RUF012",   # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S101",     # Use of `assert` detected
+    "TC001",    # Move application import into a type-checking block
+    "TC002",    # Move third-party import into a type-checking block
+    "TC003",    # Move standard library import into a type-checking block
+    "PYI041",   # Use `float` instead of `int | float`
 ]
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.
@@ -533,6 +548,7 @@ task-tags = [
 typing-modules = []
 # A list of rule codes or prefixes to consider non-fixable.
 unfixable = []
+
 # A list of mappings from file pattern to rule codes or prefixes to
 # exclude, when considering any matching files. An initial '!' negates
 # the file pattern.
@@ -577,10 +593,35 @@ suppress-dummy-args = false
 suppress-none-returning = false
 
 [lint.flake8-bandit]
+# A list of callable names, whose result may be safely passed into
+# markupsafe.Markup.
+# Expects to receive a list of fully-qualified names (e.g., bleach.clean, rather than clean).
+# This setting helps you avoid false positives in code like:
+# ---
+# from bleach import clean
+# from markupsafe import Markup
+#
+# cleaned_markup = Markup(clean(some_user_input))
+# ---
+# Where the use of bleach.clean
+# usually ensures that there's no XSS vulnerability.
+# Although it is not recommended, you may also use this setting to whitelist other
+# kinds of calls, e.g. calls to i18n translation functions, where how safe that is
+# will depend on the implementation and how well the translations are audited.
+# Another common use-case is to wrap the output of functions that generate markup
+# like xml.etree.ElementTree.tostring
+# or template rendering engines where sanitization of potential user input is either
+# already baked in or has to happen before rendering.
+allowed-markup-calls = []
 # Whether to disallow try-except-pass (S110) for specific
 # exception types. By default, try-except-pass is only
 # disallowed for Exception and BaseException.
 check-typed-exception = false
+# A list of additional callable names that behave like
+# markupsafe.Markup.
+# Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
+# literal).
+extend-markup-names = []
 # A list of directories to consider temporary (see S108).
 hardcoded-tmp-directory = [
     "/tmp",
@@ -607,9 +648,12 @@ extend-immutable-calls = []
 
 [lint.flake8-builtins]
 # List of builtin module names to allow.
-builtins-allowed-modules = []
+allowed-modules = []
 # Ignore list of builtins.
-builtins-ignorelist = []
+ignorelist = []
+# Compare module names instead of full module paths.
+# Used by A005 - stdlib-module-shadowing.
+strict-checking = false
 
 [lint.flake8-comprehensions]
 # Allow dict calls that make use of keyword arguments (e.g., dict(a=1, b=2)).
@@ -1278,31 +1322,6 @@ max-statements = 50
 keep-runtime-typing = false
 
 [lint.ruff]
-# A list of callable names, whose result may be safely passed into
-# markupsafe.Markup.
-# Expects to receive a list of fully-qualified names (e.g., bleach.clean, rather than clean).
-# This setting helps you avoid false positives in code like:
-# ---
-# from bleach import clean
-# from markupsafe import Markup
-#
-# cleaned_markup = Markup(clean(some_user_input))
-# ---
-# Where the use of bleach.clean
-# usually ensures that there's no XSS vulnerability.
-# Although it is not recommended, you may also use this setting to whitelist other
-# kinds of calls, e.g. calls to i18n translation functions, where how safe that is
-# will depend on the implementation and how well the translations are audited.
-# Another common use-case is to wrap the output of functions that generate markup
-# like xml.etree.ElementTree.tostring
-# or template rendering engines where sanitization of potential user input is either
-# already baked in or has to happen before rendering.
-allowed-markup-calls = []
-# A list of additional callable names that behave like
-# markupsafe.Markup.
-# Expects to receive a list of fully-qualified names (e.g., webhelpers.html.literal, rather than
-# literal).
-extend-markup-names = []
 # Whether to prefer accessing items keyed by tuples with
 # parentheses around the tuple (see RUF031).
 parenthesize-tuple-in-subscript = false
