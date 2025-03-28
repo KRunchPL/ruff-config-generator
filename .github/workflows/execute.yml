@@ -40,7 +40,7 @@ jobs:
         uv run python -m ruff_config_generator
 
         git diff-index --quiet HEAD -- && (echo "No new ruff version found"; exit 0)
-        git diff-index HEAD --
+        git diff
         new_version=$(<workdir/version.txt)
         branch_name="ruff-$new_version"
         pr_body="Configuration generated for ruff $new_version.\n\nThis pull request was created automatically by a GitHub Action."
