@@ -51,7 +51,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git diff-index --
+        git diff-index HEAD --
         git diff
         new_version=$(<workdir/version.txt)
         branch_name="ruff-$new_version"
