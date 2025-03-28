@@ -38,8 +38,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         uv run python -m ruff_config_generator
-
+        git add workdir
         git diff-index --quiet HEAD -- && (echo "No new ruff version found"; exit 0)
+        git diff-index --
         git diff
         new_version=$(<workdir/version.txt)
         branch_name="ruff-$new_version"
