@@ -97,7 +97,7 @@ git config --unset core.symlinks
 
 Python part of the code shall follow those base guidelines:
 
-* is compatible with Python version >=3.11.0,
+* is compatible with Python version >=3.13.0,
 * all code shall pass configured static code checks,
 * all defined test shall pass,
 * all code shall be covered by unit tests.

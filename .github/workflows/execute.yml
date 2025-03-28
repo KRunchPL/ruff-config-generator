@@ -1,0 +1,63 @@
+name: Check for newer ruff version
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # 5:00 AM UTC daily
+  workflow_dispatch:
+
+jobs:
+  check_for_new_ruff_version:
+    name: Check for newer ruff version
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13"]
+        uv-version: ["0.6.10"]
+        os: ["ubuntu-latest"]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: ${{ matrix.uv-version }}
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install package with dependencies
+      run: uv sync --no-dev
+    - name: Regenerate
+      run: |
+        uv run python -m ruff_config_generator
+        git add workdir
+    - name: Push and create PR
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        NEW_FILES_EXIST=$(git diff-index --quiet HEAD -- && echo 0 || echo 1)
+        if [ $NEW_FILES_EXIST -eq 0 ]; then
+          echo "No new ruff version found."
+          exit 0
+        fi
+        echo "New ruff version found."
+
+        NEW_VERSION=$(<workdir/version.txt)
+        BRANCH_NAME="ruff-$NEW_VERSION"
+        COMMIT_MESSAGE="ruff $NEW_VERSION"
+        PR_BODY="Configuration generated for ruff $NEW_VERSION.\n\nThis pull request was created automatically by a GitHub Action."
+
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+        git checkout -b $BRANCH_NAME
+        git add workdir
+        git commit -m "$COMMIT_MESSAGE"
+        git push origin $BRANCH_NAME
+        gh pr create --title "Ruff $NEW_VERSION" --body "$PR_BODY" --base master --head $BRANCH_NAME

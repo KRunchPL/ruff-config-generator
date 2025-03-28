@@ -35,7 +35,7 @@ def main() -> int:
     )
     arguments = parser.parse_args()
 
-    match cast(Command, arguments.command):
+    match cast('Command', arguments.command):
         case Command.DOWNLOAD:
             download()
         case Command.GENERATE:
