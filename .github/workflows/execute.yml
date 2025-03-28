@@ -6,8 +6,8 @@ on:
   workflow_dispatch:  # Enable manual triggering
 
 jobs:
-  lint_and_unittest:
-    name: Run linter, type checking and unit tests
+  check_for_new_ruff_version:
+    name: Check for newer ruff version
     strategy:
       fail-fast: false
       matrix:
@@ -34,12 +34,16 @@ jobs:
       run: uv sync
 
     - name: Regenerate
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         uv run python -m ruff_config_generator
         git add workdir
-        git diff-index --quiet HEAD -- && (echo "No new ruff version found"; exit 0)
+        git diff-index --quiet HEAD -- && (echo "No new ruff version found"; exit 1)
+
+    - name: Push and create PR
+      if: ${{ failure() }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
         git diff-index --
         git diff
         new_version=$(<workdir/version.txt)
