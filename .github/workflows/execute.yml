@@ -3,7 +3,7 @@ name: Check for newer ruff version
 on:
   # schedule:
   #   - cron: '0 5 * * *'  # 5:00 AM UTC daily
-  workflow_dispatch:  # Enable manual triggering
+  workflow_dispatch:
 
 jobs:
   check_for_new_ruff_version:
@@ -19,25 +19,20 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-
     - name: Checkout repo
       uses: actions/checkout@v4
       with:
         persist-credentials: true
-
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         version: ${{ matrix.uv-version }}
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Install package with dependencies
       run: uv sync
-
     - name: Regenerate
       run: |
         uv run python -m ruff_config_generator
@@ -50,7 +45,6 @@ jobs:
           echo "New ruff version found."
           exit 1
         fi
-
     - name: Push and create PR
       if: ${{ failure() }}
       run: |
@@ -62,19 +56,17 @@ jobs:
 
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
         git checkout -b $branch_name
         git add workdir
         git commit -m "ruff $new_version"
         git push origin $branch_name
 
-        curl --request POST \
+        curl -L
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
           --url https://api.github.com/repos/${{ github.repository }}/pulls \
-          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-          --header 'content-type: application/json' \
-          --data '{
-            "title": "Ruff $new_version",
-            "body": "$pr_body",
-            "head": "$branch_name",
-            "base": "master"
-            }' \
+          -d '{"title": "Ruff $new_version","body": "$pr_body","head": "$branch_name","base": "master"}' \
           --fail
