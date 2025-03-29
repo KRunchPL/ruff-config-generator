@@ -5,6 +5,9 @@ on:
   #   - cron: '0 5 * * *'  # 5:00 AM UTC daily
   workflow_dispatch:  # Enable manual triggering
 
+permissions:
+  contents: write
+
 jobs:
   check_for_new_ruff_version:
     name: Check for newer ruff version
@@ -19,6 +22,8 @@ jobs:
 
     - name: Checkout repo
       uses: actions/checkout@v4
+      with:
+        persist-credentials: true
 
     - name: Install uv
       uses: astral-sh/setup-uv@v5
@@ -63,8 +68,15 @@ jobs:
         git add workdir
         git commit -m "ruff $new_version"
         git push origin $branch_name
-        curl -X POST \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/pulls \
-            -d "{\"title\":\"Ruff $new_version\",\"body\":\"$pr_body\",\"head\":\"$branch_name\",\"base\":\"master\"}"
+
+        curl --request POST \
+          --url https://api.github.com/repos/${{ github.repository }}/pulls \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "title": "Ruff $new_version",
+            "body": "$pr_body",
+            "head": "$branch_name",
+            "base": "master"
+            }' \
+          --fail
