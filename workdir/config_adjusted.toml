@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.11.2
+### Configuration created for ruff==0.11.3
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -727,6 +727,7 @@ extend-aliases = {}
 "matplotlib" = "mpl"
 "matplotlib.pyplot" = "plt"
 "numpy" = "np"
+"numpy.typing" = "npt"
 "pandas" = "pd"
 "seaborn" = "sns"
 "tensorflow" = "tf"
