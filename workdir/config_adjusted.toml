@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.11.7
+### Configuration created for ruff==0.11.8
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -538,6 +538,12 @@ task-tags = [
     "FIXME",
     "XXX",
 ]
+# Whether to allow imports from the third-party typing_extensions module for Python versions
+# before a symbol was added to the first-party typing module.
+# Many rules try to import symbols from the typing module but fall back to
+# typing_extensions for earlier versions of Python. This option can be used to disable this
+# fallback behavior in cases where typing_extensions is not installed.
+typing-extensions = true
 # A list of modules whose exports should be treated equivalently to
 # members of the typing module.
 # This is useful for ensuring proper type annotation inference for
