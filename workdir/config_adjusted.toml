@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.12.1
+### Configuration created for ruff==0.12.2
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -423,7 +423,7 @@ quote-style = "single"
 # ---
 # Setting skip-magic-trailing-comma = true changes the formatting to:
 # ---
-# # The arguments remain on separate lines because of the trailing comma after `b`
+# # The arguments are collapsed to a single line because the trailing comma is ignored
 # def test(a, b):
 #     pass
 # ---
@@ -868,7 +868,8 @@ ban-relative-imports = "parents"
 banned-api = {}
 # List of specific modules that may not be imported at module level, and should instead be
 # imported lazily (e.g., within a function definition, or an if TYPE_CHECKING:
-# block, or some other nested context).
+# block, or some other nested context). This also affects the rule import-outside-top-level
+# if banned-module-level-imports is enabled.
 banned-module-level-imports = []
 
 [lint.flake8-type-checking]
