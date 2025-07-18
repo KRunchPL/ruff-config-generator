@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.12.3
+### Configuration created for ruff==0.12.4
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -477,6 +477,13 @@ external = []
 fixable = [
     "ALL",
 ]
+# Whether to allow rules to add from __future__ import annotations in cases where this would
+# simplify a fix or enable a new diagnostic.
+# For example, TC001, TC002, and TC003 can move more imports into TYPE_CHECKING blocks
+# if __future__ annotations are enabled.
+# This setting is currently in preview and requires
+# preview mode to be enabled to have any effect.
+future-annotations = false
 # A list of rule codes or prefixes to ignore. Prefixes can specify exact
 # rules (like F841), entire categories (like F), or anything in
 # between.
