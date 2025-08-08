@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.12.7
+### Configuration created for ruff==0.12.8
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
