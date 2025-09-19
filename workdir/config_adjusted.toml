@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.13.0
+### Configuration created for ruff==0.13.1
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -238,6 +238,11 @@ include-dependencies = {}
 # Whether to enable preview mode. When preview mode is enabled, Ruff will expose unstable
 # commands.
 preview = false
+# The minimum number of dots in a string to consider it a valid import.
+# This setting is only relevant when detect-string-imports is enabled.
+# For example, if this is set to 2, then only strings with at least two dots (e.g., "path.to.module")
+# would be considered valid imports.
+string-imports-min-dots = 2
 
 [format]
 # Whether to format code snippets in docstrings.
