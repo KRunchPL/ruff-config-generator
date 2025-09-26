@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.13.1
+### Configuration created for ruff==0.13.2
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -96,6 +96,7 @@ force-exclude = false
 include = [
     "*.py",
     "*.pyi",
+    "*.pyw",
     "*.ipynb",
     "**/pyproject.toml",
 ]
