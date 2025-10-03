@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.13.2
+### Configuration created for ruff==0.13.3
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -959,6 +959,8 @@ ignore-variadic-names = false
 
 [lint.isort]
 # Sort imports taking into account case sensitivity.
+# Note that the order-by-type setting will
+# take precedence over this one when enabled.
 case-sensitive = false
 # An override list of tokens to always recognize as a Class for
 # order-by-type regardless of casing.
@@ -1080,6 +1082,8 @@ no-lines-before = []
 no-sections = false
 # Order imports by type, which is determined by case, in addition to
 # alphabetically.
+# Note that this option takes precedence over the
+# case-sensitive setting when enabled.
 order-by-type = false
 # Whether to place "closer" imports (fewer . characters, most local)
 # before "further" imports (more . characters, least local), or vice
