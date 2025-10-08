@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.13.3
+### Configuration created for ruff==0.14.0
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -185,8 +185,8 @@ src = [
 # The minimum Python version to target, e.g., when considering automatic
 # code upgrades, like rewriting type annotations. Ruff will not propose
 # changes using features that are not available in the given version.
-# For example, to represent supporting Python >=3.10 or ==3.10
-# specify target-version = "py310".
+# For example, to represent supporting Python >=3.11 or ==3.11
+# specify target-version = "py311".
 # If you're already using a pyproject.toml file, we recommend
 # project.requires-python instead, as it's based on Python packaging
 # standards, and will be respected by other tools. For example, Ruff
