@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.14.0
+### Configuration created for ruff==0.14.1
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -921,7 +921,8 @@ exempt-modules = [
 # ---
 # Note that this setting has no effect when from __future__ import annotations
 # is present, as __future__ annotations are always treated equivalently
-# to quoted annotations.
+# to quoted annotations. Similarly, this setting has no effect on Python
+# versions after 3.14 because these annotations are also deferred.
 quote-annotations = false
 # Exempt classes that list any of the enumerated classes as a base class
 # from needing to be moved into type-checking blocks.
