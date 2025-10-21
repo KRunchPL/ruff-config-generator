@@ -1,3 +1,4 @@
+import logging
 from copy import deepcopy
 
 import bs4
@@ -10,6 +11,9 @@ from .configuration import (
     SETTINGS_HTML_FILE,
     VERSION_FILE,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class Setting:
@@ -56,24 +60,64 @@ class Setting:
     def _processed_default_value(self) -> str:
         assert self.name is not None
         assert self.default_value is not None
-        if self.name.endswith('-rgx'):
-            value = self.default_value.strip('"').replace('\\', '\\\\')
-            return f'"{value}"'
-        if self.default_value in {'true', 'false', '[]', r'{}'} or self.default_value.startswith('"'):
+
+        # Regex patterns need special escaping
+        if self._is_regex_setting():
+            return self._process_regex_value()
+
+        # Pass through booleans, empty collections, and quoted strings
+        if self._is_passthrough_value():
             return self.default_value
+
+        # Integers don't need quotes
+        if self._is_integer_value():
+            return self.default_value
+
+        # Format list values with proper indentation
+        if self._is_list_value():
+            return self._process_list_value()
+
+        # Convert dict format from JSON to TOML
+        if self._is_dict_value():
+            return self.default_value.replace('":', '" =')
+
+        # Default: wrap in quotes  # noqa: ERA001
+        return f'"{self.default_value}"'
+
+    def _is_regex_setting(self) -> bool:
+        assert self.name is not None
+        return self.name.endswith('-rgx')
+
+    def _process_regex_value(self) -> str:
+        assert self.default_value is not None
+        value = self.default_value.strip('"').replace('\\', '\\\\')
+        return f'"{value}"'
+
+    def _is_passthrough_value(self) -> bool:
+        assert self.default_value is not None
+        return self.default_value in {'true', 'false', '[]', r'{}'} or self.default_value.startswith('"')
+
+    def _is_integer_value(self) -> bool:
+        assert self.default_value is not None
         try:
             int(self.default_value)
         except ValueError:
-            pass
+            return False
         else:
-            return self.default_value
-        if self.default_value.startswith('['):
-            values = ',\n    '.join(self.default_value[1:-1].split(', '))
-            return f'[\n    {values},\n]'
-        if self.default_value.startswith('{'):
-            return self.default_value.replace('":', '" =')
+            return True
 
-        return f'"{self.default_value}"'
+    def _is_list_value(self) -> bool:
+        assert self.default_value is not None
+        return self.default_value.startswith('[')
+
+    def _process_list_value(self) -> str:
+        assert self.default_value is not None
+        values = ',\n    '.join(self.default_value[1:-1].split(', '))
+        return f'[\n    {values},\n]'
+
+    def _is_dict_value(self) -> bool:
+        assert self.default_value is not None
+        return self.default_value.startswith('{')
 
 
 class Section:
@@ -164,51 +208,142 @@ class RuffConfiguration:
             if not section_update:
                 update.pop(section.name)
         if update:
-            print(f'Not found overrides: {update}')  # noqa: T201
+            logger.warning('Not found overrides: %s', update)
 
 
-def generate_configuration() -> None:  # noqa: C901, PLR0912
+class _HtmlParser:
+    """Parser for ruff settings HTML documentation."""
+
+    def __init__(self, config: RuffConfiguration) -> None:
+        self.config = config
+        self.current_setting: Setting | None = None
+
+    def parse_tag(self, tag: bs4.Tag) -> None:
+        """
+        Parse a single HTML tag and update configuration.
+
+        :param tag: HTML tag to parse
+        """
+        if tag.name in ('h2', 'h3'):
+            self._handle_section_header(tag)
+        elif tag.name == 'h4':
+            self._handle_setting_header(tag)
+        elif tag.name == 'p':
+            self._handle_paragraph(tag)
+        elif tag.name == 'ul':
+            self._handle_list(tag)
+        elif tag.name == 'div':
+            self._handle_div(tag)
+
+    def _handle_section_header(self, tag: bs4.Tag) -> None:
+        """
+        Handle h2/h3 section headers.
+
+        :param tag: section header tag to parse
+        """
+        self.config.new_section(tag.text)
+        logger.debug('Created section: %s', tag.text)
+
+    def _handle_setting_header(self, tag: bs4.Tag) -> None:
+        """
+        Handle h4 setting headers.
+
+        :param tag: setting header tag to parse
+        """
+        assert self.current_setting is None, 'Found h4 while processing previous setting'
+        self.current_setting = Setting()
+        code_element = tag.find_next('code')
+        assert code_element is not None, 'h4 tag must contain a code element'
+        self.current_setting.name = code_element.get_text()
+        logger.debug('Started setting: %s', self.current_setting.name)
+
+    def _handle_paragraph(self, tag: bs4.Tag) -> None:
+        """
+        Handle paragraph tags (descriptions or default values).
+
+        :param tag: paragraph tag to parse
+        """
+        if self.current_setting is None:
+            return
+
+        text = tag.get_text()
+        if text.startswith('Default value:'):
+            code_element = tag.find_next('code')
+            assert code_element is not None, 'Default value paragraph must contain a code element'
+            self.current_setting.default_value = code_element.get_text()
+            self.config.add_setting(self.current_setting)
+            logger.debug('Completed setting: %s', self.current_setting.name)
+            self.current_setting = None
+        else:
+            self.current_setting.comments.extend(text.splitlines())
+
+    def _handle_list(self, tag: bs4.Tag) -> None:
+        """
+        Handle unordered list tags (setting options/notes).
+
+        :param tag: unordered list tag to parse
+        """
+        if self.current_setting is None:
+            return
+
+        for ul_child in tag.children:
+            if not isinstance(ul_child, bs4.Tag) or ul_child.name != 'li':
+                continue
+            self.current_setting.comments.extend(f'- {ul_child.get_text()}'.splitlines())
+
+    def _handle_div(self, tag: bs4.Tag) -> None:
+        """
+        Handle div tags (code examples or deprecation notices).
+
+        :param tag: div tag to parse
+        """
+        if self.current_setting is None:
+            return
+
+        text = tag.get_text().strip()
+        if text.startswith('Deprecated'):
+            logger.debug('Skipping deprecated setting: %s', self.current_setting.name)
+            self.current_setting = None
+            return
+
+        if tag.get('class') == ['highlight']:
+            self.current_setting.comments.extend(['---', *tag.get_text().splitlines(), '---'])
+
+
+def generate_configuration() -> None:
     """
     Generate TOML file configuration.
+
+    :raises ValueError: if HTML structure is unexpected
     """
-    e_page = bs4.BeautifulSoup(SETTINGS_HTML_FILE.read_text(encoding='utf-8'), 'html.parser')
-    e_article = e_page.find(name='article')
-    config = RuffConfiguration(VERSION_FILE.read_text(encoding='utf-8'))
-    current_setting = None
+    logger.info('Starting configuration generation')
 
-    for tag in e_article.children:  # type: ignore [union-attr]
-        if tag.name in ('h2', 'h3'):  # type: ignore [union-attr]
-            config.new_section(tag.text)
-        elif tag.name == 'h4':  # type: ignore [union-attr]
-            assert current_setting is None
-            current_setting = Setting()
-            current_setting.name = tag.find_next('code').get_text()  # type: ignore [union-attr]
-        elif tag.name == 'p':  # type: ignore [union-attr]
-            if current_setting is None:
-                continue
-            if tag.get_text().startswith('Default value:'):
-                current_setting.default_value = tag.find_next('code').get_text()  # type: ignore [union-attr]
-                config.add_setting(current_setting)
-                current_setting = None
-                continue
-            current_setting.comments.extend(tag.get_text().splitlines())
-        elif tag.name == 'ul':  # type: ignore [union-attr]
-            if current_setting is None:
-                continue
-            for ul_child in tag.children:  # type: ignore [union-attr]
-                if ul_child.name != 'li':
-                    continue
-                current_setting.comments.extend(f'- {ul_child.get_text()}'.splitlines())
-        elif tag.name == 'div':  # type: ignore [union-attr]
-            if current_setting is None:
-                continue
-            if tag.get_text().strip().startswith('Deprecated'):
-                current_setting = None
-                continue
-            if tag['class'] != ['highlight']:  # type: ignore [index]
-                continue
-            current_setting.comments.extend(['---', *tag.get_text().splitlines(), '---'])
+    # Load HTML and version
+    html_content = SETTINGS_HTML_FILE.read_text(encoding='utf-8')
+    version = VERSION_FILE.read_text(encoding='utf-8').strip()
+    logger.info('Generating configuration for ruff version %s', version)
 
+    # Parse HTML
+    soup = bs4.BeautifulSoup(html_content, 'html.parser')
+    article = soup.find(name='article')
+    if article is None:
+        msg = 'Could not find <article> element in settings HTML'
+        raise ValueError(msg)
+
+    # Build configuration
+    config = RuffConfiguration(version)
+    parser = _HtmlParser(config)
+
+    for tag in article.children:  # type: ignore [union-attr]
+        if isinstance(tag, bs4.Tag):
+            parser.parse_tag(tag)
+
+    # Write output files
+    logger.info('Writing configuration to %s', CONFIGURATION_FILE)
     CONFIGURATION_FILE.write_text(str(config), encoding='utf-8')
+
     config.update_default_values(OVERRIDE_DEFAULT_VALUES)
+    logger.info('Writing adjusted configuration to %s', ADJUSTED_CONFIGURATION_FILE)
     ADJUSTED_CONFIGURATION_FILE.write_text(str(config), encoding='utf-8')
+
+    logger.info('Configuration generation completed')
