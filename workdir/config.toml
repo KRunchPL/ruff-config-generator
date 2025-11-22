@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.14.5
+### Configuration created for ruff==0.14.6
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -251,6 +251,10 @@ preview = false
 # For example, if this is set to 2, then only strings with at least two dots (e.g., "path.to.module")
 # would be considered valid imports.
 string-imports-min-dots = 2
+# Whether to include imports that are only used for type checking (i.e., imports within if TYPE_CHECKING: blocks).
+# When enabled (default), type-checking-only imports are included in the import graph.
+# When disabled, they are excluded.
+type-checking-imports = true
 
 [format]
 # Whether to format code snippets in docstrings.
