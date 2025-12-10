@@ -11,7 +11,7 @@ OVERRIDE_DEFAULT_VALUES: dict[str, dict[str, Any]] = {
     'Top-level': {
         'line-length': '110',
         'output-format': 'concise',
-        'target-version': 'py311',
+        'target-version': 'py314',
     },
     'analyze': {
         'direction': 'Dependencies',
