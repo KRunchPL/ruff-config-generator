@@ -215,7 +215,7 @@ src = [
 # 3.10+. As such, Ruff will often recommend newer features in a stub
 # file than it would for an equivalent runtime file with the same target
 # version.
-target-version = "py311"
+target-version = "py314"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
