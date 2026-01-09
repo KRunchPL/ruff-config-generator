@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.14.10
+### Configuration created for ruff==0.14.11
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -1323,3 +1323,6 @@ keep-runtime-typing = false
 # Whether to prefer accessing items keyed by tuples with
 # parentheses around the tuple (see RUF031).
 parenthesize-tuple-in-subscript = false
+# Whether to require __init__.py files to contain no code at all, including imports and
+# docstrings (see RUF067).
+strictly-empty-init-modules = false
