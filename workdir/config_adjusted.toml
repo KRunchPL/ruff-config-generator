@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.0
+### Configuration created for ruff==0.15.1
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -952,7 +952,7 @@ runtime-evaluated-base-classes = []
 # This also supports framework decorators like FastAPI's fastapi.FastAPI.get
 # which will work across assignments in the same module.
 # For example:
-# import fastapi
+# from fastapi import FastAPI
 #
 # app = FastAPI("app")
 #
@@ -1037,6 +1037,12 @@ forced-separate = []
 # import os
 # import sys
 from-first = false
+# A mapping from import section names to their heading comments.
+# When set, a comment with the specified text will be added above imports
+# in the corresponding section. If a heading comment already exists, it
+# will be replaced.
+# Compatible with isort's import_heading_{section_name} settings.
+import-heading = {}
 # A list of modules to consider first-party, regardless of whether they
 # can be identified as such via introspection of the local filesystem.
 # Supports glob patterns. For more information on the glob syntax, refer
