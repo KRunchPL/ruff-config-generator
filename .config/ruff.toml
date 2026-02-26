@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.14.0
+### Configuration created for ruff==0.15.2
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -45,12 +45,19 @@ exclude = [
     "node_modules",
     "venv",
 ]
-# A path to a local pyproject.toml file to merge into this
+# A path to a local pyproject.toml or ruff.toml file to merge into this
 # configuration. User home directory and environment variables will be
 # expanded.
-# To resolve the current pyproject.toml file, Ruff will first resolve
-# this base configuration file, then merge in any properties defined
-# in the current configuration file.
+# To resolve the current configuration file, Ruff will first load
+# this base configuration file, then merge in properties defined
+# in the current configuration file. Most settings follow simple override
+# behavior where the child value replaces the parent value. However,
+# rule selection (lint.select and lint.ignore) has special merging
+# behavior: if the child configuration specifies lint.select, it
+# establishes a new baseline rule set and the parent's lint.ignore
+# rules are discarded; if the child configuration omits lint.select,
+# the parent's rule selection is inherited and both parent and child
+# lint.ignore rules are accumulated together.
 #extend =
 # A list of file patterns to omit from formatting and linting, in addition to those
 # specified by exclude.
@@ -70,6 +77,10 @@ extend-exclude = []
 # *.pyw, to include any file with the .pyw extension.
 # For more information on the glob syntax, refer to the globset documentation.
 extend-include = []
+# A mapping of custom file extensions to known file types (overridden
+# by the --extension command-line flag).
+# Supported file types include python, pyi, ipynb, and markdown.
+extension = {}
 # Enable fix behavior by-default when running ruff (overridden
 # by the --fix and --no-fix command-line flags).
 # Only includes automatic fixes unless --unsafe-fixes is provided.
@@ -208,7 +219,7 @@ src = [
 # 3.10+. As such, Ruff will often recommend newer features in a stub
 # file than it would for an equivalent runtime file with the same target
 # version.
-target-version = "py314"
+target-version = "py313"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
@@ -244,6 +255,10 @@ preview = false
 # For example, if this is set to 2, then only strings with at least two dots (e.g., "path.to.module")
 # would be considered valid imports.
 string-imports-min-dots = 2
+# Whether to include imports that are only used for type checking (i.e., imports within if TYPE_CHECKING: blocks).
+# When enabled (default), type-checking-only imports are included in the import graph.
+# When disabled, they are excluded.
+type-checking-imports = true
 
 [format]
 # Whether to format code snippets in docstrings.
@@ -921,7 +936,8 @@ exempt-modules = [
 # ---
 # Note that this setting has no effect when from __future__ import annotations
 # is present, as __future__ annotations are always treated equivalently
-# to quoted annotations.
+# to quoted annotations. Similarly, this setting has no effect on Python
+# versions after 3.14 because these annotations are also deferred.
 quote-annotations = false
 # Exempt classes that list any of the enumerated classes as a base class
 # from needing to be moved into type-checking blocks.
@@ -940,7 +956,7 @@ runtime-evaluated-base-classes = []
 # This also supports framework decorators like FastAPI's fastapi.FastAPI.get
 # which will work across assignments in the same module.
 # For example:
-# import fastapi
+# from fastapi import FastAPI
 #
 # app = FastAPI("app")
 #
@@ -1025,6 +1041,12 @@ forced-separate = []
 # import os
 # import sys
 from-first = false
+# A mapping from import section names to their heading comments.
+# When set, a comment with the specified text will be added above imports
+# in the corresponding section. If a heading comment already exists, it
+# will be replaced.
+# Compatible with isort's import_heading_{section_name} settings.
+import-heading = {}
 # A list of modules to consider first-party, regardless of whether they
 # can be identified as such via introspection of the local filesystem.
 # Supports glob patterns. For more information on the glob syntax, refer
@@ -1348,3 +1370,6 @@ keep-runtime-typing = false
 # Whether to prefer accessing items keyed by tuples with
 # parentheses around the tuple (see RUF031).
 parenthesize-tuple-in-subscript = false
+# Whether to require __init__.py files to contain no code at all, including imports and
+# docstrings (see RUF067).
+strictly-empty-init-modules = false
