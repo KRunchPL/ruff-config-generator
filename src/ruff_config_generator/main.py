@@ -1,8 +1,12 @@
 import argparse
 import logging
 from enum import auto, StrEnum
+from pathlib import Path
 from typing import cast
 
+from ruff_config_generator.app_config import AppConfiguration
+
+from . import app_config
 from .downloader import download
 from .generator import generate_configuration
 
@@ -42,8 +46,16 @@ def main() -> int:
         nargs='?',
         default=Command.BOTH,
     )
+    parser.add_argument(
+        '-c',
+        '--config',
+        type=Path,
+        required=False,
+    )
     arguments = parser.parse_args()
 
+    if arguments.config:
+        app_config.set_app_config(AppConfiguration(toml_file=arguments.config))  # type: ignore [call-arg]
     try:
         match cast('Command', arguments.command):
             case Command.DOWNLOAD:

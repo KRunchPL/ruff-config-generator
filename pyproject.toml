@@ -1,7 +1,7 @@
 [project]
 name = "ruff-config-generator"
 description = "Generates ruff configuration"
-version = "1.0.0"
+version = "1.1.0"
 authors = [
     { name = "KRunchPL", email = "krunchfrompoland@gmail.com" },
 ]
@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.13,<4"
 dependencies = [
     "beautifulsoup4 ==4.14.3",
+    "pydantic-settings>=2.13.1",
     "requests ==2.32.5",
 ]
 

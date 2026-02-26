@@ -18,28 +18,28 @@ from ruff_config_generator.downloader import (
 @pytest.fixture
 def mock_settings_file(mocker: MockerFixture, tmp_path: Path) -> Path:
     """
-    Mock SETTINGS_HTML_FILE to use temporary directory.
+    Mock settings_html_file to use temporary directory.
 
     :param mocker: pytest mocker fixture
     :param tmp_path: pytest temporary directory fixture
     :return: mocked settings file path
     """
     settings_file = tmp_path / 'settings.html'
-    mocker.patch('ruff_config_generator.downloader.SETTINGS_HTML_FILE', settings_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
     return settings_file
 
 
 @pytest.fixture
 def mock_version_file(mocker: MockerFixture, tmp_path: Path) -> Path:
     """
-    Mock VERSION_FILE to use temporary directory.
+    Mock version_file to use temporary directory.
 
     :param mocker: pytest mocker fixture
     :param tmp_path: pytest temporary directory fixture
     :return: mocked version file path
     """
     version_file = tmp_path / 'version.txt'
-    mocker.patch('ruff_config_generator.downloader.VERSION_FILE', version_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
     return version_file
 
 

@@ -3,14 +3,7 @@ from copy import deepcopy
 
 import bs4
 
-from .configuration import (
-    ADJUSTED_CONFIGURATION_FILE,
-    CONFIGURATION_FILE,
-    OVERRIDE_DEFAULT_VALUES,
-    RULES_DESCRIPTIONS,
-    SETTINGS_HTML_FILE,
-    VERSION_FILE,
-)
+from .app_config import get_app_config
 
 
 logger = logging.getLogger(__name__)
@@ -184,7 +177,7 @@ class RuffConfiguration:
         lines = ('\n'.join(lines)).splitlines()
         for index, line in enumerate(lines):
             rule_id = line.strip(' ",')
-            if description := RULES_DESCRIPTIONS.get(rule_id):
+            if description := get_app_config().rules_descriptions.get(rule_id):
                 spaces = ' ' * (9 - len(rule_id))
                 lines[index] = f'{line}{spaces}# {description}'
         lines.append('')
@@ -319,8 +312,8 @@ def generate_configuration() -> None:
     logger.info('Starting configuration generation')
 
     # Load HTML and version
-    html_content = SETTINGS_HTML_FILE.read_text(encoding='utf-8')
-    version = VERSION_FILE.read_text(encoding='utf-8').strip()
+    html_content = get_app_config().settings_html_file.read_text(encoding='utf-8')
+    version = get_app_config().version_file.read_text(encoding='utf-8').strip()
     logger.info('Generating configuration for ruff version %s', version)
 
     # Parse HTML
@@ -339,11 +332,11 @@ def generate_configuration() -> None:
             parser.parse_tag(tag)
 
     # Write output files
-    logger.info('Writing configuration to %s', CONFIGURATION_FILE)
-    CONFIGURATION_FILE.write_text(str(config), encoding='utf-8')
+    logger.info('Writing configuration to %s', get_app_config().default_values_file)
+    get_app_config().default_values_file.write_text(str(config), encoding='utf-8')
 
-    config.update_default_values(OVERRIDE_DEFAULT_VALUES)
-    logger.info('Writing adjusted configuration to %s', ADJUSTED_CONFIGURATION_FILE)
-    ADJUSTED_CONFIGURATION_FILE.write_text(str(config), encoding='utf-8')
+    config.update_default_values(get_app_config().overrides)
+    logger.info('Writing adjusted configuration to %s', get_app_config().adjusted_values_file)
+    get_app_config().adjusted_values_file.write_text(str(config), encoding='utf-8')
 
     logger.info('Configuration generation completed')

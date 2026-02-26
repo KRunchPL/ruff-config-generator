@@ -295,7 +295,7 @@ class TestRuffConfiguration:
         :param mocker: pytest mocker fixture
         """
         mocker.patch(
-            'ruff_config_generator.generator.RULES_DESCRIPTIONS',
+            'ruff_config_generator.app_config._app_config.rules_descriptions',
             {'E501': 'Line too long'},
         )
 
@@ -599,11 +599,11 @@ def test_generate_configuration_success(
     settings_file.write_text(html_content, encoding='utf-8')
     version_file.write_text('0.1.0', encoding='utf-8')
 
-    mocker.patch('ruff_config_generator.generator.SETTINGS_HTML_FILE', settings_file)
-    mocker.patch('ruff_config_generator.generator.VERSION_FILE', version_file)
-    mocker.patch('ruff_config_generator.generator.CONFIGURATION_FILE', config_file)
-    mocker.patch('ruff_config_generator.generator.ADJUSTED_CONFIGURATION_FILE', adjusted_config_file)
-    mocker.patch('ruff_config_generator.generator.OVERRIDE_DEFAULT_VALUES', {})
+    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.default_values_file', config_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.adjusted_values_file', adjusted_config_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.overrides', {})
 
     generate_configuration()
 
@@ -632,8 +632,8 @@ def test_generate_configuration_missing_article(
     settings_file.write_text(html_content, encoding='utf-8')
     version_file.write_text('0.1.0', encoding='utf-8')
 
-    mocker.patch('ruff_config_generator.generator.SETTINGS_HTML_FILE', settings_file)
-    mocker.patch('ruff_config_generator.generator.VERSION_FILE', version_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
 
     with pytest.raises(ValueError, match='Could not find <article> element'):
         generate_configuration()
@@ -665,12 +665,12 @@ def test_generate_configuration_with_overrides(
     settings_file.write_text(html_content, encoding='utf-8')
     version_file.write_text('0.1.0', encoding='utf-8')
 
-    mocker.patch('ruff_config_generator.generator.SETTINGS_HTML_FILE', settings_file)
-    mocker.patch('ruff_config_generator.generator.VERSION_FILE', version_file)
-    mocker.patch('ruff_config_generator.generator.CONFIGURATION_FILE', config_file)
-    mocker.patch('ruff_config_generator.generator.ADJUSTED_CONFIGURATION_FILE', adjusted_config_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.default_values_file', config_file)
+    mocker.patch('ruff_config_generator.app_config._app_config.adjusted_values_file', adjusted_config_file)
     mocker.patch(
-        'ruff_config_generator.generator.OVERRIDE_DEFAULT_VALUES',
+        'ruff_config_generator.app_config._app_config.overrides',
         {'Top-level': {'line-length': '110'}},
     )
 
