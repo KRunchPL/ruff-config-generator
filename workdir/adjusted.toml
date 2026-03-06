@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.4
+### Configuration created for ruff==0.15.5
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -112,6 +112,7 @@ include = [
     "*.pyi",
     "*.pyw",
     "*.ipynb",
+    "*.md",
     "**/pyproject.toml",
 ]
 # The number of spaces per indentation level (tab).
