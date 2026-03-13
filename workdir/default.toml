@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.5
+### Configuration created for ruff==0.15.6
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -853,6 +853,10 @@ ignore-names = [
 ]
 
 [lint.flake8-tidy-imports]
+# Specific modules that may not be imported lazily, or "all" to forbid lazy imports except
+# for any modules excluded from the selector. This rule is only enforced when targeting
+# Python 3.15 or newer.
+ban-lazy = []
 # Whether to ban all relative imports ("all"), or only those imports
 # that extend into the parent module or beyond ("parents").
 ban-relative-imports = "parents"
@@ -865,6 +869,12 @@ banned-api = {}
 # block, or some other nested context). This also affects the rule import-outside-top-level
 # if banned-module-level-imports is enabled.
 banned-module-level-imports = []
+# Specific modules that must be imported lazily in contexts where lazy import is legal, or
+# "all" to require every lazily-convertible import to use the lazy keyword. Ruff ignores
+# contexts where lazy import is invalid, such as functions, classes, try/except
+# blocks, __future__ imports, and from ... import * statements. This rule is only
+# enforced when targeting Python 3.15 or newer.
+require-lazy = []
 
 [lint.flake8-type-checking]
 # Exempt certain modules from needing to be moved into type-checking
