@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.7
+### Configuration created for ruff==0.15.8
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -488,6 +488,19 @@ extend-per-file-ignores = {}
 extend-safe-fixes = []
 # A list of rule codes or prefixes to enable, in addition to those
 # specified by select.
+# Unlike select, which replaces the default rule set
+# when specified, extend-select adds to whatever rules are already
+# active. This makes extend-select the preferred option when you want
+# to enable additional rules on top of the defaults without having to
+# enumerate them.
+# For example, to enable the defaults plus flake8-bugbear:
+# ---
+# [tool.ruff.lint]
+# # Adds flake8-bugbear on top of the default rules (E4, E7, E9, F).
+# extend-select = ["B"]
+# ---
+# Using select = ["B"] instead would replace the defaults, enabling
+# only flake8-bugbear.
 extend-select = []
 # A list of rule codes or prefixes for which safe fixes should be considered
 # unsafe.
