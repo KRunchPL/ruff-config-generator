@@ -7,7 +7,7 @@ authors = [
 ]
 license = "Apache-2.0"
 readme = "README.md"
-requires-python = ">=3.13,<4"
+requires-python = ">=3.14,<4"
 dependencies = [
     "beautifulsoup4 ==4.14.3",
     "pydantic-settings>=2.13.1",
@@ -26,9 +26,9 @@ packages = [
 
 [dependency-groups]
 dev = [
-    "darglint",
     "flake8",
     "mypy",
+    "pydoclint",
     "pytest",
     "pytest-cov",
     "pytest-mock",

@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.2
+### Configuration created for ruff==0.15.12
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -80,6 +80,9 @@ extend-include = []
 # A mapping of custom file extensions to known file types (overridden
 # by the --extension command-line flag).
 # Supported file types include python, pyi, ipynb, and markdown.
+# Any file extensions listed here will be automatically added to the
+# default include list as a *.{ext} glob, so that they are linted
+# and formatted without needing any additional configuration settings.
 extension = {}
 # Enable fix behavior by-default when running ruff (overridden
 # by the --fix and --no-fix command-line flags).
@@ -109,6 +112,7 @@ include = [
     "*.pyi",
     "*.pyw",
     "*.ipynb",
+    "*.md",
     "**/pyproject.toml",
 ]
 # The number of spaces per indentation level (tab).
@@ -219,7 +223,7 @@ src = [
 # 3.10+. As such, Ruff will often recommend newer features in a stub
 # file than it would for an equivalent runtime file with the same target
 # version.
-target-version = "py313"
+target-version = "py314"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
@@ -411,8 +415,17 @@ indent-style = "space"
 # - cr-lf: Line endings will be converted to \r\n. The default line ending on Windows.
 # - native: Line endings will be converted to \n on Unix and \r\n on Windows.
 line-ending = "lf"
+# Controls the quote style for nested strings inside interpolated string expressions.
+# - alternating (default): Use alternating quotes.
+# - preferred: Use the configured quote-style.
+# ---
+# f"{data['key']}"  # alternating (default)
+# f"{data["key"]}"  # preferred
+# ---
+# Note: This setting has no effect when targeting Python versions below 3.12.
+nested-string-quote-style = "alternating"
 # Whether to enable the unstable preview style formatting.
-preview = false
+preview = true
 # Configures the preferred quote character for strings. The recommended options are
 # - double (default): Use double quotes "
 # - single: Use single quotes '
@@ -484,6 +497,19 @@ extend-per-file-ignores = {}
 extend-safe-fixes = []
 # A list of rule codes or prefixes to enable, in addition to those
 # specified by select.
+# Unlike select, which replaces the default rule set
+# when specified, extend-select adds to whatever rules are already
+# active. This makes extend-select the preferred option when you want
+# to enable additional rules on top of the defaults without having to
+# enumerate them.
+# For example, to enable the defaults plus flake8-bugbear:
+# ---
+# [tool.ruff.lint]
+# # Adds flake8-bugbear on top of the default rules (E4, E7, E9, F).
+# extend-select = ["B"]
+# ---
+# Using select = ["B"] instead would replace the defaults, enabling
+# only flake8-bugbear.
 extend-select = []
 # A list of rule codes or prefixes for which safe fixes should be considered
 # unsafe.
@@ -885,6 +911,10 @@ ignore-names = [
 ]
 
 [lint.flake8-tidy-imports]
+# Specific modules that may not be imported lazily, or "all" to forbid lazy imports except
+# for any modules excluded from the selector. This rule is only enforced when targeting
+# Python 3.15 or newer.
+ban-lazy = []
 # Whether to ban all relative imports ("all"), or only those imports
 # that extend into the parent module or beyond ("parents").
 ban-relative-imports = "parents"
@@ -897,6 +927,12 @@ banned-api = {}
 # block, or some other nested context). This also affects the rule import-outside-top-level
 # if banned-module-level-imports is enabled.
 banned-module-level-imports = []
+# Specific modules that must be imported lazily in contexts where lazy import is legal, or
+# "all" to require every lazily-convertible import to use the lazy keyword. Ruff ignores
+# contexts where lazy import is invalid, such as functions, classes, try/except
+# blocks, __future__ imports, and from ... import * statements. This rule is only
+# enforced when targeting Python 3.15 or newer.
+require-lazy = []
 
 [lint.flake8-type-checking]
 # Exempt certain modules from needing to be moved into type-checking

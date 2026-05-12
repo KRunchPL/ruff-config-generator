@@ -116,6 +116,8 @@ class Setting:
 class Section:
     """
     Single ruff configuration section.
+
+    :param name: name of the section
     """
 
     def __init__(self, name: str) -> None:
@@ -147,6 +149,8 @@ class Section:
 class RuffConfiguration:
     """
     Whole Ruff configuration.
+
+    :param version: ruff version for which configuration is stored
     """
 
     def __init__(self, version: str) -> None:
@@ -205,7 +209,11 @@ class RuffConfiguration:
 
 
 class _HtmlParser:
-    """Parser for ruff settings HTML documentation."""
+    """
+    Parser for ruff settings HTML documentation.
+
+    :param config: config to be filled in by the parser
+    """
 
     def __init__(self, config: RuffConfiguration) -> None:
         self.config = config

@@ -3,11 +3,17 @@ count = True
 extend-exclude = .*/
 
 ### Rules choice
-# DAR: We use flake8 just to run darglint, ruff takes care about the rest
-select=DAR
+# DOC: We use flake8 just to run pydoclint, ruff takes care about the rest
+select=DOC
 # DAR401: The docstring is missing an exception raised
-ignore=DAR401
+ignore=DOC5,DOC6,DOC203,DOC404
 
 ### Darglint options
-docstring_style = sphinx
-strictness = full
+style = sphinx
+arg-type-hints-in-docstring = False
+skip-checking-short-docstrings = False
+skip-checking-raises = True
+check-return-types = False
+check-yield-types = False
+check-class-attributes = False
+check-style-mismatch = True
