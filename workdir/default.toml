@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.13
+### Configuration created for ruff==0.15.14
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -1336,6 +1336,8 @@ max-public-methods = 20
 max-returns = 6
 # Maximum number of statements allowed for a function or method body (see PLR0915).
 max-statements = 50
+# Maximum number of statements allowed for a try clause body (see W0717).
+max-statements-in-try = 5
 
 [lint.pyupgrade]
 # Whether to avoid PEP 585 (List[int] -> list[int]) and PEP 604
