@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.15
+### Configuration created for ruff==0.15.16
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -1301,6 +1301,49 @@ ignore-one-line-docstrings = false
 # [tool.ruff.lint.pydocstyle]
 # convention = "google"
 # ---
+# The PEP 257 convention includes all D errors apart from:
+# D203,
+# D212,
+# D213,
+# D214,
+# D215,
+# D404,
+# D405,
+# D406,
+# D407,
+# D408,
+# D409,
+# D410,
+# D411,
+# D413,
+# D415,
+# D416,
+# D417, and
+# D420.
+# The NumPy convention includes all D errors apart from:
+# D107,
+# D203,
+# D212,
+# D213,
+# D402,
+# D413,
+# D415,
+# D416, and
+# D417.
+# The Google convention includes all D errors apart from:
+# D203,
+# D204,
+# D213,
+# D215,
+# D400,
+# D401,
+# D404,
+# D406,
+# D407,
+# D408,
+# D409, and
+# D413.
+# For more information see the FAQ entry.
 # To enable an additional rule that's excluded from the convention,
 # select the desired rule via its fully qualified rule code (e.g.,
 # D400 instead of D4 or D40):
