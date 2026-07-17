@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.21
+### Configuration created for ruff==0.15.22
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -102,9 +102,10 @@ fix-only = false
 force-exclude = false
 # A list of file patterns to include when linting.
 # Inclusion are based on globs, and should be single-path patterns, like
-# *.pyw, to include any file with the .pyw extension. pyproject.toml is
-# included here not for configuration but because we lint whether e.g. the
-# [project] matches the schema.
+# *.pyw, to include any file with the .pyw extension.
+# pyproject.toml, ruff.toml, and .ruff.toml are included here not for
+# configuration but because we lint whether e.g. the [project] matches
+# the schema in pyproject.toml or that rule names are used as selectors.
 # Notebook files (.ipynb extension) are included by default on Ruff 0.6.0+.
 # For more information on the glob syntax, refer to the globset documentation.
 include = [
@@ -114,6 +115,8 @@ include = [
     "*.ipynb",
     "*.md",
     "**/pyproject.toml",
+    "**/ruff.toml",
+    "**/.ruff.toml",
 ]
 # The number of spaces per indentation level (tab).
 # Used by the formatter and when enforcing long-line violations (like E501) to determine the visual
