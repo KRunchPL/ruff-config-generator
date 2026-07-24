@@ -1,0 +1,84 @@
+[overrides.Top-level]
+line-length = '110'
+output-format = 'concise'
+target-version = 'py314'
+
+[overrides.analyze]
+direction = 'Dependencies'
+
+[overrides.format]
+docstring-code-format = 'true'
+line-ending = 'lf'
+quote-style = 'single'
+preview = 'true'
+
+[overrides.lint]
+ignore = """
+["B005",
+    "D100",
+    "D104",
+    "D105",
+    "D107",
+    "D200",
+    "D203",
+    "D212",
+    "RUF012",
+    "S101",
+    "TC001",
+    "TC002",
+    "TC003",
+    "PYI041",
+    "CPY001"]"""
+select = '["ALL"]'
+per-file-ignores = """
+{"!tests/*" = [
+    "PT",
+]
+"tests/*" = [
+    "SLF001",
+    "FBT001",
+    "PLR0913",
+    "RUF018",
+]
+"tests/**/test_*" = [
+    "ANN",
+    "D101",
+    "D102",
+    "D103",
+    "B011",
+    "PLR2004",
+]}"""
+
+
+[overrides.'lint.flake8-import-conventions']
+banned-from = '["yaml", "json", "tomllib"]'
+
+[overrides.'lint.flake8-pytest-style']
+parametrize-names-type = 'list'
+
+[overrides.'lint.flake8-quotes']
+inline-quotes = 'single'
+
+[overrides.'lint.isort']
+combine-as-imports = 'true'
+lines-after-imports = '2'
+order-by-type = 'false'
+
+[overrides.'lint.pep8-naming']
+ignore-names = """
+["setUp",
+    "tearDown",
+    "setUpClass",
+    "tearDownClass",
+    "setUpModule",
+    "tearDownModule",
+    "asyncSetUp",
+    "asyncTearDown",
+    "setUpTestData",
+    "failureException",
+    "longMessage",
+    "maxDiff",
+    "getLogger"]"""
+
+[overrides.'lint.pycodestyle']
+max-doc-length = '110'

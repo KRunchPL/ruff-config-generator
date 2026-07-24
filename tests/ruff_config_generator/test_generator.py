@@ -4,8 +4,8 @@ import bs4
 import pytest
 from logot import logged, Logot
 from logot.loguru import LoguruCapturer
-from pytest_mock import MockerFixture
 
+from ruff_config_generator.app_config import AppConfiguration
 from ruff_config_generator.generator import (
     _HtmlParser,
     generate_configuration,
@@ -245,14 +245,14 @@ class TestRuffConfiguration:
 
     def test_init(self) -> None:
         """Test RuffConfiguration initialization."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
 
         assert config.version == '0.1.0'
         assert config.sections == []
 
     def test_new_section(self) -> None:
         """Test new_section method."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
 
         config.new_section('lint')
         config.new_section('format')
@@ -263,7 +263,7 @@ class TestRuffConfiguration:
 
     def test_add_setting(self) -> None:
         """Test add_setting method."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('lint')
 
         setting = Setting()
@@ -276,7 +276,7 @@ class TestRuffConfiguration:
 
     def test_str_basic(self) -> None:
         """Test string representation."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('Top-level')
         setting = Setting()
         setting.name = 'line-length'
@@ -289,18 +289,9 @@ class TestRuffConfiguration:
         assert '### Configuration created for ruff==0.1.0' in result
         assert 'line-length = 88' in result
 
-    def test_str_with_rule_descriptions(self, mocker: MockerFixture) -> None:
-        """
-        Test string representation with rule descriptions.
-
-        :param mocker: pytest mocker fixture
-        """
-        mocker.patch(
-            'ruff_config_generator.app_config._app_config.rules_descriptions',
-            {'E501': 'Line too long'},
-        )
-
-        config = RuffConfiguration('0.1.0')
+    def test_str_with_rule_descriptions(self) -> None:
+        """Test string representation with rule descriptions."""
+        config = RuffConfiguration('0.1.0', {'E501': 'Line too long'})
         config.new_section('lint')
         setting = Setting()
         setting.name = 'ignore'
@@ -315,7 +306,7 @@ class TestRuffConfiguration:
 
     def test_update_default_values(self) -> None:
         """Test update_default_values method."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('lint')
 
         setting1 = Setting()
@@ -337,7 +328,7 @@ class TestRuffConfiguration:
 
     def test_update_default_values_removes_used_updates(self) -> None:
         """Test that update_default_values removes used updates."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('lint')
         setting = Setting()
         setting.name = 'select'
@@ -358,7 +349,7 @@ class TestRuffConfiguration:
         """
         Test update_default_values warns on not found overrides.
         """
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('lint')
 
         update = {'format': {'quote-style': 'single'}}
@@ -369,7 +360,7 @@ class TestRuffConfiguration:
 
     def test_update_default_values_skips_non_matching_settings(self) -> None:
         """Test update_default_values skips settings not in update dict."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('lint')
 
         setting1 = Setting()
@@ -396,7 +387,7 @@ class TestHtmlParser:
 
     def test_init(self) -> None:
         """Test _HtmlParser initialization."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         assert parser.config is config
@@ -404,7 +395,7 @@ class TestHtmlParser:
 
     def test_handle_section_header_h2(self) -> None:
         """Test handling h2 section headers."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         tag = bs4.BeautifulSoup('<h2>Lint Options</h2>', 'html.parser').h2
@@ -416,7 +407,7 @@ class TestHtmlParser:
 
     def test_handle_section_header_h3(self) -> None:
         """Test handling h3 section headers."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         tag = bs4.BeautifulSoup('<h3>Format Options</h3>', 'html.parser').h3
@@ -428,7 +419,7 @@ class TestHtmlParser:
 
     def test_handle_setting_header(self) -> None:
         """Test handling h4 setting headers."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         tag = bs4.BeautifulSoup('<h4><code>line-length</code></h4>', 'html.parser').h4
@@ -440,7 +431,7 @@ class TestHtmlParser:
 
     def test_handle_paragraph_description(self) -> None:
         """Test handling paragraph as description."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
         parser.current_setting = Setting()
 
@@ -452,7 +443,7 @@ class TestHtmlParser:
 
     def test_handle_paragraph_default_value(self) -> None:
         """Test handling paragraph with default value."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         config.new_section('lint')
         parser = _HtmlParser(config)
         parser.current_setting = Setting()
@@ -471,7 +462,7 @@ class TestHtmlParser:
 
     def test_handle_paragraph_ignores_when_no_current_setting(self) -> None:
         """Test that paragraph is ignored when no current setting."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         tag = bs4.BeautifulSoup('<p>Random paragraph</p>', 'html.parser').p
@@ -483,7 +474,7 @@ class TestHtmlParser:
 
     def test_handle_list(self) -> None:
         """Test handling unordered lists."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
         parser.current_setting = Setting()
 
@@ -499,7 +490,7 @@ class TestHtmlParser:
 
     def test_handle_list_ignores_when_no_current_setting(self) -> None:
         """Test that list is ignored when no current setting."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         tag = bs4.BeautifulSoup('<ul><li>Item</li></ul>', 'html.parser').ul
@@ -511,7 +502,7 @@ class TestHtmlParser:
 
     def test_handle_list_with_non_tag_children(self) -> None:
         """Test handling list with text nodes and non-li tags."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
         parser.current_setting = Setting()
 
@@ -529,7 +520,7 @@ class TestHtmlParser:
 
     def test_handle_div_deprecated(self) -> None:
         """Test handling deprecated setting in div."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
         parser.current_setting = Setting()
         parser.current_setting.name = 'old-setting'
@@ -542,7 +533,7 @@ class TestHtmlParser:
 
     def test_handle_div_code_example(self) -> None:
         """Test handling code example in div."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
         parser.current_setting = Setting()
 
@@ -558,7 +549,7 @@ class TestHtmlParser:
 
     def test_handle_div_ignores_when_no_current_setting(self) -> None:
         """Test that div is ignored when no current setting."""
-        config = RuffConfiguration('0.1.0')
+        config = RuffConfiguration('0.1.0', {})
         parser = _HtmlParser(config)
 
         tag = bs4.BeautifulSoup('<div>Random div</div>', 'html.parser').div
@@ -569,17 +560,9 @@ class TestHtmlParser:
         assert parser.current_setting is None
 
 
-def test_generate_configuration_success(
-    mocker: MockerFixture,
-    tmp_path: Path,
-) -> None:
-    """
-    Test successful configuration generation.
-
-    :param mocker: pytest mocker fixture
-    :param tmp_path: pytest temporary directory fixture
-    """
+def test_generate_configuration_success(tmp_path: Path) -> None:
     settings_file = tmp_path / 'settings.html'
+    rules_file = tmp_path / 'rules.html'
     version_file = tmp_path / 'version.txt'
     config_file = tmp_path / 'config.toml'
     adjusted_config_file = tmp_path / 'config_adjusted.toml'
@@ -593,15 +576,20 @@ def test_generate_configuration_success(
     </article>
     """
     settings_file.write_text(html_content, encoding='utf-8')
+    rules_file.write_text('', encoding='utf-8')
     version_file.write_text('0.1.0', encoding='utf-8')
 
-    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.default_values_file', config_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.adjusted_values_file', adjusted_config_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.overrides', {})
-
-    generate_configuration()
+    generate_configuration(
+        AppConfiguration(
+            workdir=tmp_path,
+            settings_html_file_name='settings.html',
+            rules_html_file_name='rules.html',
+            version_file_name='version.txt',
+            default_values_file_name='config.toml',
+            adjusted_values_file_name='config_adjusted.toml',
+            overrides={},
+        ),
+    )
 
     assert config_file.exists()
     assert adjusted_config_file.exists()
@@ -611,41 +599,33 @@ def test_generate_configuration_success(
     assert 'line-length = 88' in content
 
 
-def test_generate_configuration_missing_article(
-    mocker: MockerFixture,
-    tmp_path: Path,
-) -> None:
-    """
-    Test configuration generation with missing article element.
-
-    :param mocker: pytest mocker fixture
-    :param tmp_path: pytest temporary directory fixture
-    """
+def test_generate_configuration_missing_article(tmp_path: Path) -> None:
     settings_file = tmp_path / 'settings.html'
+    rules_file = tmp_path / 'rules.html'
     version_file = tmp_path / 'version.txt'
 
     html_content = '<html><body><p>No article here</p></body></html>'
     settings_file.write_text(html_content, encoding='utf-8')
+    rules_file.write_text('', encoding='utf-8')
     version_file.write_text('0.1.0', encoding='utf-8')
 
-    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
-
     with pytest.raises(ValueError, match='Could not find <article> element'):
-        generate_configuration()
+        generate_configuration(
+            AppConfiguration(
+                workdir=tmp_path,
+                settings_html_file_name='settings.html',
+                rules_html_file_name='rules.html',
+                version_file_name='version.txt',
+                default_values_file_name='config.toml',
+                adjusted_values_file_name='config_adjusted.toml',
+                overrides={},
+            ),
+        )
 
 
-def test_generate_configuration_with_overrides(
-    mocker: MockerFixture,
-    tmp_path: Path,
-) -> None:
-    """
-    Test configuration generation with override values.
-
-    :param mocker: pytest mocker fixture
-    :param tmp_path: pytest temporary directory fixture
-    """
+def test_generate_configuration_with_overrides(tmp_path: Path) -> None:
     settings_file = tmp_path / 'settings.html'
+    rules_file = tmp_path / 'rules.html'
     version_file = tmp_path / 'version.txt'
     config_file = tmp_path / 'config.toml'
     adjusted_config_file = tmp_path / 'config_adjusted.toml'
@@ -659,18 +639,20 @@ def test_generate_configuration_with_overrides(
     </article>
     """
     settings_file.write_text(html_content, encoding='utf-8')
+    rules_file.write_text('', encoding='utf-8')
     version_file.write_text('0.1.0', encoding='utf-8')
 
-    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.default_values_file', config_file)
-    mocker.patch('ruff_config_generator.app_config._app_config.adjusted_values_file', adjusted_config_file)
-    mocker.patch(
-        'ruff_config_generator.app_config._app_config.overrides',
-        {'Top-level': {'line-length': '110'}},
+    generate_configuration(
+        AppConfiguration(
+            workdir=tmp_path,
+            settings_html_file_name='settings.html',
+            rules_html_file_name='rules.html',
+            version_file_name='version.txt',
+            default_values_file_name='config.toml',
+            adjusted_values_file_name='config_adjusted.toml',
+            overrides={'Top-level': {'line-length': '110'}},
+        ),
     )
-
-    generate_configuration()
 
     default_content = config_file.read_text(encoding='utf-8')
     adjusted_content = adjusted_config_file.read_text(encoding='utf-8')

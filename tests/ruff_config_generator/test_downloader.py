@@ -6,9 +6,10 @@ from logot import logged, Logot
 from logot.loguru import LoguruCapturer
 from pytest_mock import MockerFixture
 
+from ruff_config_generator.app_config import AppConfiguration
 from ruff_config_generator.downloader import (
     _download_latest_version,
-    _download_settings_page,
+    _download_page,
     _REQUEST_TIMEOUT,
     _RUFF_PYPI_INFORMATION_URL,
     _SETTINGS_HTML_URL,
@@ -17,165 +18,106 @@ from ruff_config_generator.downloader import (
 
 
 @pytest.fixture
-def mock_settings_file(mocker: MockerFixture, tmp_path: Path) -> Path:
-    """
-    Mock settings_html_file to use temporary directory.
-
-    :param mocker: pytest mocker fixture
-    :param tmp_path: pytest temporary directory fixture
-    :return: mocked settings file path
-    """
-    settings_file = tmp_path / 'settings.html'
-    mocker.patch('ruff_config_generator.app_config._app_config.settings_html_file', settings_file)
-    return settings_file
-
-
-@pytest.fixture
-def mock_version_file(mocker: MockerFixture, tmp_path: Path) -> Path:
-    """
-    Mock version_file to use temporary directory.
-
-    :param mocker: pytest mocker fixture
-    :param tmp_path: pytest temporary directory fixture
-    :return: mocked version file path
-    """
-    version_file = tmp_path / 'version.txt'
-    mocker.patch('ruff_config_generator.app_config._app_config.version_file', version_file)
-    return version_file
+def app_config(tmp_path: Path) -> AppConfiguration:
+    return AppConfiguration(
+        workdir=tmp_path,
+        settings_html_file_name='settings.html',
+        rules_html_file_name='rules.html',
+        version_file_name='version.txt',
+        default_values_file_name='temp',
+        adjusted_values_file_name='temp',
+        overrides={},
+    )
 
 
-def test_download_settings_page_success(
+def test_download_page_success(
     mocker: MockerFixture,
-    mock_settings_file: Path,
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test successful download of settings page.
-
-    :param mocker: pytest mocker fixture
-    :param mock_settings_file: mocked settings file path
-    """
     mock_response = mocker.Mock()
     mock_response.text = '<html>Settings content</html>'
     mock_get = mocker.patch('requests.get', return_value=mock_response)
 
-    _download_settings_page()
+    _download_page(_SETTINGS_HTML_URL, app_config.settings_html_file, 'settings')
 
     mock_get.assert_called_once_with(_SETTINGS_HTML_URL, timeout=_REQUEST_TIMEOUT)
     mock_response.raise_for_status.assert_called_once()
-    assert mock_settings_file.read_text(encoding='utf-8') == '<html>Settings content</html>'
+    assert app_config.settings_html_file.read_text(encoding='utf-8') == '<html>Settings content</html>'
 
 
-def test_download_settings_page_request_exception(
+def test_download_page_request_exception(
     mocker: MockerFixture,
-    mock_settings_file: Path,  # noqa: ARG001
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test handling of request exception when downloading settings page.
-
-    :param mocker: pytest mocker fixture
-    :param mock_settings_file: mocked settings file path (ensures path is mocked)
-    """
     mocker.patch('requests.get', side_effect=requests.RequestException('Network error'))
 
     with Logot(capturer=LoguruCapturer).capturing() as logot:
         with pytest.raises(requests.RequestException, match='Network error'):
-            _download_settings_page()
+            _download_page(_SETTINGS_HTML_URL, app_config.settings_html_file, 'settings')
         logot.assert_logged(logged.error('Failed to download settings page'))
 
 
-def test_download_settings_page_http_error(
+def test_download_page_http_error(
     mocker: MockerFixture,
-    mock_settings_file: Path,  # noqa: ARG001
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test handling of HTTP error when downloading settings page.
-
-    :param mocker: pytest mocker fixture
-    :param mock_settings_file: mocked settings file path (ensures path is mocked)
-    """
     mock_response = mocker.Mock()
     mock_response.raise_for_status.side_effect = requests.HTTPError('404 Not Found')
     mocker.patch('requests.get', return_value=mock_response)
 
     with pytest.raises(requests.HTTPError, match='404 Not Found'):
-        _download_settings_page()
+        _download_page(_SETTINGS_HTML_URL, app_config.settings_html_file, 'settings')
 
 
 def test_download_latest_version_success(
     mocker: MockerFixture,
-    mock_version_file: Path,
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test successful download of latest ruff version.
-
-    :param mocker: pytest mocker fixture
-    :param mock_version_file: mocked version file path
-    """
     mock_response = mocker.Mock()
     mock_response.json.return_value = {'info': {'version': '0.14.1'}}
     mock_get = mocker.patch('requests.get', return_value=mock_response)
 
-    _download_latest_version()
+    _download_latest_version(app_config)
 
     mock_get.assert_called_once_with(_RUFF_PYPI_INFORMATION_URL, timeout=_REQUEST_TIMEOUT)
     mock_response.raise_for_status.assert_called_once()
-    assert mock_version_file.read_text(encoding='utf-8') == '0.14.1'
+    assert app_config.version_file.read_text(encoding='utf-8') == '0.14.1'
 
 
 def test_download_latest_version_request_exception(
     mocker: MockerFixture,
-    mock_version_file: Path,  # noqa: ARG001
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test handling of request exception when fetching version.
-
-    :param mocker: pytest mocker fixture
-    :param mock_version_file: mocked version file path (ensures path is mocked)
-    """
     mocker.patch('requests.get', side_effect=requests.RequestException('Network error'))
 
     with Logot(capturer=LoguruCapturer).capturing() as logot:
         with pytest.raises(requests.RequestException, match='Network error'):
-            _download_latest_version()
+            _download_latest_version(app_config)
         logot.assert_logged(logged.error('Failed to fetch ruff version from PyPI'))
 
 
 def test_download_latest_version_key_error(
     mocker: MockerFixture,
-    mock_version_file: Path,  # noqa: ARG001
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test handling of unexpected PyPI response format.
-
-    :param mocker: pytest mocker fixture
-    :param mock_version_file: mocked version file path (ensures path is mocked)
-    """
     mock_response = mocker.Mock()
     mock_response.json.return_value = {'unexpected': 'format'}
     mocker.patch('requests.get', return_value=mock_response)
 
     with Logot(capturer=LoguruCapturer).capturing() as logot:
         with pytest.raises(KeyError):
-            _download_latest_version()
+            _download_latest_version(app_config)
         logot.assert_logged(logged.error('Unexpected PyPI response format'))
 
 
 def test_download_both_operations(
     mocker: MockerFixture,
-    mock_settings_file: Path,  # noqa: ARG001
-    mock_version_file: Path,  # noqa: ARG001
+    app_config: AppConfiguration,
 ) -> None:
-    """
-    Test that download() calls both download operations.
-
-    :param mocker: pytest mocker fixture
-    :param mock_settings_file: mocked settings file path (ensures path is mocked)
-    :param mock_version_file: mocked version file path (ensures path is mocked)
-    """
-    mock_download_settings = mocker.patch('ruff_config_generator.downloader._download_settings_page')
+    mock_download_page = mocker.patch('ruff_config_generator.downloader._download_page')
     mock_download_version = mocker.patch('ruff_config_generator.downloader._download_latest_version')
 
-    download()
+    download(app_config)
 
-    mock_download_settings.assert_called_once()
+    assert mock_download_page.call_count == 2
     mock_download_version.assert_called_once()

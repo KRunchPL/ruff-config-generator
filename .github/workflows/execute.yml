@@ -35,7 +35,7 @@ jobs:
       run: uv sync --no-dev
     - name: Regenerate
       run: |
-        uv run python -m ruff_config_generator
+        uv run python -m ruff_config_generator --config krunch_pl_config.toml
         git add workdir
     - name: Push and create PR
       env:

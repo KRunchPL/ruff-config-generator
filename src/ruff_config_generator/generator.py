@@ -3,7 +3,7 @@ from copy import deepcopy
 import bs4
 from loguru import logger
 
-from .app_config import get_app_config
+from .app_config import AppConfiguration
 
 
 class Setting:
@@ -148,11 +148,13 @@ class RuffConfiguration:
     Whole Ruff configuration.
 
     :param version: ruff version for which configuration is stored
+    :param rules_descriptions: mapping with descriptions of rules
     """
 
-    def __init__(self, version: str) -> None:
+    def __init__(self, version: str, rules_descriptions: dict[str, str]) -> None:
         self.version = version
         self.sections: list[Section] = []
+        self.rules_descriptions = rules_descriptions
 
     def new_section(self, name: str) -> None:
         """
@@ -178,7 +180,7 @@ class RuffConfiguration:
         lines = ('\n'.join(lines)).splitlines()
         for index, line in enumerate(lines):
             rule_id = line.strip(' ",')
-            if description := get_app_config().rules_descriptions.get(rule_id):
+            if description := self.rules_descriptions.get(rule_id):
                 spaces = ' ' * (9 - len(rule_id))
                 lines[index] = f'{line}{spaces}# {description}'
         lines.append('')
@@ -308,17 +310,18 @@ class _HtmlParser:
             self.current_setting.comments.extend(['---', *tag.get_text().splitlines(), '---'])
 
 
-def generate_configuration() -> None:
+def generate_configuration(app_config: AppConfiguration) -> None:
     """
     Generate TOML file configuration.
 
-    :raises ValueError: if HTML structure is unexpected
+    :param app_config: application configuration
     """
     logger.info('Starting configuration generation')
+    rules_descriptions = _extract_rules(app_config)
 
     # Load HTML and version
-    html_content = get_app_config().settings_html_file.read_text(encoding='utf-8')
-    version = get_app_config().version_file.read_text(encoding='utf-8').strip()
+    html_content = app_config.settings_html_file.read_text(encoding='utf-8')
+    version = app_config.version_file.read_text(encoding='utf-8').strip()
     logger.info('Generating configuration for ruff version {}', version)
 
     # Parse HTML
@@ -329,7 +332,7 @@ def generate_configuration() -> None:
         raise ValueError(msg)
 
     # Build configuration
-    config = RuffConfiguration(version)
+    config = RuffConfiguration(version, rules_descriptions)
     parser = _HtmlParser(config)
 
     for tag in article.children:  # type: ignore [union-attr]
@@ -337,11 +340,24 @@ def generate_configuration() -> None:
             parser.parse_tag(tag)
 
     # Write output files
-    logger.info('Writing configuration to {}', get_app_config().default_values_file)
-    get_app_config().default_values_file.write_text(str(config), encoding='utf-8')
+    logger.info('Writing configuration to {}', app_config.default_values_file)
+    app_config.default_values_file.write_text(str(config), encoding='utf-8')
 
-    config.update_default_values(get_app_config().overrides)
-    logger.info('Writing adjusted configuration to {}', get_app_config().adjusted_values_file)
-    get_app_config().adjusted_values_file.write_text(str(config), encoding='utf-8')
+    config.update_default_values(app_config.overrides)
+    logger.info('Writing adjusted configuration to {}', app_config.adjusted_values_file)
+    app_config.adjusted_values_file.write_text(str(config), encoding='utf-8')
 
     logger.info('Configuration generation completed')
+
+
+def _extract_rules(app_config: AppConfiguration) -> dict[str, str]:
+    html_content = app_config.rules_html_file.read_text(encoding='utf-8')
+    soup = bs4.BeautifulSoup(html_content, 'html.parser')
+    result = {}
+    for table in soup.find_all('tbody', recursive=True):
+        assert isinstance(table, bs4.Tag)
+        for row in table.find_all('tr'):
+            assert isinstance(row, bs4.Tag)
+            cells = row.find_all('td')
+            result[cells[0].text] = cells[2].text
+    return result
