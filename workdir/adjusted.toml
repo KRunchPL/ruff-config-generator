@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.15.22
+### Configuration created for ruff==0.16.0
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -508,7 +508,7 @@ extend-safe-fixes = []
 # For example, to enable the defaults plus flake8-bugbear:
 # ---
 # [tool.ruff.lint]
-# # Adds flake8-bugbear on top of the default rules (E4, E7, E9, F).
+# # Adds flake8-bugbear on top of the default rules.
 # extend-select = ["B"]
 # ---
 # Using select = ["B"] instead would replace the defaults, enabling
