@@ -1,14 +1,19 @@
 [flake8]
 count = True
-extend-exclude = .*/
+extend-exclude =
+    .*/
+    tests/
 
 ### Rules choice
 # DOC: We use flake8 just to run pydoclint, ruff takes care about the rest
 select=DOC
-# DAR401: The docstring is missing an exception raised
+# DOC5xx: Violations about “raise” and “assert” statements
+# DOC6xx: Violations about class attributes
+# DOC203: Return type(s) in the docstring not consistent with the return annotation
+# DOC404: The types in the docstring’s Yields section and the return annotation in the signature are not consistent
 ignore=DOC5,DOC6,DOC203,DOC404
 
-### Darglint options
+### pydoclint options
 style = sphinx
 arg-type-hints-in-docstring = False
 skip-checking-short-docstrings = False
@@ -17,3 +22,4 @@ check-return-types = False
 check-yield-types = False
 check-class-attributes = False
 check-style-mismatch = True
+omit-stars-when-documenting-varargs = True

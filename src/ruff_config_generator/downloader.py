@@ -1,11 +1,7 @@
-import logging
-
 import requests
+from loguru import logger
 
 from .app_config import get_app_config
-
-
-logger = logging.getLogger(__name__)
 
 
 _SETTINGS_HTML_URL = 'https://docs.astral.sh/ruff/settings/'
@@ -27,12 +23,12 @@ def _download_settings_page() -> None:
 
     :raises requests.RequestException: if download fails
     """
-    logger.info('Downloading settings page from %s', _SETTINGS_HTML_URL)
+    logger.info('Downloading settings page from {}', _SETTINGS_HTML_URL)
     try:
         response = requests.get(_SETTINGS_HTML_URL, timeout=_REQUEST_TIMEOUT)
         response.raise_for_status()
         get_app_config().settings_html_file.write_text(response.text, encoding='utf-8')
-        logger.info('Settings page saved to %s', get_app_config().settings_html_file)
+        logger.info('Settings page saved to {}', get_app_config().settings_html_file)
     except requests.RequestException:
         logger.exception('Failed to download settings page')
         raise
@@ -51,7 +47,7 @@ def _download_latest_version() -> None:
         response.raise_for_status()
         version = response.json()['info']['version']
         get_app_config().version_file.write_text(version, encoding='utf-8')
-        logger.info('Ruff version %s saved to %s', version, get_app_config().version_file)
+        logger.info('Ruff version {} saved to {}', version, get_app_config().version_file)
     except requests.RequestException:
         logger.exception('Failed to fetch ruff version from PyPI')
         raise

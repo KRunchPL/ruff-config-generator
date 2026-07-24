@@ -9,9 +9,9 @@ end_of_line = lf
 indent_style = space
 indent_size = 4
 
-[*.{json,yaml,yml}]
+[*.{json,yaml,yml,xml}]
 indent_size = 2
 
-[*.md]
+[*.{md}]
 indent_size = 4
 trim_trailing_whitespace = false

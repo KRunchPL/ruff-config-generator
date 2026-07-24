@@ -554,6 +554,7 @@ ignore = [
     "TC002",    # Move third-party import into a type-checking block
     "TC003",    # Move standard library import into a type-checking block
     "PYI041",   # Use `float` instead of `int | float`
+    "CPY001",   # Missing copyright notice at top of file
 ]
 # A list of objects that should be treated equivalently to a
 # logging.Logger object.

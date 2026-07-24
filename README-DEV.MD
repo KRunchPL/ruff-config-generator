@@ -81,7 +81,7 @@ If you don't have permission to create symlinks, this section describes how to f
 1. Verify that you have permissions to create symlinks.
 1. See [Git settings](#git-settings) below.
 
-Reference: [Allowing non-administrators to create symbolic links](https://github.com/git-for-windows/git/wiki/Symbolic-Links#allowing-non-administrators-to-create-symbolic-links)
+Reference: [Allowing non-administrators to create symbolic links](https://gitforwindows.org/symbolic-links.html#allowing-non-administrators-to-create-symbolic-links)
 
 #### Git settings
 

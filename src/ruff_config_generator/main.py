@@ -1,17 +1,16 @@
 import argparse
-import logging
+import sys
 from enum import auto, StrEnum
 from pathlib import Path
 from typing import cast
+
+from loguru import logger
 
 from ruff_config_generator.app_config import AppConfiguration
 
 from . import app_config
 from .downloader import download
 from .generator import generate_configuration
-
-
-logger = logging.getLogger(__name__)
 
 
 class Command(StrEnum):
@@ -24,16 +23,26 @@ class Command(StrEnum):
     BOTH = auto()
 
 
+def _setup_logger() -> None:
+    logger.remove()
+    logger.add(
+        sys.stdout,
+        level='INFO',
+        format=(
+            '<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | '
+            '<level>{level: <8}</level> | '
+            '<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        ),
+    )
+
+
 def main() -> int:
     """
     Run the tool.
 
     :return: system exit code (0 for success, 1 for failure)
     """
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    )
+    _setup_logger()
 
     parser = argparse.ArgumentParser(
         prog='RuffConfigGenerator',
@@ -65,7 +74,7 @@ def main() -> int:
             case Command.BOTH:
                 download()
                 generate_configuration()
-    except Exception:
+    except Exception:  # noqa: BLE001
         logger.exception('Operation failed')
         return 1
     else:

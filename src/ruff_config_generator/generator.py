@@ -1,12 +1,9 @@
-import logging
 from copy import deepcopy
 
 import bs4
+from loguru import logger
 
 from .app_config import get_app_config
-
-
-logger = logging.getLogger(__name__)
 
 
 class Setting:
@@ -205,7 +202,7 @@ class RuffConfiguration:
             if not section_update:
                 update.pop(section.name)
         if update:
-            logger.warning('Not found overrides: %s', update)
+            logger.warning('Not found overrides: {}', update)
 
 
 class _HtmlParser:
@@ -243,7 +240,7 @@ class _HtmlParser:
         :param tag: section header tag to parse
         """
         self.config.new_section(tag.text)
-        logger.debug('Created section: %s', tag.text)
+        logger.debug('Created section: {}', tag.text)
 
     def _handle_setting_header(self, tag: bs4.Tag) -> None:
         """
@@ -256,7 +253,7 @@ class _HtmlParser:
         code_element = tag.find_next('code')
         assert code_element is not None, 'h4 tag must contain a code element'
         self.current_setting.name = code_element.get_text()
-        logger.debug('Started setting: %s', self.current_setting.name)
+        logger.debug('Started setting: {}', self.current_setting.name)
 
     def _handle_paragraph(self, tag: bs4.Tag) -> None:
         """
@@ -273,7 +270,7 @@ class _HtmlParser:
             assert code_element is not None, 'Default value paragraph must contain a code element'
             self.current_setting.default_value = code_element.get_text()
             self.config.add_setting(self.current_setting)
-            logger.debug('Completed setting: %s', self.current_setting.name)
+            logger.debug('Completed setting: {}', self.current_setting.name)
             self.current_setting = None
         else:
             self.current_setting.comments.extend(text.splitlines())
@@ -303,7 +300,7 @@ class _HtmlParser:
 
         text = tag.get_text().strip()
         if text.startswith('Deprecated'):
-            logger.debug('Skipping deprecated setting: %s', self.current_setting.name)
+            logger.debug('Skipping deprecated setting: {}', self.current_setting.name)
             self.current_setting = None
             return
 
@@ -322,7 +319,7 @@ def generate_configuration() -> None:
     # Load HTML and version
     html_content = get_app_config().settings_html_file.read_text(encoding='utf-8')
     version = get_app_config().version_file.read_text(encoding='utf-8').strip()
-    logger.info('Generating configuration for ruff version %s', version)
+    logger.info('Generating configuration for ruff version {}', version)
 
     # Parse HTML
     soup = bs4.BeautifulSoup(html_content, 'html.parser')
@@ -340,11 +337,11 @@ def generate_configuration() -> None:
             parser.parse_tag(tag)
 
     # Write output files
-    logger.info('Writing configuration to %s', get_app_config().default_values_file)
+    logger.info('Writing configuration to {}', get_app_config().default_values_file)
     get_app_config().default_values_file.write_text(str(config), encoding='utf-8')
 
     config.update_default_values(get_app_config().overrides)
-    logger.info('Writing adjusted configuration to %s', get_app_config().adjusted_values_file)
+    logger.info('Writing adjusted configuration to {}', get_app_config().adjusted_values_file)
     get_app_config().adjusted_values_file.write_text(str(config), encoding='utf-8')
 
     logger.info('Configuration generation completed')

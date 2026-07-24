@@ -1,9 +1,14 @@
-import logging
-
 import pytest
+from logot import logged, Logot
+from logot.loguru import LoguruCapturer
 from pytest_mock import MockerFixture
 
 from ruff_config_generator.main import Command, main
+
+
+@pytest.fixture(autouse=True)
+def mock_setup_logger(mocker: MockerFixture) -> None:
+    mocker.patch('ruff_config_generator.main._setup_logger')
 
 
 def test_command_enum_values() -> None:
@@ -106,33 +111,28 @@ def test_main_both_commands(mocker: MockerFixture) -> None:
 
 def test_main_download_exception(
     mocker: MockerFixture,
-    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
     Test main function handles download exception.
 
     :param mocker: pytest mocker fixture
-    :param caplog: pytest log capture fixture
     """
     mocker.patch('sys.argv', ['ruff_config_generator', 'download'])
     mocker.patch('ruff_config_generator.main.download', side_effect=RuntimeError('Download failed'))
 
-    with caplog.at_level(logging.ERROR):
+    with Logot(capturer=LoguruCapturer).capturing() as logot:
         result = main()
-
+        logot.assert_logged(logged.error('Operation failed'))
     assert result == 1
-    assert 'Operation failed' in caplog.text
 
 
 def test_main_generate_exception(
     mocker: MockerFixture,
-    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
     Test main function handles generate exception.
 
     :param mocker: pytest mocker fixture
-    :param caplog: pytest log capture fixture
     """
     mocker.patch('sys.argv', ['ruff_config_generator', 'generate'])
     mocker.patch(
@@ -140,46 +140,24 @@ def test_main_generate_exception(
         side_effect=ValueError('Generation failed'),
     )
 
-    with caplog.at_level(logging.ERROR):
+    with Logot(capturer=LoguruCapturer).capturing() as logot:
         result = main()
-
+        logot.assert_logged(logged.error('Operation failed'))
     assert result == 1
-    assert 'Operation failed' in caplog.text
 
 
 def test_main_success_logging(
     mocker: MockerFixture,
-    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
     Test main function logs success message.
 
     :param mocker: pytest mocker fixture
-    :param caplog: pytest log capture fixture
     """
     mocker.patch('sys.argv', ['ruff_config_generator', 'download'])
     mocker.patch('ruff_config_generator.main.download')
 
-    with caplog.at_level(logging.INFO):
+    with Logot(capturer=LoguruCapturer).capturing() as logot:
         result = main()
-
+        logot.assert_logged(logged.info('Operation completed successfully'))
     assert result == 0
-    assert 'Operation completed successfully' in caplog.text
-
-
-def test_main_logging_configuration(mocker: MockerFixture) -> None:
-    """
-    Test main function configures logging.
-
-    :param mocker: pytest mocker fixture
-    """
-    mocker.patch('sys.argv', ['ruff_config_generator', 'download'])
-    mocker.patch('ruff_config_generator.main.download')
-    mock_basic_config = mocker.patch('logging.basicConfig')
-
-    main()
-
-    mock_basic_config.assert_called_once()
-    call_kwargs = mock_basic_config.call_args.kwargs
-    assert call_kwargs['level'] == logging.INFO
-    assert 'format' in call_kwargs

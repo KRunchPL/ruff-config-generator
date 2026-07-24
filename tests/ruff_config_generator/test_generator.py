@@ -1,8 +1,9 @@
-import logging
 from pathlib import Path
 
 import bs4
 import pytest
+from logot import logged, Logot
+from logot.loguru import LoguruCapturer
 from pytest_mock import MockerFixture
 
 from ruff_config_generator.generator import (
@@ -353,23 +354,18 @@ class TestRuffConfiguration:
 
     def test_update_default_values_warns_on_not_found(
         self,
-        caplog: pytest.LogCaptureFixture,
     ) -> None:
         """
         Test update_default_values warns on not found overrides.
-
-        :param caplog: pytest log capture fixture
         """
         config = RuffConfiguration('0.1.0')
         config.new_section('lint')
 
         update = {'format': {'quote-style': 'single'}}
 
-        with caplog.at_level(logging.WARNING):
+        with Logot(capturer=LoguruCapturer).capturing() as logot:
             config.update_default_values(update)
-
-        assert 'Not found overrides' in caplog.text
-        assert 'format' in caplog.text
+            logot.assert_logged(logged.warning(r"Not found overrides: {'format': {'quote-style': 'single'}}"))
 
     def test_update_default_values_skips_non_matching_settings(self) -> None:
         """Test update_default_values skips settings not in update dict."""

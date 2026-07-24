@@ -30,6 +30,7 @@ D102 = 'Missing docstring in public method'
 D103 = 'Missing docstring in public function'
 B011 = '[*] Do not `assert False` (`python -O` removes these calls), raise `AssertionError()`'
 PLR2004 = 'Magic value used in comparison'
+CPY001 = 'Missing copyright notice at top of file'
 
 [overrides.Top-level]
 line-length = '110'
@@ -60,7 +61,8 @@ ignore = """
     "TC001",
     "TC002",
     "TC003",
-    "PYI041"]"""
+    "PYI041",
+    "CPY001"]"""
 select = '["ALL"]'
 per-file-ignores = """
 {"!tests/*" = [

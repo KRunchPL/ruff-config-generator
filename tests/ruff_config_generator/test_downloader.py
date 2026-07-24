@@ -1,8 +1,9 @@
-import logging
 from pathlib import Path
 
 import pytest
 import requests
+from logot import logged, Logot
+from logot.loguru import LoguruCapturer
 from pytest_mock import MockerFixture
 
 from ruff_config_generator.downloader import (
@@ -67,21 +68,19 @@ def test_download_settings_page_success(
 def test_download_settings_page_request_exception(
     mocker: MockerFixture,
     mock_settings_file: Path,  # noqa: ARG001
-    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
     Test handling of request exception when downloading settings page.
 
     :param mocker: pytest mocker fixture
     :param mock_settings_file: mocked settings file path (ensures path is mocked)
-    :param caplog: pytest log capture fixture
     """
     mocker.patch('requests.get', side_effect=requests.RequestException('Network error'))
 
-    with caplog.at_level(logging.ERROR), pytest.raises(requests.RequestException, match='Network error'):
-        _download_settings_page()
-
-    assert 'Failed to download settings page' in caplog.text
+    with Logot(capturer=LoguruCapturer).capturing() as logot:
+        with pytest.raises(requests.RequestException, match='Network error'):
+            _download_settings_page()
+        logot.assert_logged(logged.error('Failed to download settings page'))
 
 
 def test_download_settings_page_http_error(
@@ -126,43 +125,39 @@ def test_download_latest_version_success(
 def test_download_latest_version_request_exception(
     mocker: MockerFixture,
     mock_version_file: Path,  # noqa: ARG001
-    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
     Test handling of request exception when fetching version.
 
     :param mocker: pytest mocker fixture
     :param mock_version_file: mocked version file path (ensures path is mocked)
-    :param caplog: pytest log capture fixture
     """
     mocker.patch('requests.get', side_effect=requests.RequestException('Network error'))
 
-    with caplog.at_level(logging.ERROR), pytest.raises(requests.RequestException, match='Network error'):
-        _download_latest_version()
-
-    assert 'Failed to fetch ruff version from PyPI' in caplog.text
+    with Logot(capturer=LoguruCapturer).capturing() as logot:
+        with pytest.raises(requests.RequestException, match='Network error'):
+            _download_latest_version()
+        logot.assert_logged(logged.error('Failed to fetch ruff version from PyPI'))
 
 
 def test_download_latest_version_key_error(
     mocker: MockerFixture,
     mock_version_file: Path,  # noqa: ARG001
-    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
     Test handling of unexpected PyPI response format.
 
     :param mocker: pytest mocker fixture
     :param mock_version_file: mocked version file path (ensures path is mocked)
-    :param caplog: pytest log capture fixture
     """
     mock_response = mocker.Mock()
     mock_response.json.return_value = {'unexpected': 'format'}
     mocker.patch('requests.get', return_value=mock_response)
 
-    with caplog.at_level(logging.ERROR), pytest.raises(KeyError):
-        _download_latest_version()
-
-    assert 'Unexpected PyPI response format' in caplog.text
+    with Logot(capturer=LoguruCapturer).capturing() as logot:
+        with pytest.raises(KeyError):
+            _download_latest_version()
+        logot.assert_logged(logged.error('Unexpected PyPI response format'))
 
 
 def test_download_both_operations(
