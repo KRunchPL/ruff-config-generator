@@ -43,9 +43,9 @@ direction = 'Dependencies'
 docstring-code-format = 'true'
 line-ending = 'lf'
 quote-style = 'single'
+preview = 'true'
 
 [overrides.lint]
-external = '["DAR"]'
 ignore = """
 ["B005",
     "D100",

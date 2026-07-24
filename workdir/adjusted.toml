@@ -428,7 +428,7 @@ line-ending = "lf"
 # Note: This setting has no effect when targeting Python versions below 3.12.
 nested-string-quote-style = "alternating"
 # Whether to enable the unstable preview style formatting.
-preview = false
+preview = true
 # Configures the preferred quote character for strings. The recommended options are
 # - double (default): Use double quotes "
 # - single: Use single quotes '
@@ -521,9 +521,7 @@ extend-unsafe-fixes = []
 # preserved when (e.g.) validating # noqa directives. Useful for
 # retaining # noqa directives that cover plugins not yet implemented
 # by Ruff.
-external = [
-    "DAR",
-]
+external = []
 # A list of rule codes or prefixes to consider fixable. By default,
 # all rules are considered fixable.
 fixable = [
