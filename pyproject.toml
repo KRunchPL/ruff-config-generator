@@ -35,6 +35,7 @@ repository = "https://github.com/KRunchPL/ruff-config-generator"
 documentation = "https://github.com/KRunchPL/ruff-config-generator"
 
 [project.scripts]
+ruff-config-generator = "ruff_config_generator.__main__:app"
 ruff_config_generator = "ruff_config_generator.__main__:app"
 
 [tool.hatch.build.targets.wheel]

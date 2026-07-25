@@ -1,8 +1,19 @@
 from functools import cached_property
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel
+from pydantic import AfterValidator, BaseModel, ValidationInfo
+
+
+def _ensure_folder_exists(value: Path, info: ValidationInfo) -> Path:
+    if value.exists() and not value.is_dir():
+        msg = (
+            f'Path "{value}" points to existing element, which is not a directory, '
+            f'so cannot be used as "{info.field_name}".'
+        )
+        raise ValueError(msg)
+    value.mkdir(parents=True, exist_ok=True)
+    return value
 
 
 class AppConfiguration(BaseModel):
@@ -10,7 +21,7 @@ class AppConfiguration(BaseModel):
     Application configuration model.
     """
 
-    workdir: Path
+    workdir: Annotated[Path, AfterValidator(_ensure_folder_exists)]
     settings_html_file_name: str
     rules_html_file_name: str
     version_file_name: str
