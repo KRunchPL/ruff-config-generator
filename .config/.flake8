@@ -2,7 +2,7 @@
 count = True
 extend-exclude =
     .*/
-    tests/
+    tests/*
 
 ### Rules choice
 # DOC: We use flake8 just to run pydoclint, ruff takes care about the rest

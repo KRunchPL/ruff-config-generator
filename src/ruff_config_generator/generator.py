@@ -1,3 +1,4 @@
+import re
 from copy import deepcopy
 
 import bs4
@@ -350,6 +351,9 @@ def generate_configuration(app_config: AppConfiguration) -> None:
     logger.info('Configuration generation completed')
 
 
+_HEADER_MATCH = re.compile(r'(?P<name>\S+) \((?P<tags>.+)\)')
+
+
 def _extract_rules(app_config: AppConfiguration) -> dict[str, str]:
     html_content = app_config.rules_html_file.read_text(encoding='utf-8')
     soup = bs4.BeautifulSoup(html_content, 'html.parser')
@@ -360,4 +364,10 @@ def _extract_rules(app_config: AppConfiguration) -> dict[str, str]:
             assert isinstance(row, bs4.Tag)
             cells = row.find_all('td')
             result[cells[0].text] = cells[2].text
+    for header in soup.find_all('h2'):
+        assert isinstance(header, bs4.Tag)
+        if (re_match := _HEADER_MATCH.fullmatch(header.text)) is None:
+            continue
+        for tag in re_match.group('tags').split(', '):
+            result[tag] = re_match.group('name')
     return result
