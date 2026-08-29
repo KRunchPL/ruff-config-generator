@@ -637,6 +637,7 @@ unfixable = []
     "SLF001",   # Private member accessed: {access}
     "FBT001",   # Boolean-typed positional argument in function definition
     "PLR0913",  # Too many arguments in function definition ({c_args} > {max_args})
+    "PLR0917",  # Too many positional arguments ({c_pos} > {max_pos})
     "RUF018",   # Avoid assignment expressions in assert statements
 ]
 "tests/**/test_*" = [

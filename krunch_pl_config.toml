@@ -38,6 +38,7 @@ per-file-ignores = """
     "SLF001",
     "FBT001",
     "PLR0913",
+    "PLR0917",
     "RUF018",
 ]
 "tests/**/test_*" = [
