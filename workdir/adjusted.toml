@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.16.5
+### Configuration created for ruff==0.16.6
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -629,6 +629,7 @@ unfixable = []
 # A list of mappings from file pattern to rule codes or prefixes to
 # exclude, when considering any matching files. An initial '!' negates
 # the file pattern.
+# For more information on the glob syntax, refer to the globset documentation.
 [lint.per-file-ignores]
 "!tests/*" = [
     "PT",       # flake8-pytest-style
