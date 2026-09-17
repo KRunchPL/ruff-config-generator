@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.16.7
+### Configuration created for ruff==0.16.8
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -900,6 +900,8 @@ ban-lazy = []
 # that extend into the parent module or beyond ("parents").
 ban-relative-imports = "parents"
 # Specific modules or module members that may not be imported or accessed.
+# These can be extended by the
+# extend-banned-api option.
 # Note that this rule is only meant to flag accidental uses,
 # and can be circumvented via eval or importlib.
 banned-api = {}
@@ -908,6 +910,11 @@ banned-api = {}
 # block, or some other nested context). This also affects the rule import-outside-top-level
 # if banned-module-level-imports is enabled.
 banned-module-level-imports = []
+# Additional modules or module members that may not be imported or accessed.
+# These entries will be added to the
+# banned-api mapping and will override
+# any existing entries if the two settings overlap.
+extend-banned-api = {}
 # Specific modules that must be imported lazily in contexts where lazy import is legal, or
 # "all" to require every lazily-convertible import to use the lazy keyword. Ruff ignores
 # contexts where lazy import is invalid, such as functions, classes, try/except
