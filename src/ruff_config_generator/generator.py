@@ -363,10 +363,17 @@ def _extract_rules(app_config: AppConfiguration) -> dict[str, str]:
         for row in table.find_all('tr'):
             assert isinstance(row, bs4.Tag)
             cells = row.find_all('td')
-            result[cells[0].text] = cells[2].text
-    for header in soup.find_all('h2'):
-        assert isinstance(header, bs4.Tag)
-        if (re_match := _HEADER_MATCH.fullmatch(header.text)) is None:
+            key = cells[0].text.strip()
+            description = ''.join(
+                tag.text if tag.name != 'code' else f'`{tag.text}`'
+                for tag in cells[1].find('br').next_siblings
+            )
+            result[key] = description
+    for input_tag in soup.find_all('input', attrs={'name': 'linter'}):
+        assert isinstance(input_tag, bs4.Tag)
+        label_tag = input_tag.parent
+        assert isinstance(label_tag, bs4.Tag)
+        if (re_match := _HEADER_MATCH.fullmatch(label_tag.text.strip())) is None:
             continue
         for tag in re_match.group('tags').split(', '):
             result[tag] = re_match.group('name')

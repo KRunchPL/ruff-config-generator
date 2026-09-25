@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.16.8
+### Configuration created for ruff==0.16.9
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -555,20 +555,20 @@ future-annotations = false
 # In preview, categories like correctness and suspicious can be used
 # in addition to rule codes and linter group prefixes.
 ignore = [
-    "B005",     # Using .strip() with multi-character strings is misleading
+    "B005",     # Using `.strip()` with multi-character strings is misleading
     "D100",     # Missing docstring in public module
     "D104",     # Missing docstring in public package
     "D105",     # Missing docstring in magic method
-    "D107",     # Missing docstring in __init__
+    "D107",     # Missing docstring in `__init__`
     "D200",     # One-line docstring should fit on one line
     "D203",     # 1 blank line required before class docstring
     "D212",     # Multi-line docstring summary should start at the first line
     "RUF012",   # Mutable default value for class attribute
-    "S101",     # Use of assert detected
-    "TC001",    # Move application import {} into a type-checking block
-    "TC002",    # Move third-party import {} into a type-checking block
-    "TC003",    # Move standard library import {} into a type-checking block
-    "PYI041",   # Use {supertype} instead of {subtype} | {supertype}
+    "S101",     # Use of `assert` detected
+    "TC001",    # Move application import `{}` into a type-checking block
+    "TC002",    # Move third-party import `{}` into a type-checking block
+    "TC003",    # Move standard library import `{}` into a type-checking block
+    "PYI041",   # Use `{supertype}` instead of `{subtype} | {supertype}`
     "CPY001",   # Missing copyright notice at top of file
 ]
 # A list of objects that should be treated equivalently to a
@@ -635,19 +635,19 @@ unfixable = []
     "PT",       # flake8-pytest-style
 ]
 "tests/*" = [
-    "SLF001",   # Private member accessed: {access}
+    "SLF001",   # Private member accessed: `{access}`
     "FBT001",   # Boolean-typed positional argument in function definition
     "PLR0913",  # Too many arguments in function definition ({c_args} > {max_args})
     "PLR0917",  # Too many positional arguments ({c_pos} > {max_pos})
-    "RUF018",   # Avoid assignment expressions in assert statements
+    "RUF018",   # Avoid assignment expressions in `assert` statements
 ]
 "tests/**/test_*" = [
     "ANN",      # flake8-annotations
     "D101",     # Missing docstring in public class
     "D102",     # Missing docstring in public method
     "D103",     # Missing docstring in public function
-    "B011",     # Do not assert False (python -O removes these calls), raise AssertionError()
-    "PLR2004",  # Magic value used in comparison, consider replacing {value} with a constant variable
+    "B011",     # Do not `assert False` (`python -O` removes these calls), raise `AssertionError()`
+    "PLR2004",  # Magic value used in comparison, consider replacing `{value}` with a constant variable
 ]
 
 [lint.flake8-annotations]
