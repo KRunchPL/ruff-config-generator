@@ -1,7 +1,7 @@
 [overrides.Top-level]
 line-length = '110'
 output-format = 'concise'
-target-version = 'py314'
+target-version = 'py315'
 
 [overrides.analyze]
 direction = 'Dependencies'
