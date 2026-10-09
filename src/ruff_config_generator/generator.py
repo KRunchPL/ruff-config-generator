@@ -81,7 +81,9 @@ class Setting:
 
     def _process_regex_value(self) -> str:
         assert self.default_value is not None
-        value = self.default_value.strip('"').replace('\\', '\\\\')
+        value = (
+            self.default_value.strip('"').replace(r'\\', '\x00').replace('\\', '\\\\').replace('\x00', r'\\')
+        )
         return f'"{value}"'
 
     def _is_passthrough_value(self) -> bool:

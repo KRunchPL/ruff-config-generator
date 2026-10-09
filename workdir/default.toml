@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.16.10
+### Configuration created for ruff==0.17.0
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -216,8 +216,8 @@ src = [
 # The minimum Python version to target, e.g., when considering automatic
 # code upgrades, like rewriting type annotations. Ruff will not propose
 # changes using features that are not available in the given version.
-# For example, to represent supporting Python >=3.11 or ==3.11
-# specify target-version = "py311".
+# For example, to represent supporting Python >=3.12 or ==3.12
+# specify target-version = "py312".
 # If you're already using a pyproject.toml file, we recommend
 # project.requires-python instead, as it's based on Python packaging
 # standards, and will be respected by other tools. For example, Ruff
@@ -239,7 +239,7 @@ src = [
 # 3.10+. As such, Ruff will often recommend newer features in a stub
 # file than it would for an equivalent runtime file with the same target
 # version.
-target-version = "py310"
+target-version = "py311"
 # Enable application of unsafe fixes.
 # If excluded, a hint will be displayed when unsafe fixes are available.
 # If set to false, the hint will be hidden.
@@ -485,8 +485,9 @@ skip-magic-trailing-comma = false
 allowed-confusables = []
 # A regular expression used to identify "dummy" variables, or those which
 # should be ignored when enforcing (e.g.) unused-variable rules. The
-# default expression matches _, __, and _var, but not _var_.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# default expression matches _, __, _var, and _次, but not _var_
+# or _次_.
+dummy-variable-rgx = "^(_+|(_+[\\p{XID_Continue}]*[\\p{XID_Continue}--_]+?))$"
 # A list of file patterns to exclude from linting in addition to the files excluded globally (see exclude, and extend-exclude).
 # Exclusions are based on globs, and can be either:
 # - Single-path patterns, like .mypy_cache (to exclude any directory
@@ -763,6 +764,7 @@ extend-aliases = {}
 # the extend-aliases option.
 [lint.flake8-import-conventions.aliases]
 "altair" = "alt"
+"datetime" = "dt"
 "matplotlib" = "mpl"
 "matplotlib.pyplot" = "plt"
 "numpy" = "np"
@@ -965,14 +967,34 @@ exempt-modules = [
 quote-annotations = false
 # Exempt classes that list any of the enumerated classes as a base class
 # from needing to be moved into type-checking blocks.
-# Common examples include Pydantic's pydantic.BaseModel and SQLAlchemy's
-# sqlalchemy.orm.DeclarativeBase, but can also support user-defined
-# classes that inherit from those base classes. For example, if you define
-# a common DeclarativeBase subclass that's used throughout your project
-# (e.g., class Base(DeclarativeBase) ... in base.py), you can add it to
-# this list (runtime-evaluated-base-classes = ["base.Base"]) to exempt
+# This can either be configured as a list, if all entries share the same
+# runtime semantics of being runtime required. Or a table where each entry
+# is assigned to its desired runtime semantics.
+# A common example for "runtime" required semantics is Pydantic's pydantic.BaseModel
+# but can also support user-defined classes that inherit from those base classes.
+# For example, if you define a common BaseModel subclass that's used throughout
+# your project (e.g., class Base(BaseModel) ... in base.py), you can add it to
+# this list/table (runtime-evaluated-base-classes = ["base.Base"]) to exempt
 # models from being moved into type-checking blocks.
-runtime-evaluated-base-classes = []
+# ---
+# [tool.ruff.lint.flake8-type-checking]
+# runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+# ---
+# Or
+# ---
+# [tool.ruff.lint.flake8-type-checking.runtime-evaluated-base-classes]
+# "pydantic.BaseModel" = "required"
+# ---
+# For some use-cases like SQLAlchemy's sqlalchemy.orm.DeclarativeBase it makes more
+# sense to mark the class as runtime "ambiguous", since references to other models do
+# not need to resolve at runtime. With these semantics ruff will assume the annotations
+# already contain all of the correct forward references, and will not attempt to move
+# related imports and/or quote annotations.
+# ---
+# [tool.ruff.lint.flake8-type-checking.runtime-evaluated-base-classes]
+# "sqlalchemy.orm.DeclarativeBase" = "ambiguous"
+# ---
+runtime-evaluated-base-classes = {}
 # Exempt classes and functions decorated with any of the enumerated
 # decorators from being moved into type-checking blocks.
 # Common examples include Pydantic's @pydantic.validate_call decorator
@@ -987,7 +1009,9 @@ runtime-evaluated-base-classes = []
 # @app.get("/home")
 # def home() -> str: ...
 # Here app.get will correctly be identified as fastapi.FastAPI.get.
-runtime-evaluated-decorators = []
+# Just like with runtime-evaluated-base-classes it's possible to mark
+# decorators as runtime "ambiguous".
+runtime-evaluated-decorators = {}
 # Enforce TC001, TC002, and TC003 rules even when valid runtime imports
 # are present for the same module.
 # See flake8-type-checking's strict option.
@@ -1439,5 +1463,5 @@ keep-runtime-typing = false
 # parentheses around the tuple (see RUF031).
 parenthesize-tuple-in-subscript = false
 # Whether to require __init__.py files to contain no code at all, including imports and
-# docstrings (see RUF067).
+# __all__ assignments (see RUF067). Module and attribute docstrings are still allowed.
 strictly-empty-init-modules = false
