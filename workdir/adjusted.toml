@@ -1,4 +1,4 @@
-### Configuration created for ruff==0.17.1
+### Configuration created for ruff==0.17.2
 
 # A list of builtins to treat as defined references, in addition to the
 # system builtins.
@@ -808,6 +808,7 @@ extend-aliases = {}
 "datetime" = "dt"
 "matplotlib" = "mpl"
 "matplotlib.pyplot" = "plt"
+"networkx" = "nx"
 "numpy" = "np"
 "numpy.typing" = "npt"
 "pandas" = "pd"
@@ -1445,6 +1446,20 @@ allow-magic-value-types = [
     "str",
     "bytes",
 ]
+# Specific literal values to ignore when used as "magic values" (see PLR2004).
+allow-magic-values = [
+    0,
+    1,
+    -1,
+    0.0,
+    1.0,
+    -1.0,
+    "",
+    "__main__",
+]
+# Literal values to ignore when used as "magic values" (see PLR2004),
+# in addition to those included in allow-magic-values.
+extend-allow-magic-values = []
 # Maximum number of arguments allowed for a function or method definition
 # (see PLR0913).
 max-args = 5
